@@ -1,0 +1,395 @@
+.loot-form input:focus,
+.loot-form textarea:focus,
+.loot-form button:focus {
+  outline: none;
+}
+
+.loot-form {
+  position: absolute;
+  width: 100dvw;
+  max-width: 356px;
+  height: 100%;
+  max-height: 536.2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(2, 9, 25, 0.85);
+  backdrop-filter: blur(25px);
+  border: .5px solid #fffbbd;
+  padding: 0 16px;
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.close-button {
+  cursor: pointer;
+  border: .5px solid #fffbbd !important;
+  width: 28px !important;
+  height: 28px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 16px;
+  aspect-ratio: 1/1;
+  background-color: transparent;
+  color: #fffbbd;
+}
+
+.loot-form-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 390px;
+  line-height: .8;
+  position: relative; /* Ensure positioning context for absolute elements */
+}
+
+.loot-form-header h2 {
+  margin: .5em auto .25em 0;
+
+}
+
+.coordinates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 12px;
+  color: #fffbbd;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.loot-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: .5em;
+}
+
+.form-group {
+  margin-bottom: .5em;
+  height: auto;
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  flex-direction: row;
+  align-items: first-baseline;
+}
+
+.desc-group label{
+  margin-top: .2em !important;
+}
+
+.form-group label {
+  display: flex;
+  margin: auto;
+  margin-right: 10px;
+  padding: 0;
+  height: 1em;
+}
+
+.title-input,
+.description-input {
+  border: 0;
+  min-height: 24px;
+  width: 100%;
+  border-radius: 0;
+  padding: 5px;
+  resize: none;
+  font-family: 'TheGoodMonolith';
+  color: #fffbbd;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.title-input {
+  font-size: 16px;
+  width: 100%;
+}
+
+.description-input {
+  width: 100%;
+  font-size: 16px;
+  min-height: 52px;
+}
+
+.form-inventory {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: .5em;
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: .5em;
+  gap: 4px;
+  width: 100%;
+}
+
+.tabs button {
+  padding: 10px;
+  width: 100%;
+  border: .5px solid #fffbbd;
+  border-radius: 0;
+  background-color: #020919;
+  color: #fffbbd;
+  cursor: pointer;
+  text-shadow: .5px 0px 0px #fffbbd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabs button.active {
+  background-color: #5bef6a !important;
+  color: #020919 !important;
+  text-shadow: .5px 0px 0px #020919;
+
+}
+
+.tokens-container {
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  width: 100%;
+  max-height: 290px;
+  overflow-y: auto;
+  gap: 4px;
+  margin-bottom: .5em;
+  align-items: flex-start;
+  align-content: baseline;
+
+}
+
+/* Styles for fungible tokens */
+.inventory-fungible-token {
+  width: 100%;
+  height: 33px;
+  margin: 0;
+  padding: 6px;
+  border: .5px solid rgba(255, 251, 189, 0.25);
+  border-radius: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.inventory-fungible-token.selected {
+  border-color: #5bef6a;
+}
+
+.token-image {
+  display: flex;
+}
+
+.fungible-input {
+  font-family: 'TheGoodMonolith';
+}
+
+.token-image-symbol-address {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.inventory-fungible-token .token-image-symbol {
+  display: flex;
+  align-items: center;
+}
+
+.inventory-fungible-token img {
+  max-width: 26px;
+  margin-bottom: 0;
+}
+
+.inventory-fungible-token .token-symbol {
+  font-size: 16px;
+  text-shadow: .5px 0 0 #fffbbd;
+  color: #fffbbd;
+}
+
+.inventory-fungible-token .token-address {
+  font-size: 10px;
+  text-align: center;
+}
+
+.fungible-balance-input-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.inventory-fungible-balance {
+  font-size: 12px;
+  color: #fffbbd;
+}
+
+.inventory-fungible-input-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.inventory-fungible-input-wrap .fungible-input {
+  width: 72px;
+  padding: 2px;
+  font-size: 16px;
+  color: #fffbbd;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: .5px solid rgba(255, 251, 189, 0.25);
+  border-radius: 0;
+}
+
+/* Styles for NFT tokens */
+.inventory-nft-token {
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: .5px solid rgb(255, 251, 189, .5);
+  margin: 5px auto;
+  padding: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.inventory-nft-token.selected {
+  border-color: #5bef6a;
+  border-width: .5px;
+}
+
+.inventory-nft-token img {
+  width: 84px;
+  margin: 1px;
+  height: 84px;
+  object-fit: cover;
+}
+
+.inventory-nft-token .token-address {
+  font-size: 10px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.selected-count {
+  text-align: center;
+}
+
+.drop-button {
+  border: .5px solid #fffbbd;
+  font-size: 20px;
+  padding: 6px 18px !important;
+}
+
+.token-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.confirm-button {
+  border: .5px solid #fffbbd;
+  font-size: 20px;
+  padding: 6px 18px;
+  background-color: #020919;
+  color: #fffbbd;
+  cursor: pointer;
+  text-shadow: .5px 0px 0px #fffbbd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+.map-preview {
+  width: 100%;
+  height: 150px;
+  margin-bottom: .5em;
+  object-fit: contain;
+}
+
+.token-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+
+.token-info {
+  display: flex;
+  align-items: center;
+}
+
+.token-list-image {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  object-fit: cover;
+}
+
+.token-amount {
+  font-weight: bold;
+}
+
+.static-map {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 1em;
+}
+
+.coordinates-row {
+  text-align: center;
+  font-size: 12px;
+  color: #fffbbd;
+  margin-bottom: 1em;
+}
+
+.location-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: #fffbbd;
+  margin: .25em 0 .5em 0;
+}
+
+.coordinates-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'TheGoodMonolith';
+  font-size: 12px;
+  text-shadow: .5px 0px 0px #fffbbd;
+}
+
+.location-name {
+  font-family: 'TheGoodMonolith';
+  font-size: 16px;
+  opacity: 0.8;
+  text-shadow: .5px 0px 0px #fffbbd;
+}
+
+.location-image {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  margin-bottom: 1em;
+}
+
+.location-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

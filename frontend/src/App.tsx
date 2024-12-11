@@ -1,0 +1,53 @@
+import React, { useState } from 'react';
+import NavBar from './components/NavBar.tsx';
+import Map from './components/Map.tsx';
+import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
+import UserProfile from './components/UserProfile.tsx';
+import { WalletContextType } from './types';
+import './App.css';
+import Notification from './components/Notification.tsx';
+import { DropsProvider } from './context/DropsContext';
+
+const App: React.FC = () => {
+  const [showProfile, setShowProfile] = useState<boolean>(false);
+  const [txStatus, setTxStatus] = useState<{ type: 'pending' | 'success', txId?: string } | null>(null);
+
+  const handleProfileClick = (): void => {
+    setShowProfile(!showProfile);
+  };
+
+  const handleCloseProfile = (): void => {
+    setShowProfile(false);
+  };
+
+  return (
+    <WalletProviderWrapper>
+      <DropsProvider>
+        <div className="app-container">
+          <NavBar onProfileClick={handleProfileClick} />
+          <div className="map-container">
+            <Map setTxStatus={setTxStatus} />
+          </div>
+          <WalletContext.Consumer>
+            {({ walletAddress, profile }: WalletContextType) => (
+              showProfile && (
+                <div className="self-profile">
+                  <UserProfile walletAddress={walletAddress} profile={profile} onClose={handleCloseProfile} />
+                </div>
+              )
+            )}
+          </WalletContext.Consumer>
+          {txStatus && (
+            <Notification 
+              type={txStatus.type}
+              message={txStatus.type === 'pending' ? 'Transaction Pending...' : 'Transaction Successful!'}
+              txId={txStatus.txId}
+            />
+          )}
+        </div>
+      </DropsProvider>
+    </WalletProviderWrapper>
+  );
+};
+
+export default App;

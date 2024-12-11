@@ -1,0 +1,97 @@
+.marker-blurb {
+  background: rgba(0, 0, 0, 0.85);
+  padding: 12px;
+  color: white;
+  min-width: 200px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.marker-blurb:after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(0, 0, 0, 0.85);
+}
+
+.marker-blurb.expanded {
+  min-width: 300px;
+}
+
+.marker-blurb h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.marker-blurb .description {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.token-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.token-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.token-item img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.drop-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #999;
+}
+
+.location-image {
+  overflow: hidden;
+  height: 150px;
+}
+
+.location-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.claim-button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 12px;
+  background: #5bef6a;
+  border: none;
+  color: #020919;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.claim-button:hover {
+  background: #4bd659;
+}
+
+.distance-warning {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #ff6b6b;
+  text-align: center;
+}
