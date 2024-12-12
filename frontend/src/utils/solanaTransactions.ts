@@ -1,5 +1,4 @@
 import { 
-  Connection, 
   PublicKey, 
   Transaction, 
   SystemProgram,

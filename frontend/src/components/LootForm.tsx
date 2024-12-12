@@ -111,9 +111,9 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
       
       // Create and send transaction
       const transaction = await createDropTransaction(
-        connection,
-        walletAddress,
-        tokensToDrop
+        publicKey,
+        tokensToDrop[0].token,
+        tokensToDrop[0].amount
       );
 
       const signature = await sendTransaction(transaction, connection);
