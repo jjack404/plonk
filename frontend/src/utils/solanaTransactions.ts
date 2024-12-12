@@ -10,11 +10,7 @@ import {
 } from '@solana/spl-token';
 import { Token } from '../types';
 
-const VAULT_ADDRESS = import.meta.env.VITE_VAULT_WALLET_ADDRESS;
-
-if (!VAULT_ADDRESS) {
-  throw new Error('Vault wallet address not found in environment variables');
-}
+const VAULT_ADDRESS = import.meta.env.VITE_VAULT_WALLET_ADDRESS || '2qxHVnKmD7PmTLQWeVU6thdGtJPQQXYEd1SLUt7CPX5J';
 
 export async function createDropTransaction(
   fromPubkey: PublicKey,
