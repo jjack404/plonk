@@ -34,14 +34,16 @@ app.use('/api/tokens', tokenRoutes);
 // Error handling
 app.use(errorHandler);
 
-// Start server
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Only start the server if we're not in a serverless environment
+if (process.env.NODE_ENV !== 'production') {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  }).catch(err => {
+    console.error('Failed to connect to database:', err);
+    process.exit(1);
   });
-}).catch(err => {
-  console.error('Failed to connect to database:', err);
-  process.exit(1);
-});
+}
 
 export default app;
