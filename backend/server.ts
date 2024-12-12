@@ -17,8 +17,10 @@ app.use(cors({
     'https://plonk-frontend.vercel.app',
     'http://localhost:5173'
   ],
-  methods: ['GET', 'POST', 'PUT'],
-  allowedHeaders: ['Content-Type', 'wallet-address']
+  methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'wallet-address'],
+  credentials: true,
+  maxAge: 86400
 }));
 
 app.use(bodyParser.json());
