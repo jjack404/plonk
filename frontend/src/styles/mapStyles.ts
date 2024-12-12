@@ -119,5 +119,39 @@ export const mapStyles = [
       { "lightness": 30 },
       { "saturation": -40 }
     ]
+  },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "on" },
+      { "weight": 1 }
+    ]
+  },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels.text",
+    "stylers": [
+      { "visibility": "on" },
+      { "weight": 1 },
+      { "lightness": 25 }
+    ]
+  },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      { "color": "#F0E6D2" },
+      { "visibility": "on" }
+    ]
+  },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      { "color": "#000000" },
+      { "visibility": "on" },
+      { "weight": 2 }
+    ]
   }
 ];

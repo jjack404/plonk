@@ -10,12 +10,11 @@ import dropRoutes from './routes/drops';
 import tokenRoutes from './routes/tokens';
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = Number(process.env.PORT) || 3001;
 
 app.use(cors({
   origin: ['https://plonk-frontend.vercel.app', 'http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT'],
-  allowedHeaders: ['Content-Type', 'wallet-address']
+  credentials: true
 }));
 
 app.use(bodyParser.json());
@@ -32,7 +31,7 @@ app.use(errorHandler);
 // Start server
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }).catch(err => {
   console.error('Failed to connect to database:', err);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from './components/NavBar.tsx';
 import Map from './components/Map.tsx';
 import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
@@ -19,6 +19,19 @@ const App: React.FC = () => {
   const handleCloseProfile = (): void => {
     setShowProfile(false);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === '+' || e.key === '-' || e.key === '=') {
+          e.preventDefault();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <WalletProviderWrapper>

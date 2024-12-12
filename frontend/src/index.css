@@ -60,3 +60,14 @@ button {
 
   border-radius: 5px;
 }
+
+html, body {
+  touch-action: none;  /* Prevents pinch zoom on mobile */
+  -ms-content-zooming: none;  /* For IE/Edge */
+  overflow: hidden;
+}
+
+/* Allow touch actions on the map container specifically */
+.map-container {
+  touch-action: auto !important;
+}

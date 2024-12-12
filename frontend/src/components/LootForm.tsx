@@ -6,6 +6,7 @@ import './LootForm.css';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { createDropTransaction } from '../utils/solanaTransactions';
 import { getLocationImage } from '../utils/locationImage';
+import PanoramaView from './PanoramaView';
 
 const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxStatus }) => {
   const { walletAddress } = useContext<WalletContextType>(WalletContext);
@@ -18,7 +19,11 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
   const [activeTab, setActiveTab] = useState<'fungible' | 'nft'>('fungible');
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [tokenAmounts, setTokenAmounts] = useState<Record<string, number>>({});
-  const [locationImage, setLocationImage] = useState<string>('');
+  const [locationData, setLocationData] = useState<{
+    type: 'panorama' | 'static';
+    url?: string;
+    location?: { lat: number; lng: number; pano?: string };
+  } | null>(null);
 
   useEffect(() => {
     const fetchTokens = async (): Promise<void> => {
@@ -38,7 +43,11 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
   }, [walletAddress]);
 
   useEffect(() => {
-    getLocationImage(position).then(setLocationImage);
+    if (position) {
+      getLocationImage(position).then(data => {
+        setLocationData(data);
+      });
+    }
   }, [position]);
 
   const handleTokenClick = (token: Token): void => {
@@ -193,7 +202,17 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
         </div>
       </div>
       <div className="location-image">
-        <img src={locationImage} alt="Drop location" />
+        {locationData?.type === 'panorama' && locationData.location ? (
+          <PanoramaView 
+            position={locationData.location}
+            onError={() => setLocationData({ 
+              type: 'static', 
+              url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${position.lng}&zoom=14&size=300x150&markers=color:red%7C${position.lat},${position.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
+            })}
+          />
+        ) : (
+          <img src={locationData?.url} alt="Drop location" />
+        )}
       </div>
       {isConfirming ? (
         <div className="confirmation-view">

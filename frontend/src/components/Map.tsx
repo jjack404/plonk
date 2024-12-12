@@ -16,7 +16,7 @@ interface MapProps {
 
 const containerStyle: React.CSSProperties = {
   width: '100%',
-  height: '100%',
+  height: '100%'
 };
 
 const center: Position = {
@@ -56,18 +56,48 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const handleMapLoad = (map: google.maps.Map): void => {
     mapRef.current = map;
+    
+    // Add a listener for Street View changes
+    const streetView = map.getStreetView();
+    streetView.setOptions({
+      imageDateControl: false,
+      motionTracking: false,
+      motionTrackingControl: false,
+      addressControl: false,
+      linksControl: true,
+      panControl: true,
+      enableCloseButton: true,
+      visible: false
+    });
   };
 
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <GoogleMap
         mapContainerStyle={containerStyle}
+        mapContainerClassName="map-container"
         center={center}
         zoom={2}
         onLoad={handleMapLoad}
         onClick={handleMapClick}
         onRightClick={handleMapRightClick}
-        options={{ styles: mapStyles, fullscreenControl: false }}
+        options={{ 
+          styles: mapStyles, 
+          fullscreenControl: false,
+          clickableIcons: false,
+          streetViewControl: true,
+          minZoom: 2,
+          maxZoom: 18,
+          restriction: {
+            latLngBounds: {
+              north: 85,
+              south: -85,
+              west: -180,
+              east: 180
+            },
+            strictBounds: true
+          }
+        }}
       >
         {Array.isArray(drops) && window.google && drops.map((marker, index) => (
           <MapMarker

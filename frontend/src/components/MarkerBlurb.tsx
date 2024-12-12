@@ -4,6 +4,7 @@ import './MarkerBlurb.css';
 import { getLocationImage } from '../utils/locationImage';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
+import PanoramaView from './PanoramaView';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -13,20 +14,28 @@ interface MarkerBlurbProps {
   onClaim?: (drop: Drop) => void;
 }
 
-const MarkerBlurb: React.FC<MarkerBlurbProps> = ({ 
-  drop, 
-  position, 
-  expanded, 
+const getStaticMapUrl = (lat: number, lng: number): string => {
+  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+};
+
+const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
+  drop,
+  position,
+  expanded,
   onExpand,
-  onClaim 
+  onClaim
 }) => {
   const { latitude, longitude } = useCurrentLocation();
   const [isInRange, setIsInRange] = useState(false);
-  const [locationImage, setLocationImage] = useState<string>('');
-  
+  const [locationData, setLocationData] = useState<{
+    type: 'panorama' | 'static';
+    url?: string;
+    location?: { lat: number; lng: number; pano?: string };
+  } | null>(null);
+
   useEffect(() => {
     if (expanded && drop) {
-      getLocationImage(drop.position).then(setLocationImage);
+      getLocationImage(drop.position).then(setLocationData);
     }
   }, [expanded, drop]);
 
@@ -38,15 +47,13 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         drop.position.lat,
         drop.position.lng
       );
-      console.log('Distance to drop:', distance, 'miles');
-      console.log('Current location:', latitude, longitude);
-      console.log('Drop location:', drop.position.lat, drop.position.lng);
+
       setIsInRange(distance <= 1); // Within 1 mile
     }
   }, [drop, latitude, longitude]);
 
   if (!drop) return null;
-  
+
   const abbreviateAddress = (address: string): string => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
@@ -70,7 +77,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   );
 
   return (
-    <div 
+    <div
       className={`marker-blurb ${expanded ? 'expanded' : ''}`}
       style={{ 
         position: 'absolute',
@@ -78,14 +85,27 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         top: position.y,
         transform: 'translate(-50%, -100%)'
       }}
-      onClick={onExpand}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (!expanded) onExpand();
+      }}
     >
       <div className="marker-blurb-content">
         {expanded ? (
           <>
-            {locationImage && (
+            {expanded && locationData && (
               <div className="location-image">
-                <img src={locationImage} alt="Location view" />
+                {locationData.type === 'panorama' && locationData.location ? (
+                  <PanoramaView 
+                    position={locationData.location}
+                    onError={() => setLocationData({ 
+                      type: 'static', 
+                      url: getStaticMapUrl(drop.position.lat, drop.position.lng) 
+                    })}
+                  />
+                ) : (
+                  <img src={locationData.url} alt="Location view" />
+                )}
               </div>
             )}
             <h3>{drop.title}</h3>
@@ -94,13 +114,13 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
             <div className="drop-info">
               <span className="wallet">By: {abbreviateAddress(drop.walletAddress)}</span>
               <span className="location">
-                {drop.position.city && drop.position.country 
+                {drop.position.city && drop.position.country
                   ? `${drop.position.city}, ${drop.position.country}`
                   : drop.position.country || 'Unknown Location'}
               </span>
             </div>
             {isInRange && drop.status !== 'Claimed' && (
-              <button 
+              <button
                 className="claim-button"
                 onClick={(e) => {
                   e.stopPropagation();
