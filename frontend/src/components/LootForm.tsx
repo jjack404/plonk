@@ -107,7 +107,7 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
         amount: tokenAmounts[token.mint] || token.amount,
       }));
 
-      setTxStatus({ type: 'pending' });
+      setTxStatus({ type: 'pending', action: 'drop' });
       
       // Create and send transaction
       const transaction = await createDropTransaction(
@@ -117,7 +117,7 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
       );
 
       const signature = await sendTransaction(transaction, connection);
-      setTxStatus({ type: 'pending', txId: signature });
+      setTxStatus({ type: 'success', txId: signature, action: 'drop' });
 
       // Save drop to database
       const dropData = {
@@ -151,7 +151,7 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
         }
       );
 
-      setTxStatus({ type: 'success', txId: signature });
+      setTxStatus({ type: 'success', txId: signature, action: 'drop' });
       
       // Call onSubmit with the created drop data
       onSubmit({

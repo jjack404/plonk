@@ -3,14 +3,14 @@ import NavBar from './components/NavBar.tsx';
 import Map from './components/Map.tsx';
 import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
 import UserProfile from './components/UserProfile.tsx';
-import { WalletContextType } from './types';
+import { WalletContextType, TransactionStatus } from './types';
 import './App.css';
 import Notification from './components/Notification.tsx';
 import { DropsProvider } from './context/DropsContext';
 
 const App: React.FC = () => {
   const [showProfile, setShowProfile] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState<{ type: 'pending' | 'success', txId?: string } | null>(null);
+  const [txStatus, setTxStatus] = useState<TransactionStatus | null>(null);
 
   const handleProfileClick = (): void => {
     setShowProfile(!showProfile);
@@ -53,7 +53,7 @@ const App: React.FC = () => {
           {txStatus && (
             <Notification 
               type={txStatus.type}
-              message={txStatus.type === 'pending' ? 'Transaction Pending...' : 'Transaction Successful!'}
+              action={txStatus.action}
               txId={txStatus.txId}
             />
           )}

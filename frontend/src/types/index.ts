@@ -61,11 +61,17 @@ export interface UserProfileProps {
   onClose: () => void;
 }
 
+export type TransactionStatus = {
+  type: 'pending' | 'success';
+  txId?: string;
+  action?: 'drop' | 'claim';
+};
+
 export interface LootFormProps {
   position: Position;
   onClose: () => void;
   onSubmit: (data: Drop) => Promise<void>;
-  setTxStatus: (status: { type: 'pending' | 'success', txId?: string } | null) => void;
+  setTxStatus: (status: TransactionStatus | null) => void;
 }
 
 export interface MapProps {}

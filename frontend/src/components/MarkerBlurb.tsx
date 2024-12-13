@@ -55,7 +55,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         drop.position.lng
       );
 
-      setIsInRange(distance <= 1); // Within 1 mile
+      setIsInRange(distance <= 5); // Within 1 mile
     }
   }, [drop, latitude, longitude]);
 

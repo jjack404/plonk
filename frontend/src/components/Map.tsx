@@ -15,8 +15,14 @@ import { Transaction } from '@solana/web3.js';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
 
+interface TransactionStatus {
+  type: 'pending' | 'success';
+  txId?: string;
+  action?: 'drop' | 'claim';
+}
+
 interface MapProps {
-  setTxStatus: (status: { type: 'pending' | 'success', txId?: string } | null) => void;
+  setTxStatus: (status: TransactionStatus | null) => void;
 }
 
 const containerStyle: React.CSSProperties = {
@@ -84,7 +90,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         throw new Error('Wallet not connected');
       }
       
-      setTxStatus({ type: 'pending' });
+      setTxStatus({ type: 'pending', action: 'claim' });
       
       // Get partially signed transaction from backend
       const response = await axios.post(
@@ -116,7 +122,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         { headers: { 'wallet-address': walletAddress } }
       );
 
-      setTxStatus({ type: 'success', txId: signature });
+      setTxStatus({ type: 'success', txId: signature, action: 'claim' });
       setExpandedMarker(null);
     } catch (error) {
       console.error('Claim error:', error);
