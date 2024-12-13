@@ -9,31 +9,40 @@ export const connectDB = async () => {
 
     const uri = process.env.MONGODB_URI;
     if (!uri) {
-      throw new Error('MONGODB_URI is not defined in environment variables');
+      console.error('MONGODB_URI environment variable is not set');
+      throw new Error('MONGODB_URI is not defined');
     }
 
+    console.log('Attempting to connect to MongoDB...');
+    
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 15000,
       socketTimeoutMS: 45000,
-      connectTimeoutMS: 10000,
+      connectTimeoutMS: 15000,
       maxPoolSize: 10,
       minPoolSize: 0
     });
 
-    mongoose.connection.on('connected', () => {
+    const db = mongoose.connection;
+
+    db.on('connected', () => {
       console.log('MongoDB connected successfully');
     });
 
-    mongoose.connection.on('error', (err) => {
+    db.on('error', (err) => {
       console.error('MongoDB connection error:', err);
     });
 
-    mongoose.connection.on('disconnected', () => {
+    db.on('disconnected', () => {
       console.log('MongoDB disconnected');
     });
 
-  } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
+  } catch (error: any) {
+    console.error('MongoDB connection error details:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
     throw error;
   }
 };
