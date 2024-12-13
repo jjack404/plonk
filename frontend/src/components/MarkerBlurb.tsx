@@ -142,21 +142,19 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
                   : drop.position.country || 'Unknown Location'}
               </span>
             </div>
-            {isInRange && drop.status !== 'Claimed' && (
-              <button
-                className="claim-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClaim?.(drop);
-                }}
-              >
+            {isInRange && expanded && onClaim && (
+              <button className="claim-button" onClick={() => onClaim(drop)}>
                 Claim Drop
               </button>
             )}
             {!isInRange && expanded && (
-              <p className="distance-warning">
-                You must be within 1 mile of the drop location to claim it
-              </p>
+              <div className="distance-warning">
+                {latitude === null && longitude === null ? (
+                  <p>Please enable location services to see if you can claim</p>
+                ) : (
+                  <p>You must be within 1 mile of the drop location to claim it</p>
+                )}
+              </div>
             )}
           </>
         ) : (
