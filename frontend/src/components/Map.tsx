@@ -72,6 +72,11 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     });
   };
 
+  const handleClaimDrop = (drop: Drop) => {
+    console.log('Claim functionality coming soon!', drop);
+    setExpandedMarker(null);
+  };
+
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <GoogleMap
@@ -123,6 +128,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
             position={markerPosition}
             expanded={!!expandedMarker}
             onExpand={() => setExpandedMarker(hoveredMarker)}
+            onClaim={handleClaimDrop}
           />
         )}
 

@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Position, Drop } from '../types';
+import { isMobileDevice } from '../utils/device';
 
 export const useMapInteractions = (walletAddress: string | null) => {
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -39,10 +40,21 @@ export const useMapInteractions = (walletAddress: string | null) => {
   };
 
   const handleMarkerMouseOver = (marker: Drop, event: google.maps.MapMouseEvent) => {
-    if (event.domEvent && event.domEvent instanceof MouseEvent) {
-      const { clientX, clientY } = event.domEvent;
-      setMarkerPosition({ x: clientX, y: clientY });
-      setHoveredMarker(marker);
+    if (!mapRef.current) return;
+    
+    const scale = Math.pow(2, mapRef.current.getZoom() || 0);
+    const projection = mapRef.current.getProjection();
+    
+    if (projection && event.latLng) {
+      const point = projection.fromLatLngToPoint(event.latLng);
+      if (point) {
+        const pixelPoint = {
+          x: Math.floor(point.x * scale),
+          y: Math.floor(point.y * scale)
+        };
+        setMarkerPosition(pixelPoint);
+        setHoveredMarker(marker);
+      }
     }
   };
 
@@ -61,11 +73,6 @@ export const useMapInteractions = (walletAddress: string | null) => {
     handleMapRightClick,
     handleMarkerMouseOver
   };
-};
-
-// Helper functions
-const isMobileDevice = (): boolean => {
-  return /Mobi|Android/i.test(navigator.userAgent);
 };
 
 const getLocationDetails = async (
