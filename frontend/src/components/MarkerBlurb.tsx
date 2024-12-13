@@ -5,6 +5,7 @@ import { getLocationImage } from '../utils/locationImage';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
+import { isMobileDevice } from '../utils/device';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -32,6 +33,12 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     url?: string;
     location?: { lat: number; lng: number; pano?: string };
   } | null>(null);
+  const [blurbStyle, setBlurbStyle] = useState<React.CSSProperties>({
+    position: 'absolute' as 'absolute',
+    left: position.x,
+    top: position.y,
+    transform: 'translate(-50%, -100%)'
+  });
 
   useEffect(() => {
     if (expanded && drop) {
@@ -51,6 +58,27 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
       setIsInRange(distance <= 1); // Within 1 mile
     }
   }, [drop, latitude, longitude]);
+
+  useEffect(() => {
+    if (isMobileDevice() && expanded) {
+      setBlurbStyle({
+        position: 'fixed' as 'fixed',
+        left: '50%',
+        bottom: 20,
+        top: 'auto' as 'auto',
+        transform: 'translateX(-50%)',
+        maxHeight: '70vh',
+        overflowY: 'auto' as 'auto'
+      });
+    } else {
+      setBlurbStyle({
+        position: 'absolute' as 'absolute',
+        left: position.x,
+        top: position.y,
+        transform: 'translate(-50%, -100%)'
+      });
+    }
+  }, [position, expanded]);
 
   if (!drop) return null;
 
@@ -79,12 +107,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   return (
     <div
       className={`marker-blurb ${expanded ? 'expanded' : ''}`}
-      style={{ 
-        position: 'absolute',
-        left: position.x,
-        top: position.y,
-        transform: 'translate(-50%, -100%)'
-      }}
+      style={blurbStyle}
       onClick={(e) => {
         e.stopPropagation();
         if (!expanded) onExpand();
