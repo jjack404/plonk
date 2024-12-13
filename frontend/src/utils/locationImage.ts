@@ -1,7 +1,7 @@
 import { Position } from '../types';
 
 interface LocationImageResult {
-  type: 'panorama' | 'static';
+  type: 'panorama' | 'photosphere' | 'static';
   url?: string;
   location?: {
     lat: number;
@@ -30,6 +30,25 @@ export const getLocationImage = async (position: Position): Promise<LocationImag
           lat: location.latLng.lat(),
           lng: location.latLng.lng(),
           pano: location.pano
+        }
+      };
+    }
+
+    // Check for photospheres
+    const photosphereResult = await sv.getPanorama({
+      location: { lat, lng },
+      radius: 160,
+      source: google.maps.StreetViewSource.DEFAULT
+    });
+
+    const photosphereLocation = photosphereResult.data?.location;
+    if (photosphereLocation?.latLng && photosphereLocation.pano) {
+      return {
+        type: 'photosphere',
+        location: {
+          lat: photosphereLocation.latLng.lat(),
+          lng: photosphereLocation.latLng.lng(),
+          pano: photosphereLocation.pano
         }
       };
     }

@@ -15,6 +15,16 @@ interface MarkerBlurbProps {
   onClaim?: (drop: Drop) => void;
 }
 
+interface LocationImageState {
+  type: 'panorama' | 'static' | 'photosphere';
+  url?: string;
+  location?: {
+    lat: number;
+    lng: number;
+    pano?: string;
+  };
+}
+
 const getStaticMapUrl = (lat: number, lng: number): string => {
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
 };
@@ -28,11 +38,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
 }) => {
   const { latitude, longitude } = useCurrentLocation();
   const [isInRange, setIsInRange] = useState(false);
-  const [locationData, setLocationData] = useState<{
-    type: 'panorama' | 'static';
-    url?: string;
-    location?: { lat: number; lng: number; pano?: string };
-  } | null>(null);
+  const [locationData, setLocationData] = useState<LocationImageState | null>(null);
   const [blurbStyle, setBlurbStyle] = useState<React.CSSProperties>({
     position: 'absolute' as 'absolute',
     left: position.x,

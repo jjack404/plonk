@@ -8,6 +8,16 @@ import { createDropTransaction } from '../utils/solanaTransactions';
 import { getLocationImage } from '../utils/locationImage';
 import PanoramaView from './PanoramaView';
 
+interface LocationImageState {
+  type: 'panorama' | 'static' | 'photosphere';
+  url?: string;
+  location?: {
+    lat: number;
+    lng: number;
+    pano?: string;
+  };
+}
+
 const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxStatus }) => {
   const { walletAddress } = useContext<WalletContextType>(WalletContext);
   const { connection } = useConnection();
@@ -19,11 +29,7 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
   const [activeTab, setActiveTab] = useState<'fungible' | 'nft'>('fungible');
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [tokenAmounts, setTokenAmounts] = useState<Record<string, number>>({});
-  const [locationData, setLocationData] = useState<{
-    type: 'panorama' | 'static';
-    url?: string;
-    location?: { lat: number; lng: number; pano?: string };
-  } | null>(null);
+  const [locationData, setLocationData] = useState<LocationImageState | null>(null);
 
   useEffect(() => {
     const fetchTokens = async (): Promise<void> => {
