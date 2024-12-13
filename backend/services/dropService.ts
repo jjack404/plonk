@@ -34,12 +34,18 @@ export const getDropsByWallet = async (walletAddress: string) => {
 export const updateDropTransaction = async (
   dropId: string,
   walletAddress: string,
-  txId: string
+  txId: string,
+  status?: string
 ) => {
   try {
+    const updateData: any = { txId };
+    if (status) {
+      updateData.status = status;
+    }
+
     return await Drop.findOneAndUpdate(
-      { _id: dropId, walletAddress },
-      { txId },
+      { _id: dropId },
+      updateData,
       { new: true }
     );
   } catch (error) {

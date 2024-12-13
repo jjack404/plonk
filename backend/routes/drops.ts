@@ -44,7 +44,8 @@ const updateTransactionHandler: RequestHandler = async (req: AuthenticatedReques
     const drop = await updateDropTransaction(
       req.params.id,
       req.walletAddress!,
-      req.body.txId
+      req.body.txId,
+      req.body.status
     );
     if (!drop) {
       res.status(404).json({ error: 'Drop not found' });
