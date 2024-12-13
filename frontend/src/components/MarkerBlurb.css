@@ -8,7 +8,6 @@
   z-index: 1000;
   cursor: pointer;
   transition: all 0.3s ease;
-  touch-action: manipulation;
 }
 
 .marker-blurb:after {
@@ -72,6 +71,12 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .claim-button {
@@ -95,24 +100,4 @@
   font-size: 12px;
   color: #ff6b6b;
   text-align: center;
-}
-
-@media (max-width: 768px) {
-  .marker-blurb {
-    min-width: 250px;
-    padding: 16px;
-  }
-  
-  .marker-blurb:not(.expanded) {
-    display: none;
-  }
-  
-  .marker-blurb.expanded {
-    min-width: 90vw;
-    max-width: 400px;
-    position: fixed;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-  }
 }

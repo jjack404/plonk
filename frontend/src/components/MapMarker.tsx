@@ -1,6 +1,7 @@
 import { Marker } from '@react-google-maps/api';
 import { Drop } from '../types';
 import pepeIcon from '../assets/pepe.png';
+import { isMobileDevice } from '../utils/device';
 
 interface MapMarkerProps {
   marker: Drop;
@@ -14,17 +15,35 @@ const MapMarker: React.FC<MapMarkerProps> = ({
   onMouseOver,
   onMouseOut,
   onClick
-}) => (
-  <Marker
-    position={marker.position}
-    icon={{
-      url: pepeIcon,
-      scaledSize: new window.google.maps.Size(32, 32),
-    }}
-    onMouseOver={(e: google.maps.MapMouseEvent) => onMouseOver(marker, e)}
-    onMouseOut={onMouseOut}
-    onClick={onClick}
-  />
-);
+}) => {
+  const handleMarkerClick = () => {
+    if (isMobileDevice()) {
+      // On mobile, trigger click immediately
+      onClick();
+    } else {
+      // On desktop, keep existing behavior
+      onClick();
+    }
+  };
+
+  const handleMouseOver = (e: google.maps.MapMouseEvent) => {
+    if (!isMobileDevice()) {
+      onMouseOver(marker, e);
+    }
+  };
+
+  return (
+    <Marker
+      position={marker.position}
+      icon={{
+        url: pepeIcon,
+        scaledSize: new window.google.maps.Size(32, 32),
+      }}
+      onMouseOver={handleMouseOver}
+      onMouseOut={() => !isMobileDevice() && onMouseOut()}
+      onClick={handleMarkerClick}
+    />
+  );
+};
 
 export default MapMarker;

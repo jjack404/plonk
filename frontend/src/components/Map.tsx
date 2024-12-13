@@ -9,6 +9,7 @@ import { mapStyles } from '../styles/mapStyles';
 import MapMarker from './MapMarker';
 import MarkerBlurb from './MarkerBlurb';
 import LootForm from './LootForm';
+import { isMobileDevice } from '../utils/device';
 
 interface MapProps {
   setTxStatus: (status: { type: 'pending' | 'success', txId?: string } | null) => void;
@@ -104,8 +105,15 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
             key={index}
             marker={marker}
             onMouseOver={handleMarkerMouseOver}
-            onMouseOut={() => setHoveredMarker(null)}
-            onClick={() => setExpandedMarker(expandedMarker === marker ? null : marker)}
+            onMouseOut={() => !isMobileDevice() && setHoveredMarker(null)}
+            onClick={() => {
+              if (isMobileDevice()) {
+                setExpandedMarker(marker);
+                setHoveredMarker(null);
+              } else {
+                setExpandedMarker(expandedMarker === marker ? null : marker);
+              }
+            }}
           />
         ))}
         

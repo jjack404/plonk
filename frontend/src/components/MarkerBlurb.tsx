@@ -14,11 +14,6 @@ interface MarkerBlurbProps {
   onClaim?: (drop: Drop) => void;
 }
 
-// Add a utility function to detect mobile
-const isMobile = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-};
-
 const getStaticMapUrl = (lat: number, lng: number): string => {
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
 };
@@ -57,13 +52,6 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     }
   }, [drop, latitude, longitude]);
 
-  // Automatically expand on mobile when marker is clicked
-  const handleClick = () => {
-    if (isMobile()) {
-      onExpand();
-    }
-  };
-
   if (!drop) return null;
 
   const abbreviateAddress = (address: string): string => {
@@ -91,12 +79,15 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   return (
     <div
       className={`marker-blurb ${expanded ? 'expanded' : ''}`}
-      onClick={handleClick}
       style={{ 
         position: 'absolute',
         left: position.x,
         top: position.y,
         transform: 'translate(-50%, -100%)'
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (!expanded) onExpand();
       }}
     >
       <div className="marker-blurb-content">
