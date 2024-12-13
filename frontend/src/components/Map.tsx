@@ -10,6 +10,9 @@ import MapMarker from './MapMarker';
 import MarkerBlurb from './MarkerBlurb';
 import LootForm from './LootForm';
 import { isMobileDevice } from '../utils/device';
+import axios from 'axios';
+import { Transaction } from '@solana/web3.js';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 interface MapProps {
   setTxStatus: (status: { type: 'pending' | 'success', txId?: string } | null) => void;
@@ -27,6 +30,8 @@ const center: Position = {
 
 const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   const { walletAddress } = useContext(WalletContext);
+  const { connection } = useConnection();
+  const { sendTransaction, publicKey } = useWallet();
   const { drops, addDrop } = useDrops();
   const {
     showForm,
@@ -72,9 +77,50 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     });
   };
 
-  const handleClaimDrop = (drop: Drop) => {
-    console.log('Claim functionality coming soon!', drop);
-    setExpandedMarker(null);
+  const handleClaimDrop = async (drop: Drop) => {
+    try {
+      if (!walletAddress || !publicKey) {
+        throw new Error('Wallet not connected');
+      }
+      
+      setTxStatus({ type: 'pending' });
+      
+      // Get partially signed transaction from backend
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/drops/${drop._id}/claim`,
+        {},
+        { headers: { 'wallet-address': walletAddress } }
+      );
+
+      // Deserialize and send transaction
+      const transaction = Transaction.from(
+        Buffer.from(response.data.transaction, 'base64')
+      );
+
+      // Send for final signature and broadcast
+      const signature = await sendTransaction(transaction, connection, {
+        skipPreflight: false,
+        preflightCommitment: 'confirmed'
+      });
+
+      setTxStatus({ type: 'pending', txId: signature });
+
+      // Wait for confirmation
+      await connection.confirmTransaction(signature, 'confirmed');
+      
+      // Update drop status
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/api/drops/${drop._id}/transaction`,
+        { txId: signature, status: 'Claimed' },
+        { headers: { 'wallet-address': walletAddress } }
+      );
+
+      setTxStatus({ type: 'success', txId: signature });
+      setExpandedMarker(null);
+    } catch (error) {
+      console.error('Claim error:', error);
+      setTxStatus(null);
+    }
   };
 
   return (

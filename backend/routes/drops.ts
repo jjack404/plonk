@@ -7,6 +7,8 @@ import {
   getDropsByWallet,
   updateDropTransaction 
 } from '../services/dropService';
+import { createClaimTransaction } from '../services/claimService';
+import { Drop } from '../models/Drop';
 
 const router = express.Router();
 
@@ -58,5 +60,24 @@ router.post('/', checkWalletAddress, createDropHandler);
 router.get('/', getAllDropsHandler);
 router.get('/wallet/:walletAddress', getWalletDropsHandler);
 router.put('/:id/transaction', checkWalletAddress, updateTransactionHandler);
+router.post('/:id/claim', checkWalletAddress, locationCheckLimiter, async (req: AuthenticatedRequest, res, next): Promise<void> => {
+  try {
+    const drop = await Drop.findOne({ _id: req.params.id, status: 'Active' });
+    
+    if (!drop) {
+      res.status(404).json({ error: 'Drop not found or already claimed' });
+      return;
+    }
+
+    const transaction = await createClaimTransaction(drop, req.walletAddress!);
+    
+    res.json({
+      transaction: transaction.serialize({ verifySignatures: false }).toString('base64'),
+      drop
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;
