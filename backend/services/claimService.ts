@@ -11,12 +11,20 @@ import { IDrop } from '../models/Drop';
 import bs58 from 'bs58';
 
 const connection = new Connection(process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com');
-const vaultKeypair = Keypair.fromSecretKey(bs58.decode(process.env.VAULT_PRIVATE_KEY!));
+
+// Lazy load the vault keypair
+const getVaultKeypair = () => {
+  if (!process.env.VAULT_PRIVATE_KEY) {
+    throw new Error('VAULT_PRIVATE_KEY environment variable is not set');
+  }
+  return Keypair.fromSecretKey(bs58.decode(process.env.VAULT_PRIVATE_KEY));
+};
 
 export async function createClaimTransaction(
   drop: IDrop,
   claimerAddress: string
 ): Promise<Transaction> {
+  const vaultKeypair = getVaultKeypair();
   const transaction = new Transaction();
   const token = drop.tokens[0];
   const claimerPubkey = new PublicKey(claimerAddress);
