@@ -70,12 +70,19 @@ router.post('/:id/claim', checkWalletAddress, locationCheckLimiter, async (req: 
       return;
     }
 
-    const transaction = await createClaimTransaction(drop, req.walletAddress!);
-    
-    res.json({
-      transaction: transaction.serialize({ verifySignatures: false }).toString('base64'),
-      drop
-    });
+    try {
+      const transaction = await createClaimTransaction(drop, req.walletAddress!);
+      res.json({
+        transaction: transaction.serialize({ verifySignatures: false }).toString('base64'),
+        drop
+      });
+    } catch (error: any) {
+      console.error('Claim transaction creation error:', error);
+      res.status(500).json({ 
+        error: 'Failed to create claim transaction',
+        details: error.message 
+      });
+    }
   } catch (error) {
     next(error);
   }

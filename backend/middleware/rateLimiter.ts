@@ -10,6 +10,6 @@ export const apiLimiter = rateLimit({
 
 export const locationCheckLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 10,
+  max: 20,
   message: 'Too many location checks, please try again later.',
 });

@@ -13,6 +13,7 @@ import { isMobileDevice } from '../utils/device';
 import axios from 'axios';
 import { Transaction } from '@solana/web3.js';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { Buffer } from 'buffer';
 
 interface MapProps {
   setTxStatus: (status: { type: 'pending' | 'success', txId?: string } | null) => void;
