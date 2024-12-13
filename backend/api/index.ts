@@ -8,22 +8,14 @@ import { apiLimiter } from '../middleware/rateLimiter';
 import profileRoutes from '../routes/profile';
 import dropsRouter from '../routes/drops';
 import tokenRoutes from '../routes/tokens';
+import { corsMiddleware } from '../middleware/cors';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.set('trust proxy', 1);
 
-app.use(cors({
-  origin: [
-    'https://plonk-frontend.vercel.app',
-    'http://localhost:5173'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'wallet-address'],
-  credentials: true,
-  maxAge: 86400 // Cache preflight requests for 24 hours
-}));
+app.use(corsMiddleware);
 
 app.options('*', cors());
 
