@@ -16,12 +16,12 @@ const MapMarker: React.FC<MapMarkerProps> = ({
   onMouseOut,
   onClick
 }) => {
-  const handleMarkerClick = () => {
+  const handleMarkerClick = (e: google.maps.MapMouseEvent) => {
     if (isMobileDevice()) {
-      // On mobile, trigger click immediately
+      // On mobile, trigger both position calculation and click
+      onMouseOver(marker, e);
       onClick();
     } else {
-      // On desktop, keep existing behavior
       onClick();
     }
   };
