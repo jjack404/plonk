@@ -3,23 +3,37 @@ import mongoose from 'mongoose';
 export const connectDB = async () => {
   try {
     if (mongoose.connection.readyState === 1) {
+      console.log('MongoDB already connected');
       return;
     }
 
-    await mongoose.connect(process.env.MONGODB_URI!, {
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 5000,
-      connectTimeoutMS: 5000,
-      // Add these options for better serverless performance
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
+
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
       maxPoolSize: 10,
-      minPoolSize: 0,
-      maxIdleTimeMS: 5000,
-      waitQueueTimeoutMS: 5000
+      minPoolSize: 0
     });
 
-    console.log('Connected to MongoDB');
+    mongoose.connection.on('connected', () => {
+      console.log('MongoDB connected successfully');
+    });
+
+    mongoose.connection.on('error', (err) => {
+      console.error('MongoDB connection error:', err);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.log('MongoDB disconnected');
+    });
+
   } catch (error) {
-    console.error('Failed to connect to database:', error);
+    console.error('Failed to connect to MongoDB:', error);
     throw error;
   }
 };
