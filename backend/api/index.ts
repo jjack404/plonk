@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
 import { connectDB } from '../config/database';
 import { errorHandler } from '../middleware/errorHandler';
@@ -13,12 +12,13 @@ import { corsMiddleware } from '../middleware/cors';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy for Vercel
 app.set('trust proxy', 1);
 
+// Apply CORS middleware first, remove duplicate cors usage
 app.use(corsMiddleware);
 
-app.options('*', cors());
-
+// Body parser middleware
 app.use(bodyParser.json());
 app.use('/api/', apiLimiter);
 
@@ -33,13 +33,12 @@ app.use(errorHandler);
 // Connect to database
 connectDB().catch(err => {
   console.error('Failed to connect to database:', err);
+  process.exit(1); // Exit if DB connection fails
 });
 
-// Only start the server in non-production
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+// Start server in all environments
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 export default app; 
