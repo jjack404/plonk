@@ -58,7 +58,7 @@ export const useMapInteractions = (walletAddress: string | null) => {
     }
   };
 
-  const handleMarkerMouseOver = (marker: Drop, e: google.maps.MapMouseEvent) => {
+  const handleMarkerMouseOver = (marker: Drop) => {
     setHoveredMarker(marker);
     updateMarkerPosition(marker);
   };

@@ -40,7 +40,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   const { walletAddress } = useContext(WalletContext);
   const { connection } = useConnection();
   const { sendTransaction, publicKey } = useWallet();
-  const { drops, setDrops } = useDrops();
+  const { drops, setDrops, isLoading: dropsLoading, error: dropsError } = useDrops();
   const {
     showForm,
     setShowForm,
@@ -57,45 +57,14 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     handleMarkerMouseOver
   } = useMapInteractions(walletAddress);
 
-  const [isLoading, setIsLoading] = useState(true);
   const [dropsLoaded, setDropsLoaded] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const result = await new Promise((resolve) => {
-          const checkLoaded = () => {
-            if (dropsLoaded && mapLoaded) {
-              resolve(true);
-            }
-          };
-          const interval = setInterval(checkLoaded, 100);
-          setTimeout(() => {
-            clearInterval(interval);
-            resolve(false);
-          }, 3000);
-        });
-
-        if (!result) {
-          console.warn('Loading timed out - forcing load completion');
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error loading data:', error);
-        setIsLoading(false);
-      }
-    };
-
-    loadData();
-  }, [dropsLoaded, mapLoaded]);
-
-  // Update drops loaded state when drops are available
-  useEffect(() => {
-    if (Array.isArray(drops)) {
+    if (!dropsLoading && !dropsError) {
       setDropsLoaded(true);
     }
-  }, [drops]);
+  }, [dropsLoading, dropsError]);
 
   const handleCloseForm = (): void => {
     setShowForm(false);
@@ -171,9 +140,12 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     }
   };
 
+  const isLoading = !dropsLoaded || !mapLoaded;
+
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <Loader isLoading={isLoading} />
+      {dropsError && <div className="error-message">{dropsError}</div>}
       <GoogleMap
         mapContainerStyle={containerStyle}
         mapContainerClassName={`map-container ${isLoading ? 'loading' : ''}`}
@@ -202,7 +174,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
       >
         {Array.isArray(drops) && window.google && drops.map((marker, index) => (
           <MapMarker
-            key={index}
+            key={marker._id || index}
             marker={marker}
             onMouseOver={handleMarkerMouseOver}
             onMouseOut={() => !isMobileDevice() && setHoveredMarker(null)}

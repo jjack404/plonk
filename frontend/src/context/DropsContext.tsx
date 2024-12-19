@@ -8,19 +8,29 @@ interface DropsContextType {
   addDrop: (drop: Drop) => void;
   updateDrop: (dropId: string, updates: Partial<Drop>) => void;
   fetchDrops: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
 }
 
 const DropsContext = createContext<DropsContextType | undefined>(undefined);
 
 export const DropsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [drops, setDrops] = useState<Drop[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchDrops = async (): Promise<void> => {
     try {
+      setIsLoading(true);
+      setError(null);
       const response = await axios.get<Drop[]>(`${import.meta.env.VITE_BACKEND_URL}/api/drops`);
       setDrops(response.data);
     } catch (error) {
       console.error('Error fetching drops:', error);
+      setError('Failed to load drops');
+      setDrops([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,7 +51,15 @@ export const DropsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   return (
-    <DropsContext.Provider value={{ drops, setDrops, addDrop, updateDrop, fetchDrops }}>
+    <DropsContext.Provider value={{ 
+      drops, 
+      setDrops, 
+      addDrop, 
+      updateDrop, 
+      fetchDrops,
+      isLoading,
+      error 
+    }}>
       {children}
     </DropsContext.Provider>
   );
