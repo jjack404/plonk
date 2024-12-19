@@ -53,8 +53,9 @@ const App: React.FC = () => {
           {txStatus && (
             <Notification 
               type={txStatus.type}
-              action={txStatus.action}
               txId={txStatus.txId}
+              message={txStatus.action === 'drop' ? 'Dropping loot...' : 'Claiming loot...'}
+              onClose={() => setTxStatus(null)}
             />
           )}
         </div>

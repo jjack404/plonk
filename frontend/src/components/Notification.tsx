@@ -5,15 +5,14 @@ interface NotificationProps {
   message: string;
   type: 'pending' | 'success';
   txId?: string;
-  action?: 'drop' | 'claim';
   onClose: () => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({ message, type, txId, action, onClose }) => {
+const Notification: React.FC<NotificationProps> = ({ message, type, txId, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 6000); // 6 seconds
+    }, 6000);
 
     return () => clearTimeout(timer);
   }, [onClose]);
