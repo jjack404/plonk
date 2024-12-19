@@ -61,11 +61,11 @@ export interface UserProfileProps {
   onClose: () => void;
 }
 
-export type TransactionStatus = {
+export interface TransactionStatus {
   type: 'pending' | 'success';
   txId?: string;
   action?: 'drop' | 'claim';
-};
+}
 
 export interface LootFormProps {
   position: Position;
