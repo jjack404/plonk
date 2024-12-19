@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { WalletContext } from '../context/WalletContext';
 import { Drop, Position } from '../types';
@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Transaction } from '@solana/web3.js';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
+import pepeIcon from '../assets/pepe.png';
 
 interface TransactionStatus {
   type: 'pending' | 'success';
@@ -39,7 +40,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   const { walletAddress } = useContext(WalletContext);
   const { connection } = useConnection();
   const { sendTransaction, publicKey } = useWallet();
-  const { drops, addDrop } = useDrops();
+  const { drops, setDrops } = useDrops();
   const {
     showForm,
     setShowForm,
@@ -56,6 +57,11 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     handleMarkerMouseOver
   } = useMapInteractions(walletAddress);
 
+  const [dropMode, setDropMode] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
+  const dragImageRef = useRef<HTMLImageElement | null>(null);
+
   const handleCloseForm = (): void => {
     setShowForm(false);
     setFormPosition(null);
@@ -63,7 +69,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const handleSubmitForm = async (data: Drop): Promise<void> => {
     if (!formPosition) return;
-    addDrop(data);
+    setDrops(drops.concat(data));
     handleCloseForm();
   };
 
@@ -99,12 +105,10 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         { headers: { 'wallet-address': walletAddress } }
       );
 
-      // Deserialize and send transaction
       const transaction = Transaction.from(
         Buffer.from(response.data.transaction, 'base64')
       );
 
-      // Send for final signature and broadcast
       const signature = await sendTransaction(transaction, connection, {
         skipPreflight: false,
         preflightCommitment: 'confirmed'
@@ -112,15 +116,16 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
       setTxStatus({ type: 'pending', txId: signature });
 
-      // Wait for confirmation
       await connection.confirmTransaction(signature, 'confirmed');
       
-      // Update drop status
       await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/drops/${drop._id}/transaction`,
         { txId: signature, status: 'Claimed' },
         { headers: { 'wallet-address': walletAddress } }
       );
+
+      // Update local drops state by filtering out the claimed drop
+      setDrops(drops.filter(d => d._id !== drop._id));
 
       setTxStatus({ type: 'success', txId: signature, action: 'claim' });
       setExpandedMarker(null);
@@ -130,8 +135,106 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     }
   };
 
+  // Add touch/mouse event handlers
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    if (!dragImageRef.current) return;
+    
+    setIsDragging(true);
+    dragImageRef.current.style.opacity = '0.7';
+    
+    if ('touches' in e) {
+      setDragPosition({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      });
+    } else {
+      setDragPosition({
+        x: e.clientX,
+        y: e.clientY
+      });
+    }
+  };
+
+  const handleDragMove = (e: MouseEvent | TouchEvent) => {
+    if (!isDragging || !dragImageRef.current) return;
+
+    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
+    setDragPosition({ x, y });
+    dragImageRef.current.style.transform = `translate(${x}px, ${y}px)`;
+  };
+
+  const handleDragEnd = (e: MouseEvent | TouchEvent) => {
+    if (!isDragging || !dragImageRef.current || !mapRef.current) return;
+
+    const x = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const y = 'changedTouches' in e ? e.changedTouches[0].clientY : e.clientY;
+
+    // Convert screen coordinates to map coordinates
+    const point = new google.maps.Point(x, y);
+    const topRight = mapRef.current.getProjection()?.fromLatLngToPoint(
+      mapRef.current.getBounds()?.getNorthEast()!
+    );
+    const bottomLeft = mapRef.current.getProjection()?.fromLatLngToPoint(
+      mapRef.current.getBounds()?.getSouthWest()!
+    );
+
+    if (topRight && bottomLeft) {
+      const latLng = mapRef.current.getProjection()?.fromPointToLatLng(
+        new google.maps.Point(
+          (point.x / window.innerWidth) * (topRight.x - bottomLeft.x) + bottomLeft.x,
+          (point.y / window.innerHeight) * (topRight.y - bottomLeft.y) + bottomLeft.y
+        )
+      );
+
+      if (latLng) {
+        setFormPosition({
+          lat: latLng.lat(),
+          lng: latLng.lng()
+        });
+        setShowForm(true);
+      }
+    }
+
+    setIsDragging(false);
+    dragImageRef.current.style.opacity = '1';
+    setDragPosition(null);
+  };
+
+  // Add event listeners
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleDragMove);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('touchmove', handleDragMove);
+      window.addEventListener('touchend', handleDragEnd);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleDragMove);
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchmove', handleDragMove);
+      window.removeEventListener('touchend', handleDragEnd);
+    };
+  }, [isDragging]);
+
+  // Only show the draggable marker on mobile
+  const showDraggableMarker = isMobileDevice();
+
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+      {showDraggableMarker && (
+        <img
+          ref={dragImageRef}
+          src={pepeIcon}
+          className={`drop-marker-button ${isDragging ? 'dragging' : ''}`}
+          onMouseDown={handleDragStart}
+          onTouchStart={handleDragStart}
+          alt="Drop marker"
+        />
+      )}
       <GoogleMap
         mapContainerStyle={containerStyle}
         mapContainerClassName="map-container"
