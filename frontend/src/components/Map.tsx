@@ -57,9 +57,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     handleMarkerMouseOver
   } = useMapInteractions(walletAddress);
 
-  const [dropMode, setDropMode] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
   const dragImageRef = useRef<HTMLImageElement | null>(null);
 
   const handleCloseForm = (): void => {
@@ -144,15 +142,15 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     dragImageRef.current.style.opacity = '0.7';
     
     if ('touches' in e) {
-      setDragPosition({
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY
-      });
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+      dragImageRef.current.style.left = `${x - 20}px`;
+      dragImageRef.current.style.top = `${y - 20}px`;
     } else {
-      setDragPosition({
-        x: e.clientX,
-        y: e.clientY
-      });
+      const x = e.clientX;
+      const y = e.clientY;
+      dragImageRef.current.style.left = `${x - 20}px`;
+      dragImageRef.current.style.top = `${y - 20}px`;
     }
   };
 
@@ -162,8 +160,8 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
-    setDragPosition({ x, y });
-    dragImageRef.current.style.transform = `translate(${x}px, ${y}px)`;
+    dragImageRef.current.style.left = `${x - 20}px`;
+    dragImageRef.current.style.top = `${y - 20}px`;
   };
 
   const handleDragEnd = (e: MouseEvent | TouchEvent) => {
@@ -200,7 +198,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
     setIsDragging(false);
     dragImageRef.current.style.opacity = '1';
-    setDragPosition(null);
   };
 
   // Add event listeners

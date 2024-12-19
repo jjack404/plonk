@@ -58,8 +58,9 @@
 }
 
 .drop-marker-button.dragging {
-  cursor: grabbing;
-  position: fixed;
+  position: fixed !important;
   pointer-events: none;
   opacity: 0.7;
+  transform: translate(-50%, -50%);
+  transition: none;
 }
