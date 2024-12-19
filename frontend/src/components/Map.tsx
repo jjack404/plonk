@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { WalletContext } from '../context/WalletContext';
 import { Drop, Position } from '../types';
@@ -14,7 +14,7 @@ import axios from 'axios';
 import { Transaction } from '@solana/web3.js';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
-import pepeIcon from '../assets/pepe.png';
+import Loader from './Loader';
 
 interface TransactionStatus {
   type: 'pending' | 'success';
@@ -57,8 +57,45 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     handleMarkerMouseOver
   } = useMapInteractions(walletAddress);
 
-  const [isDragging, setIsDragging] = useState(false);
-  const dragImageRef = useRef<HTMLImageElement | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dropsLoaded, setDropsLoaded] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const result = await new Promise((resolve) => {
+          const checkLoaded = () => {
+            if (dropsLoaded && mapLoaded) {
+              resolve(true);
+            }
+          };
+          const interval = setInterval(checkLoaded, 100);
+          setTimeout(() => {
+            clearInterval(interval);
+            resolve(false);
+          }, 3000);
+        });
+
+        if (!result) {
+          console.warn('Loading timed out - forcing load completion');
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [dropsLoaded, mapLoaded]);
+
+  // Update drops loaded state when drops are available
+  useEffect(() => {
+    if (Array.isArray(drops)) {
+      setDropsLoaded(true);
+    }
+  }, [drops]);
 
   const handleCloseForm = (): void => {
     setShowForm(false);
@@ -73,6 +110,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const handleMapLoad = (map: google.maps.Map): void => {
     mapRef.current = map;
+    setMapLoaded(true);
     
     // Add a listener for Street View changes
     const streetView = map.getStreetView();
@@ -133,108 +171,12 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     }
   };
 
-  // Add touch/mouse event handlers
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    if (!dragImageRef.current) return;
-    
-    setIsDragging(true);
-    dragImageRef.current.style.opacity = '0.7';
-    
-    if ('touches' in e) {
-      const x = e.touches[0].clientX;
-      const y = e.touches[0].clientY;
-      dragImageRef.current.style.left = `${x - 20}px`;
-      dragImageRef.current.style.top = `${y - 20}px`;
-    } else {
-      const x = e.clientX;
-      const y = e.clientY;
-      dragImageRef.current.style.left = `${x - 20}px`;
-      dragImageRef.current.style.top = `${y - 20}px`;
-    }
-  };
-
-  const handleDragMove = (e: MouseEvent | TouchEvent) => {
-    if (!isDragging || !dragImageRef.current) return;
-
-    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
-    dragImageRef.current.style.left = `${x - 20}px`;
-    dragImageRef.current.style.top = `${y - 20}px`;
-  };
-
-  const handleDragEnd = (e: MouseEvent | TouchEvent) => {
-    if (!isDragging || !dragImageRef.current || !mapRef.current) return;
-
-    const x = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
-    const y = 'changedTouches' in e ? e.changedTouches[0].clientY : e.clientY;
-
-    // Convert screen coordinates to map coordinates
-    const point = new google.maps.Point(x, y);
-    const topRight = mapRef.current.getProjection()?.fromLatLngToPoint(
-      mapRef.current.getBounds()?.getNorthEast()!
-    );
-    const bottomLeft = mapRef.current.getProjection()?.fromLatLngToPoint(
-      mapRef.current.getBounds()?.getSouthWest()!
-    );
-
-    if (topRight && bottomLeft) {
-      const latLng = mapRef.current.getProjection()?.fromPointToLatLng(
-        new google.maps.Point(
-          (point.x / window.innerWidth) * (topRight.x - bottomLeft.x) + bottomLeft.x,
-          (point.y / window.innerHeight) * (topRight.y - bottomLeft.y) + bottomLeft.y
-        )
-      );
-
-      if (latLng) {
-        setFormPosition({
-          lat: latLng.lat(),
-          lng: latLng.lng()
-        });
-        setShowForm(true);
-      }
-    }
-
-    setIsDragging(false);
-    dragImageRef.current.style.opacity = '1';
-  };
-
-  // Add event listeners
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener('mousemove', handleDragMove);
-      window.addEventListener('mouseup', handleDragEnd);
-      window.addEventListener('touchmove', handleDragMove);
-      window.addEventListener('touchend', handleDragEnd);
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleDragMove);
-      window.removeEventListener('mouseup', handleDragEnd);
-      window.removeEventListener('touchmove', handleDragMove);
-      window.removeEventListener('touchend', handleDragEnd);
-    };
-  }, [isDragging]);
-
-  // Only show the draggable marker on mobile
-  const showDraggableMarker = isMobileDevice();
-
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      {showDraggableMarker && (
-        <img
-          ref={dragImageRef}
-          src={pepeIcon}
-          className={`drop-marker-button ${isDragging ? 'dragging' : ''}`}
-          onMouseDown={handleDragStart}
-          onTouchStart={handleDragStart}
-          alt="Drop marker"
-        />
-      )}
+      <Loader isLoading={isLoading} />
       <GoogleMap
         mapContainerStyle={containerStyle}
-        mapContainerClassName="map-container"
+        mapContainerClassName={`map-container ${isLoading ? 'loading' : ''}`}
         center={center}
         zoom={2}
         onLoad={handleMapLoad}

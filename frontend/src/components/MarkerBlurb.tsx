@@ -69,12 +69,12 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
       });
     } else {
       setBlurbStyle({
-        position: 'fixed',
+        position: 'absolute',
         left: position.x,
-        top: position.y - 60,
+        top: position.y,
         transform: 'translate(-50%, -100%)',
         maxHeight: '300px',
-        pointerEvents: 'none'
+        pointerEvents: expanded ? 'auto' : 'none'
       });
     }
   }, [position, expanded]);

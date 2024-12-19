@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Position, Drop } from '../types';
 import { isMobileDevice } from '../utils/device';
 
@@ -9,6 +9,25 @@ export const useMapInteractions = (walletAddress: string | null) => {
   const [hoveredMarker, setHoveredMarker] = useState<Drop | null>(null);
   const [expandedMarker, setExpandedMarker] = useState<Drop | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
+
+  const updateMarkerPosition = (marker: Drop) => {
+    if (!mapRef.current) return;
+
+    const latLng = new google.maps.LatLng(marker.position.lat, marker.position.lng);
+    const projection = mapRef.current.getProjection();
+    if (!projection) return;
+
+    const scale = Math.pow(2, mapRef.current.getZoom() || 0);
+    const worldPoint = projection.fromLatLngToPoint(latLng);
+    const topRight = projection.fromLatLngToPoint(mapRef.current.getBounds()?.getNorthEast()!);
+    const bottomLeft = projection.fromLatLngToPoint(mapRef.current.getBounds()?.getSouthWest()!);
+    
+    if (worldPoint && topRight && bottomLeft) {
+      const x = (worldPoint.x - bottomLeft.x) * scale;
+      const y = (worldPoint.y - topRight.y) * scale;
+      setMarkerPosition({ x, y });
+    }
+  };
 
   const handleMapClick = (event: google.maps.MapMouseEvent): void => {
     if (isMobileDevice() && walletAddress && event.latLng) {
@@ -39,16 +58,22 @@ export const useMapInteractions = (walletAddress: string | null) => {
     }
   };
 
-  const handleMarkerMouseOver = (marker: Drop, event: google.maps.MapMouseEvent) => {
-    if (!mapRef.current || !event.domEvent) return;
-    
-    const domEvent = event.domEvent as MouseEvent;
-    setMarkerPosition({
-      x: domEvent.clientX,
-      y: domEvent.clientY
-    });
+  const handleMarkerMouseOver = (marker: Drop, e: google.maps.MapMouseEvent) => {
     setHoveredMarker(marker);
+    updateMarkerPosition(marker);
   };
+
+  useEffect(() => {
+    if (mapRef.current && (hoveredMarker || expandedMarker)) {
+      const marker = hoveredMarker || expandedMarker;
+      if (marker) {
+        const listener = mapRef.current.addListener('bounds_changed', () => {
+          updateMarkerPosition(marker);
+        });
+        return () => google.maps.event.removeListener(listener);
+      }
+    }
+  }, [hoveredMarker, expandedMarker]);
 
   return {
     showForm,

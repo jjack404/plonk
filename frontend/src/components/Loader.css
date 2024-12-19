@@ -1,0 +1,55 @@
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 27, 30, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-content {
+  text-align: center;
+  color: #fffbbd;
+  font-family: 'TheGoodMonolith', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
+
+.loader-content p {
+  margin-top: 24px;
+}
+
+.pixel-loader {
+  width: 96px;
+  height: 96px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.pixel {
+  width: 28px;
+  height: 28px;
+  background-color: rgba(255, 251, 189, 0.2);
+  transition: background-color 0.15s steps(1);
+}
+
+.pixel.active {
+  background-color: #fffbbd;
+}
+
+/* Position pixels in a circle, excluding center */
+.pixel:nth-child(1) { grid-area: 1 / 1; }
+.pixel:nth-child(2) { grid-area: 1 / 2; }
+.pixel:nth-child(3) { grid-area: 1 / 3; }
+.pixel:nth-child(4) { grid-area: 2 / 3; }
+.pixel:nth-child(5) { grid-area: 3 / 3; }
+.pixel:nth-child(6) { grid-area: 3 / 2; }
+.pixel:nth-child(7) { grid-area: 3 / 1; }
+.pixel:nth-child(8) { grid-area: 2 / 1; } 
