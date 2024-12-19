@@ -18,6 +18,23 @@
     text-decoration: underline;
   }
   
+  .notification .close-button {
+    cursor: pointer;
+    border: .5px solid #fffbbd !important;
+    width: 20px !important;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-size: 12px;
+    aspect-ratio: 1/1;
+    background-color: transparent;
+    color: #fffbbd;
+    padding: 0 !important;
+    margin-left: 10px !important;
+  }
+  
   .loading-spinner {
     width: 20px;
     height: 20px;

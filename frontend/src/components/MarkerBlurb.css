@@ -7,7 +7,18 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   cursor: pointer;
-  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.marker-blurb:not(.expanded) {
+  pointer-events: none;
+}
+
+.marker-blurb.expanded {
+  pointer-events: auto;
+  cursor: default;
+  width: 80dvw;
+  max-width: 500px;
 }
 
 .marker-blurb:after {
@@ -19,12 +30,6 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top: 8px solid rgba(0, 0, 0, 0.85);
-}
-
-.marker-blurb.expanded {
-  min-width: 300px;
-  max-width: 90vw;
-  -webkit-overflow-scrolling: touch;
 }
 
 .marker-blurb h3 {
@@ -53,7 +58,7 @@
 .token-item img {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 0%;
 }
 
 .drop-info {
@@ -103,7 +108,7 @@
   border: 1px solid #666;
   color: white;
   font-size: 12px;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
@@ -127,7 +132,7 @@
 @media (max-width: 768px) {
   .marker-blurb.expanded {
     width: 90vw;
-    border-radius: 12px;
+    border-radius: 0;
   }
   
   .marker-blurb-content {

@@ -40,22 +40,14 @@ export const useMapInteractions = (walletAddress: string | null) => {
   };
 
   const handleMarkerMouseOver = (marker: Drop, event: google.maps.MapMouseEvent) => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || !event.domEvent) return;
     
-    const scale = Math.pow(2, mapRef.current.getZoom() || 0);
-    const projection = mapRef.current.getProjection();
-    
-    if (projection && event.latLng) {
-      const point = projection.fromLatLngToPoint(event.latLng);
-      if (point) {
-        const pixelPoint = {
-          x: Math.floor(point.x * scale),
-          y: Math.floor(point.y * scale)
-        };
-        setMarkerPosition(pixelPoint);
-        setHoveredMarker(marker);
-      }
-    }
+    const domEvent = event.domEvent as MouseEvent;
+    setMarkerPosition({
+      x: domEvent.clientX,
+      y: domEvent.clientY
+    });
+    setHoveredMarker(marker);
   };
 
   return {

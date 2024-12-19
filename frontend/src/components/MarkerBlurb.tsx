@@ -5,7 +5,6 @@ import { getLocationImage } from '../utils/locationImage';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
-import { isMobileDevice } from '../utils/device';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -60,22 +59,22 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   }, [drop, latitude, longitude]);
 
   useEffect(() => {
-    if (isMobileDevice() && expanded) {
+    if (expanded) {
       setBlurbStyle({
-        position: 'fixed' as 'fixed',
+        position: 'fixed',
         left: '50%',
-        bottom: 20,
-        top: 'auto' as 'auto',
-        transform: 'translateX(-50%)',
-        maxHeight: '70vh',
-        overflowY: 'auto' as 'auto'
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        maxHeight: '80vh'
       });
     } else {
       setBlurbStyle({
-        position: 'absolute' as 'absolute',
+        position: 'fixed',
         left: position.x,
-        top: position.y,
-        transform: 'translate(-50%, -100%)'
+        top: position.y - 60,
+        transform: 'translate(-50%, -100%)',
+        maxHeight: '300px',
+        pointerEvents: 'none'
       });
     }
   }, [position, expanded]);

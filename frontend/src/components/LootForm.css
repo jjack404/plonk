@@ -16,7 +16,7 @@
   background-color: rgba(2, 9, 25, 0.85);
   backdrop-filter: blur(25px);
   border: .5px solid #fffbbd;
-  padding: 0 16px;
+  padding: 16px;
   border-radius: 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1001;
@@ -27,7 +27,6 @@
   border: .5px solid #fffbbd !important;
   width: 28px !important;
   height: 28px;
-  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,20 +35,21 @@
   aspect-ratio: 1/1;
   background-color: transparent;
   color: #fffbbd;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .loot-form-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 390px;
-  line-height: .8;
-  position: relative; /* Ensure positioning context for absolute elements */
+  margin-bottom: 16px;
 }
 
 .loot-form-header h2 {
-  margin: .5em auto .25em 0;
-
+  margin: 0;
+  line-height: 1;
 }
 
 .coordinates {
