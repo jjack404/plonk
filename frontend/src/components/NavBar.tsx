@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { WalletContext } from '../context/WalletContext';
-import { NavBarProps } from '../types';
 import { PiWalletDuotone, PiUserSquareDuotone } from "react-icons/pi";
+import { useModal } from '../context/ModalContext';
 import './NavBar.css';
 
-const NavBar: React.FC<NavBarProps> = ({ onProfileClick }) => {
+const NavBar: React.FC = () => {
   const { walletAddress } = useContext(WalletContext);
+  const { openModal } = useModal();
 
   return (
     <nav className="navbar">
@@ -15,7 +16,7 @@ const NavBar: React.FC<NavBarProps> = ({ onProfileClick }) => {
       </div>
       <div className="walletButton">
         {walletAddress && (
-          <button className="dashboard-button" onClick={onProfileClick}>
+          <button className="dashboard-button" onClick={() => openModal('profile')}>
             <PiUserSquareDuotone className="profile-icon" />
           </button>
         )}
