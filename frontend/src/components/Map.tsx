@@ -58,6 +58,8 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [localTxStatus, setLocalTxStatus] = useState<TransactionStatus | null>(null);
   const { setVisible } = useWalletModal();
+  const [visibleMarkers, setVisibleMarkers] = useState<Drop[]>([]);
+  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
 
   useEffect(() => {
     if (!dropsLoading && !dropsError) {
@@ -81,9 +83,14 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     handleCloseForm();
   }, [walletAddress, publicKey, connection, sendTransaction]);
 
-  const handleMapLoad = (map: google.maps.Map): void => {
+  const handleMapLoad = useCallback((map: google.maps.Map): void => {
     mapRef.current = map;
     setMapLoaded(true);
+    
+    const initialBounds = map.getBounds();
+    if (initialBounds) {
+      setBounds(initialBounds);
+    }
     
     const streetView = map.getStreetView();
     streetView.setOptions({
@@ -96,7 +103,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
       enableCloseButton: true,
       visible: false
     });
-  };
+  }, []);
 
   const handleClaimDrop = useCallback(async (drop: Drop) => {
     try {
@@ -143,6 +150,29 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const isLoading = !dropsLoaded || !mapLoaded;
 
+  const isMarkerInBounds = useCallback((marker: Drop, bounds: google.maps.LatLngBounds) => {
+    return bounds.contains({
+      lat: marker.position.lat,
+      lng: marker.position.lng
+    });
+  }, []);
+
+  useEffect(() => {
+    if (bounds && Array.isArray(drops)) {
+      const markersInView = drops.filter(marker => isMarkerInBounds(marker, bounds));
+      setVisibleMarkers(markersInView);
+    }
+  }, [bounds, drops, isMarkerInBounds]);
+
+  const handleBoundsChanged = useCallback(() => {
+    if (mapRef.current) {
+      const newBounds = mapRef.current.getBounds();
+      if (newBounds) {
+        setBounds(newBounds);
+      }
+    }
+  }, []);
+
   return (
     <>
       <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -172,8 +202,9 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
               strictBounds: true
             }
           }}
+          onBoundsChanged={handleBoundsChanged}
         >
-          {Array.isArray(drops) && window.google && drops.map((marker, index) => (
+          {Array.isArray(visibleMarkers) && window.google && visibleMarkers.map((marker, index) => (
             <MapMarker
               key={marker._id || index}
               marker={marker}
