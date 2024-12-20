@@ -5,16 +5,22 @@
     backdrop-filter: blur(25px);
     color: #fffbbd;
     border-radius: 0;
-    max-width: 375px;
-    max-height: 500px;
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 80%;
+    width: 80vw;
+    max-width: 500px;
     height: 66%;
     transform: translate(-50%, -50%);
     z-index: 1001;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        width: 90vw;
+        border-radius: 0;
+    }
 }
 
 .close-button {

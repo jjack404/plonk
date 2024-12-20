@@ -1,7 +1,8 @@
-import { Marker } from '@react-google-maps/api';
+import { OverlayView } from '@react-google-maps/api';
 import { Drop } from '../types';
-import pepeIcon from '../assets/pepe.png';
+import { PiMapPinDuotone } from "react-icons/pi";
 import { isMobileDevice } from '../utils/device';
+import React from 'react';
 
 interface MapMarkerProps {
   marker: Drop;
@@ -16,33 +17,59 @@ const MapMarker: React.FC<MapMarkerProps> = ({
   onMouseOut,
   onClick
 }) => {
-  const handleMarkerClick = (e: google.maps.MapMouseEvent) => {
+  const handleMarkerClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const syntheticEvent = {
+      latLng: new google.maps.LatLng(marker.position.lat, marker.position.lng),
+      domEvent: e.nativeEvent
+    } as google.maps.MapMouseEvent;
+    
     if (isMobileDevice()) {
-      // On mobile, trigger both position calculation and click
-      onMouseOver(marker, e);
-      onClick();
-    } else {
-      onClick();
+      onMouseOver(marker, syntheticEvent);
     }
+    onClick();
   };
 
-  const handleMouseOver = (e: google.maps.MapMouseEvent) => {
+  const handleMouseOver = (e: React.MouseEvent) => {
     if (!isMobileDevice()) {
-      onMouseOver(marker, e);
+      const syntheticEvent = {
+        latLng: new google.maps.LatLng(marker.position.lat, marker.position.lng),
+        domEvent: e.nativeEvent
+      } as google.maps.MapMouseEvent;
+      
+      onMouseOver(marker, syntheticEvent);
     }
   };
 
   return (
-    <Marker
+    <OverlayView
       position={marker.position}
-      icon={{
-        url: pepeIcon,
-        scaledSize: new window.google.maps.Size(32, 32),
-      }}
-      onMouseOver={handleMouseOver}
-      onMouseOut={() => !isMobileDevice() && onMouseOut()}
-      onClick={handleMarkerClick}
-    />
+      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+      getPixelPositionOffset={(width, height) => ({
+        x: -(width / 2),
+        y: -(height / 2)
+      })}
+    >
+      <div 
+        style={{ 
+          cursor: 'pointer',
+          fontSize: '32px',
+          color: '#fffbbd',
+          filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5))',
+          transform: 'translateY(-30px) translateX(-16px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '32px',
+          height: '32px'
+        }}
+        onClick={handleMarkerClick}
+        onMouseOver={handleMouseOver}
+        onMouseOut={() => !isMobileDevice() && onMouseOut()}
+      >
+        <PiMapPinDuotone />
+      </div>
+    </OverlayView>
   );
 };
 
