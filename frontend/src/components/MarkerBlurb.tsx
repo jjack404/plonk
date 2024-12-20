@@ -203,6 +203,12 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         ) : (
           <>
             {renderTokens()}
+            <div className="mini-location">
+              {drop.position.city && drop.position.country
+                ? `${drop.position.city}, ${drop.position.country}`
+                : drop.position.country || 
+                  `${drop.position.lat.toFixed(4)}, ${drop.position.lng.toFixed(4)}`}
+            </div>
           </>
         )}
       </div>

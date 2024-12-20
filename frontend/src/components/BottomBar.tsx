@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import './BottomBar.css';
-import { MdLocationOn, MdLocationOff } from 'react-icons/md';
+import { PiGpsDuotone, PiGpsSlashDuotone } from "react-icons/pi";
 
 const BottomBar: React.FC = () => {
   const { latitude, longitude } = useCurrentLocation();
@@ -10,15 +10,14 @@ const BottomBar: React.FC = () => {
   return (
     <div className="bottom-bar">
       <div className="location-status">
-        <div className={`status-circle ${isLocationActive ? 'active' : 'inactive'}`} />
         {isLocationActive ? (
           <div className="status-active">
-            <MdLocationOn />
+            <PiGpsDuotone />
             <span>Location Active</span>
           </div>
         ) : (
           <div className="status-inactive">
-            <MdLocationOff />
+            <PiGpsSlashDuotone />
             <span>Location Disabled</span>
           </div>
         )}
