@@ -1,12 +1,11 @@
 .marker-blurb {
-  background: var(--color-background-transparent);
+  background: var(--color-background-transparent-heavy);
   padding: 12px;
   color: var(--color-text);
   min-width: 200px;
   backdrop-filter: blur(5px);
-  border: .5px solid var(--color-text);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 999;
   margin-top: -30px;
   cursor: pointer;
   pointer-events: auto;
@@ -19,6 +18,13 @@
   cursor: default;
   width: 80dvw;
   max-width: 500px;
+  position: fixed;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-height: calc(100vh - 120px);
+  margin-top: 30px;
+  overflow-y: auto;
 }
 .marker-blurb h3 {
   margin: 0 0 8px 0;

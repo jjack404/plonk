@@ -100,7 +100,8 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
         left: '50%',
         top: '50%',
         transform: 'translate(-50%, -50%)',
-        maxHeight: '80vh'
+        maxHeight: 'calc(100vh - 120px)',
+        marginTop: '30px'
       });
     } else {
       setBlurbStyle({
