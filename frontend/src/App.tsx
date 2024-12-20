@@ -5,7 +5,6 @@ import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
 import UserProfile from './components/UserProfile';
 import { WalletContextType, TransactionStatus } from './types';
 import './App.css';
-import Notification from './components/Notification';
 import { DropsProvider } from './context/DropsContext';
 
 const App: React.FC = () => {
@@ -50,14 +49,6 @@ const App: React.FC = () => {
               )
             )}
           </WalletContext.Consumer>
-          {txStatus && (
-            <Notification 
-              type={txStatus.type}
-              txId={txStatus.txId}
-              message={txStatus.action === 'drop' ? 'Dropping loot...' : 'Claiming loot...'}
-              onClose={() => setTxStatus(null)}
-            />
-          )}
         </div>
       </DropsProvider>
     </WalletProviderWrapper>

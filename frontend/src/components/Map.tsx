@@ -56,6 +56,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const [dropsLoaded, setDropsLoaded] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [localTxStatus, setLocalTxStatus] = useState<TransactionStatus | null>(null);
   const { setVisible } = useWalletModal();
 
   useEffect(() => {
@@ -63,6 +64,11 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
       setDropsLoaded(true);
     }
   }, [dropsLoading, dropsError]);
+
+  const updateTxStatus = (status: TransactionStatus | null) => {
+    setTxStatus(status);
+    setLocalTxStatus(status);
+  };
 
   const handleCloseForm = (): void => {
     setShowForm(false);
@@ -79,7 +85,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     mapRef.current = map;
     setMapLoaded(true);
     
-    // Add a listener for Street View changes
     const streetView = map.getStreetView();
     streetView.setOptions({
       imageDateControl: false,
@@ -99,9 +104,8 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         throw new Error('Wallet not connected');
       }
       
-      setTxStatus({ type: 'pending', action: 'claim' });
+      updateTxStatus({ type: 'pending', action: 'claim' });
       
-      // Get partially signed transaction from backend
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/drops/${drop._id}/claim`,
         {},
@@ -117,7 +121,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         preflightCommitment: 'confirmed'
       });
 
-      setTxStatus({ type: 'pending', txId: signature });
+      updateTxStatus({ type: 'pending', txId: signature });
 
       await connection.confirmTransaction(signature, 'confirmed');
       
@@ -127,14 +131,13 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         { headers: { 'wallet-address': walletAddress } }
       );
 
-      // Update local drops state by filtering out the claimed drop
       setDrops(drops.filter(d => d._id !== drop._id));
 
-      setTxStatus({ type: 'success', txId: signature, action: 'claim' });
+      updateTxStatus({ type: 'success', txId: signature, action: 'claim' });
       setExpandedMarker(null);
     } catch (error) {
       console.error('Claim error:', error);
-      setTxStatus(null);
+      updateTxStatus(null);
     }
   };
 
@@ -204,14 +207,12 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
               position={formPosition}
               onClose={handleCloseForm}
               onSubmit={handleSubmitForm}
-              setTxStatus={setTxStatus}
+              setTxStatus={updateTxStatus}
             />
           )}
-
-          
         </GoogleMap>
       </LoadScript>
-      <BottomBar />
+      <BottomBar txStatus={localTxStatus} />
     </>
   );
 };

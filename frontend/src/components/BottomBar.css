@@ -74,4 +74,26 @@
 
 .help-button:hover {
   opacity: 0.8;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.history-button {
+  background: none;
+  border: none;
+  color: #5bef6a;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.history-button:hover {
+  color: #4bd659;
 } 

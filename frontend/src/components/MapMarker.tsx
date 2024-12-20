@@ -59,9 +59,7 @@ const MapMarker: React.FC<MapMarkerProps> = ({
           justifyContent: 'center',
           width: '32px',
           height: '32px',
-          position: 'relative',
-          willChange: 'transform',
-          transform: 'translate3d(0,0,0)'
+          position: 'relative'
         }}
         onClick={handleMarkerClick}
         onMouseOver={handleMouseOver}
