@@ -21,7 +21,7 @@ const getStaticMapUrl = (lat: number, lng: number): string => {
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
 };
 
-const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
+const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
   drop,
   position,
   expanded,
@@ -248,6 +248,14 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.drop?._id === nextProps.drop?._id &&
+    prevProps.position.x === nextProps.position.x &&
+    prevProps.position.y === nextProps.position.y &&
+    prevProps.expanded === nextProps.expanded &&
+    prevProps.walletAddress === nextProps.walletAddress
+  );
+});
 
 export default MarkerBlurb;

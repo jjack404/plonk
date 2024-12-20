@@ -8,12 +8,14 @@ interface NotificationProps {
   onClose: () => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({ message, type, txId, onClose }) => {
+const Notification: React.FC<NotificationProps> = React.memo(({
+  message,
+  type,
+  txId,
+  onClose
+}) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 6000);
-
+    const timer = setTimeout(onClose, 6000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
@@ -33,6 +35,12 @@ const Notification: React.FC<NotificationProps> = ({ message, type, txId, onClos
       <button className="close-button" onClick={onClose}>✕</button>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.message === nextProps.message &&
+    prevProps.type === nextProps.type &&
+    prevProps.txId === nextProps.txId
+  );
+});
 
 export default Notification;

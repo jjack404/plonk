@@ -1,8 +1,8 @@
+import React from 'react';
 import { OverlayView } from '@react-google-maps/api';
 import { Drop } from '../types';
 import { PiMapPinDuotone } from "react-icons/pi";
 import { isMobileDevice } from '../utils/device';
-import React from 'react';
 
 interface MapMarkerProps {
   marker: Drop;
@@ -71,4 +71,11 @@ const MapMarker: React.FC<MapMarkerProps> = ({
   );
 };
 
-export default MapMarker;
+// Memoize with custom comparison
+export default React.memo(MapMarker, (prevProps, nextProps) => {
+  return (
+    prevProps.marker._id === nextProps.marker._id &&
+    prevProps.marker.position.lat === nextProps.marker.position.lat &&
+    prevProps.marker.position.lng === nextProps.marker.position.lng
+  );
+});

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { WalletContext } from '../context/WalletContext';
 import { Drop, Position } from '../types';
@@ -75,11 +75,11 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     setFormPosition(null);
   };
 
-  const handleSubmitForm = async (data: Drop): Promise<void> => {
+  const handleSubmitForm = useCallback(async (data: Drop): Promise<void> => {
     if (!formPosition) return;
     setDrops(drops.concat(data));
     handleCloseForm();
-  };
+  }, [walletAddress, publicKey, connection, sendTransaction]);
 
   const handleMapLoad = (map: google.maps.Map): void => {
     mapRef.current = map;
@@ -98,7 +98,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     });
   };
 
-  const handleClaimDrop = async (drop: Drop) => {
+  const handleClaimDrop = useCallback(async (drop: Drop) => {
     try {
       if (!walletAddress || !publicKey) {
         throw new Error('Wallet not connected');
@@ -139,7 +139,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
       console.error('Claim error:', error);
       updateTxStatus(null);
     }
-  };
+  }, [walletAddress, publicKey, connection, sendTransaction, updateTxStatus]);
 
   const isLoading = !dropsLoaded || !mapLoaded;
 

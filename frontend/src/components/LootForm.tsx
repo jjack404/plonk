@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FormEvent, KeyboardEvent, ChangeEvent } from 'react';
+import React, { useState, useEffect, useContext, FormEvent, KeyboardEvent, ChangeEvent, useCallback } from 'react';
 import { WalletContext } from '../context/WalletContext';
 import { LootFormProps, Token, WalletContextType } from '../types';
 import axios from 'axios';
@@ -8,7 +8,12 @@ import { createDropTransaction } from '../utils/solanaTransactions';
 import { getLocationImage } from '../utils/locationImage';
 import PanoramaView from './PanoramaView';
 
-const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxStatus }) => {
+const LootForm: React.FC<LootFormProps> = React.memo(({
+  position,
+  onClose,
+  onSubmit,
+  setTxStatus
+}) => {
   const { walletAddress } = useContext<WalletContextType>(WalletContext);
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
@@ -50,34 +55,21 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
     }
   }, [position]);
 
-  const handleTokenClick = (token: Token): void => {
-    setSelectedTokens((prevSelectedTokens) => {
-      if (prevSelectedTokens.includes(token)) {
-        return prevSelectedTokens.filter((t) => t !== token);
-      } else {
-        return [...prevSelectedTokens, token];
+  const handleTokenClick = useCallback((token: Token) => {
+    setSelectedTokens(prev => {
+      if (prev.includes(token)) {
+        return prev.filter(t => t !== token);
       }
+      return [...prev, token];
     });
-  };
+  }, []);
 
-  const handleAmountChange = (token: Token, amount: string): void => {
-    let parsedAmount = parseFloat(amount);
-    
-    // Handle empty or invalid input
-    if (isNaN(parsedAmount)) {
-      parsedAmount = 0;
-    }
-    
-    // For NFTs, ensure whole numbers
-    if (token.isNFT) {
-      parsedAmount = Math.floor(parsedAmount);
-    }
-    
-    setTokenAmounts((prevAmounts) => ({
-      ...prevAmounts,
-      [token.mint]: parsedAmount,
+  const handleAmountChange = useCallback((mint: string, amount: number) => {
+    setTokenAmounts(prev => ({
+      ...prev,
+      [mint]: amount
     }));
-  };
+  }, []);
 
   const isAmountValid = (): boolean => {
     return selectedTokens.every(token => {
@@ -306,7 +298,7 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
                                 type="number"
                                 className="fungible-input"
                                 value={tokenAmounts[token.mint] || ''}
-                                onChange={(e) => handleAmountChange(token, e.target.value)}
+                                onChange={(e) => handleAmountChange(token.mint, parseFloat(e.target.value))}
                                 onKeyDown={preventNegativeInput}
                                 min="0.001"
                                 step="0.001"
@@ -345,6 +337,11 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.position.lat === nextProps.position.lat &&
+    prevProps.position.lng === nextProps.position.lng
+  );
+});
 
 export default LootForm;

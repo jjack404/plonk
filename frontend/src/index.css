@@ -19,11 +19,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  /* Primary Colors */
-  --color-background: #020919;
-  --color-text: #fffbbd;
+  /* Theme Colors */
+  --color-primary: #020919;
+  --color-secondary: #fffbbd;
+  
+  /* Semantic Colors */
+  --color-background: var(--color-primary);
+  --color-text: var(--color-secondary);
+  
+  /* Status Colors */
   --color-success: #5bef6a;
   --color-error: #ff6b6b;
+  
+  /* Opacity Variants */
+  --color-background-85: rgba(2, 9, 25, 0.85);
+  --color-background-95: rgba(2, 9, 25, 0.95);
   
   /* Background Variations */
   --color-background-transparent: rgba(2, 9, 25, 0.85);
