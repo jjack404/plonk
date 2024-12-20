@@ -14,9 +14,9 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(2, 9, 25, 0.7);
-    border: .5px solid #fffbbd;
-    color: #fffbbd;
+    background: var(--color-background-transparent);
+    border: .5px solid var(--color-text);
+    color: var(--color-text);
     padding: 8px;
     cursor: pointer;
     font-size: 16px;
@@ -25,7 +25,7 @@
   }
   
   .panorama-button:hover {
-    background: rgba(2, 9, 25, 0.9);
+    background: var(--color-background-transparent-heavy);
   }
   
   .panorama-button.left {

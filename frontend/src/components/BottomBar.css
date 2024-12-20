@@ -4,65 +4,54 @@
   align-items: center;
   height: 48px;
   padding: 0 12px;
-  background-color: #020919;
-  color: white;
+  background-color: var(--color-background);
+  color: var(--color-text);
   position: fixed;
   bottom: 0;
   width: 100%;
   z-index: 1000;
 }
-
 .location-status {
   display: flex;
   align-items: center;
   font-size: 12px;
 }
-
 .status-active, .status-inactive {
   display: flex;
   align-items: center;
   gap: 4px;
 }
-
 .status-active {
-  color: #5bef6a;
+  color: var(--color-success);
 }
-
 .status-inactive {
-  color: #ff6b6b;
+  color: var(--color-error);
 }
-
 .status-active svg, .status-inactive svg {
   font-size: 16px;
 }
-
 .status-active span, .status-inactive span {
   display: none;
 }
-
 @media (min-width: 768px) {
   .bottom-bar {
-    height: 60px;
-    padding: 0 1em;
-  }
-
+      height: 60px;
+      padding: 0 1em;
+ }
   .location-status {
-    font-size: 14px;
-  }
-
+      font-size: 14px;
+ }
   .status-active svg, .status-inactive svg {
-    font-size: 20px;
-  }
-
+      font-size: 20px;
+ }
   .status-active span, .status-inactive span {
-    display: inline;
-  }
+      display: inline;
+ }
 }
-
 .help-button {
   background: none;
   border: none;
-  color: #fffbbd;
+  color: var(--color-text);
   font-size: 24px;
   cursor: pointer;
   padding: 8px;
@@ -71,20 +60,17 @@
   justify-content: center;
   transition: opacity 0.2s ease;
 }
-
 .help-button:hover {
   opacity: 0.8;
 }
-
 .button-group {
   display: flex;
   gap: 8px;
 }
-
 .history-button {
   background: none;
   border: none;
-  color: #5bef6a;
+  color: var(--color-success);
   cursor: pointer;
   padding: 8px;
   font-size: 20px;
@@ -93,7 +79,6 @@
   justify-content: center;
   transition: all 0.2s ease;
 }
-
 .history-button:hover {
-  color: #4bd659;
-} 
+  opacity: 0.8;
+}

@@ -18,6 +18,31 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Primary Colors */
+  --color-background: #020919;
+  --color-text: #fffbbd;
+  --color-success: #5bef6a;
+  --color-error: #ff6b6b;
+  
+  /* Background Variations */
+  --color-background-transparent: rgba(2, 9, 25, 0.85);
+  --color-background-transparent-heavy: rgba(2, 9, 25, 0.95);
+  
+  /* Border Colors */
+  --color-border: #fffbbd;
+  --color-border-transparent: rgba(255, 251, 189, 0.2);
+  
+  /* Marker Colors */
+  --color-marker: #2eb344;
+  
+  /* UI Element Colors */
+  --color-input-background: rgba(255, 255, 255, 0.05);
+  --color-overlay-background: rgba(26, 27, 30, 0.95);
+  
+  /* Text Colors */
+  --color-text-muted: #999;
+  --color-text-secondary: #ccc;
 }
 
 body {

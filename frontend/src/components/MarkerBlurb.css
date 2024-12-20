@@ -1,70 +1,60 @@
 .marker-blurb {
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--color-background-transparent);
   padding: 12px;
-  color: white;
+  color: var(--color-text);
   min-width: 200px;
   backdrop-filter: blur(5px);
-  border: .5px solid #fffbbd;
+  border: .5px solid var(--color-text);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   margin-top: -30px;
   cursor: pointer;
   pointer-events: auto;
 }
-
 .marker-blurb:not(.expanded) {
   pointer-events: none;
 }
-
 .marker-blurb.expanded {
   pointer-events: auto;
   cursor: default;
   width: 80dvw;
   max-width: 500px;
 }
-
 .marker-blurb h3 {
   margin: 0 0 8px 0;
   font-size: 16px;
 }
-
 .marker-blurb .description {
   margin: 8px 0;
   font-size: 14px;
-  color: #ccc;
+  color: var(--color-text-secondary);
 }
-
 .token-preview {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
 .token-item {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .token-item img {
   width: 24px;
   height: 24px;
   border-radius: 0%;
 }
-
 .drop-info {
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-muted);
 }
-
 .location-image {
   overflow: hidden;
   height: 150px;
 }
-
 .location-image img {
   width: 100%;
   height: 100%;
@@ -75,52 +65,46 @@
   user-select: none;
   pointer-events: none;
 }
-
 .claim-button {
   width: 100%;
   padding: 8px;
   margin-top: 12px;
-  border: .5px solid #5bef6a;
-  background: #5bef6a;
-  color: #020919;
+  border: .5px solid var(--color-success);
+  background: var(--color-success);
+  color: var(--color-background);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 .claim-button:hover {
-  background: #4bd659 !important; 
-  color: #020919 !important;
+  background: var(--color-success) !important;
+  color: var(--color-background) !important;
+  opacity: 0.9;
 }
-
 .enable-location-button {
   margin-top: 8px;
   padding: 6px 12px;
-  background: #4a4a4a;
-  border: 1px solid #666;
-  color: white;
+  background: var(--color-input-background);
+  border: 1px solid var(--color-border-transparent);
+  color: var(--color-text);
   font-size: 12px;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
 }
-
 .enable-location-button:hover {
   background: #5a5a5a;
 }
-
 .distance-warning {
   margin-top: 12px;
   text-align: center;
 }
-
 .distance-warning p {
   font-size: 12px;
-  color: #ff6b6b;
+  color: var(--color-error);
   margin-bottom: 8px;
 }
-
 .location-checking {
   margin-top: 12px;
   text-align: center;
@@ -128,80 +112,72 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  color: #ccc;
+  color: var(--color-text-secondary);
   gap: 8px;
 }
-
 .location-checking p {
   font-size: 12px;
   margin-top: 8px;
   line-height: 0;
 }
-
 .mini-loader {
   width: 16px;
   height: 16px;
-  border: 2px solid #333;
-  border-top: 2px solid #5bef6a;
+  border: 2px solid var(--color-border-transparent);
+  border-top: 2px solid var(--color-success);
   border-radius: 50%;
   margin: 0;
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+      transform: rotate(0deg);
+ }
+  100% {
+      transform: rotate(360deg);
+ }
 }
-
 @media (max-width: 768px) {
   .marker-blurb.expanded {
-    width: 90vw;
-    border-radius: 0;
-  }
-  
+      width: 90vw;
+      border-radius: 0;
+ }
   .marker-blurb-content {
-    max-height: 60vh;
-  }
+      max-height: 60vh;
+ }
 }
-
 .wallet-connect {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
-
 .wallet-icon {
   font-size: 1.2em;
 }
-
 .drop-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
-
 .drop-value {
-  color: #5bef6a;
+  color: var(--color-success);
   font-size: 14px;
   font-weight: bold;
 }
-
 .distance-display {
   text-align: center;
   margin-top: 12px;
-  color: #999;
+  color: var(--color-text-muted);
   font-size: 16px;
 }
-
 .distance-display span {
-  color: #ff6b6b;
+  color: var(--color-error);
   font-weight: bold;
 }
-
 .distance-display .unit {
-  color: #999;
+  color: var(--color-text-muted);
   font-size: 14px;
   margin-left: 4px;
 }

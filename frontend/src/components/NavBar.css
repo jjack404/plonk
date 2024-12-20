@@ -5,7 +5,7 @@
   max-width: 100%;
   padding: 0 0.5em; /* Adjust padding to ensure content is centered */
   background-color: transparent;
-  color: white;
+  color: var(--color-text);
   height: 30px; /* Set a fixed height */
   box-sizing: border-box; /* Ensure padding is included in the height */
 }
@@ -23,7 +23,7 @@
 .logo h1 {
   display: flex;
   font-size: 20px;
-  color: #fffbbd;
+  color: var(--color-text);
   margin: 0;
   padding: 0;
   letter-spacing: 0.1em;
@@ -36,7 +36,7 @@
 }
 
 .dashboard-button {
-  background-color: #020919;
+  background-color: var(--color-background);
   display: flex;
   align-items: center;
   width: auto;
@@ -48,7 +48,7 @@
 .dashboard-button .profile-icon {
   height: 25.65px;
   width: 25.65px;
-  color: #fffbbd;
+  color: var(--color-text);
 }
 
 .wallet-adapter-button-start-icon {
@@ -66,8 +66,8 @@
   height: 15px;
   margin: 0;
   padding: 0;
-  background-color: #020919;
-  color: white;
+  background-color: var(--color-background);
+  color: var(--color-text);
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -75,8 +75,8 @@
 
 /* Wallet Button */
 .wallet-adapter-button {
-  background: #020919 !important;
-  color: #fffbbd !important;
+  background: var(--color-background) !important;
+  color: var(--color-text) !important;
   border-radius: 0 !important;
   padding: 0 8px !important;
   font-family: "TheGoodMonolith" !important;
@@ -87,7 +87,7 @@
 
 .wallet-adapter-button-trigger .wallet-icon {
   font-size: 1.2em;
-  color: #fffbbd;
+  color: var(--color-text);
 }
 
 @media (min-width: 768px) {
@@ -126,5 +126,5 @@
   left: -18px;
   z-index: 1;
   font-size: 1.2em;
-  color: #fffbbd;
+  color: var(--color-text);
 }

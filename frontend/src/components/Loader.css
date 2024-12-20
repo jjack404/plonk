@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(26, 27, 30, 0.95);
+  background: var(--color-overlay-background);
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
@@ -14,7 +14,7 @@
 
 .loader-content {
   text-align: center;
-  color: #fffbbd;
+  color: var(--color-text);
   font-family: 'TheGoodMonolith', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-size: 12px;
 }
@@ -36,12 +36,12 @@
 .pixel {
   width: 28px;
   height: 28px;
-  background-color: rgba(255, 251, 189, 0.2);
+  background-color: var(--color-border-transparent);
   transition: background-color 0.15s steps(1);
 }
 
 .pixel.active {
-  background-color: #fffbbd;
+  background-color: var(--color-text);
 }
 
 /* Position pixels in a circle, excluding center */
