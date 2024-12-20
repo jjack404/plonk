@@ -12,6 +12,8 @@ interface MarkerBlurbProps {
   expanded: boolean;
   onExpand: () => void;
   onClaim?: (drop: Drop) => void;
+  walletAddress: string | null;
+  onConnectWallet: () => void;
 }
 
 const getStaticMapUrl = (lat: number, lng: number): string => {
@@ -23,7 +25,9 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   position,
   expanded,
   onExpand,
-  onClaim
+  onClaim,
+  walletAddress,
+  onConnectWallet
 }) => {
   const { latitude, longitude } = useCurrentLocation();
   const [isInRange, setIsInRange] = useState(false);
@@ -103,6 +107,44 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     </ul>
   );
 
+  const renderClaimButton = () => {
+    if (!walletAddress) {
+      return (
+        <button 
+          className="claim-button"
+          onClick={onConnectWallet}
+        >
+          Select Wallet
+        </button>
+      );
+    }
+
+    if (latitude === null || longitude === null) {
+      return (
+        <div className="distance-warning">
+          <p>Please enable location services to see if you can claim</p>
+        </div>
+      );
+    }
+
+    if (!isInRange) {
+      return (
+        <div className="distance-warning">
+          <p>You must be within 1 mile of the drop location to claim it</p>
+        </div>
+      );
+    }
+
+    return (
+      <button 
+        className="claim-button"
+        onClick={() => drop && onClaim?.(drop)}
+      >
+        Claim Drop
+      </button>
+    );
+  };
+
   return (
     <div
       className={`marker-blurb ${expanded ? 'expanded' : ''}`}
@@ -141,20 +183,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
                   : drop.position.country || 'Unknown Location'}
               </span>
             </div>
-            {isInRange && expanded && onClaim && (
-              <button className="claim-button" onClick={() => onClaim(drop)}>
-                Claim Drop
-              </button>
-            )}
-            {!isInRange && expanded && (
-              <div className="distance-warning">
-                {latitude === null && longitude === null ? (
-                  <p>Please enable location services to see if you can claim</p>
-                ) : (
-                  <p>You must be within 1 mile of the drop location to claim it</p>
-                )}
-              </div>
-            )}
+            {renderClaimButton()}
           </>
         ) : (
           <>

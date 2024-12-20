@@ -15,6 +15,8 @@ import { Transaction } from '@solana/web3.js';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
 import Loader from './Loader';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import BottomBar from './BottomBar';
 
 interface TransactionStatus {
   type: 'pending' | 'success';
@@ -28,7 +30,7 @@ interface MapProps {
 
 const containerStyle: React.CSSProperties = {
   width: '100%',
-  height: '100%'
+  height: 'calc(100% - 48px)'
 };
 
 const center: Position = {
@@ -59,6 +61,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const [dropsLoaded, setDropsLoaded] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const { setVisible } = useWalletModal();
 
   useEffect(() => {
     if (!dropsLoading && !dropsError) {
@@ -143,72 +146,77 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   const isLoading = !dropsLoaded || !mapLoaded;
 
   return (
-    <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <Loader isLoading={isLoading} />
-      {dropsError && <div className="error-message">{dropsError}</div>}
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        mapContainerClassName={`map-container ${isLoading ? 'loading' : ''}`}
-        center={center}
-        zoom={2}
-        onLoad={handleMapLoad}
-        onClick={handleMapClick}
-        onRightClick={handleMapRightClick}
-        options={{ 
-          styles: mapStyles, 
-          fullscreenControl: false,
-          clickableIcons: false,
-          streetViewControl: true,
-          minZoom: 2,
-          maxZoom: 18,
-          restriction: {
-            latLngBounds: {
-              north: 85,
-              south: -85,
-              west: -180,
-              east: 180
-            },
-            strictBounds: true
-          }
-        }}
-      >
-        {Array.isArray(drops) && window.google && drops.map((marker, index) => (
-          <MapMarker
-            key={marker._id || index}
-            marker={marker}
-            onMouseOver={handleMarkerMouseOver}
-            onMouseOut={() => !isMobileDevice() && setHoveredMarker(null)}
-            onClick={() => {
-              if (isMobileDevice()) {
-                setExpandedMarker(marker);
-                setHoveredMarker(null);
-              } else {
-                setExpandedMarker(expandedMarker === marker ? null : marker);
-              }
-            }}
-          />
-        ))}
-        
-        {(hoveredMarker || expandedMarker) && markerPosition && (
-          <MarkerBlurb
-            drop={expandedMarker || hoveredMarker}
-            position={markerPosition}
-            expanded={!!expandedMarker}
-            onExpand={() => setExpandedMarker(hoveredMarker)}
-            onClaim={handleClaimDrop}
-          />
-        )}
+    <>
+      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+        <Loader isLoading={isLoading} />
+        {dropsError && <div className="error-message">{dropsError}</div>}
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          mapContainerClassName={`map-container ${isLoading ? 'loading' : ''}`}
+          center={center}
+          zoom={2}
+          onLoad={handleMapLoad}
+          onClick={handleMapClick}
+          onRightClick={handleMapRightClick}
+          options={{ 
+            styles: mapStyles, 
+            fullscreenControl: false,
+            clickableIcons: false,
+            streetViewControl: true,
+            minZoom: 2,
+            maxZoom: 18,
+            restriction: {
+              latLngBounds: {
+                north: 85,
+                south: -85,
+                west: -180,
+                east: 180
+              },
+              strictBounds: true
+            }
+          }}
+        >
+          {Array.isArray(drops) && window.google && drops.map((marker, index) => (
+            <MapMarker
+              key={marker._id || index}
+              marker={marker}
+              onMouseOver={handleMarkerMouseOver}
+              onMouseOut={() => !isMobileDevice() && setHoveredMarker(null)}
+              onClick={() => {
+                if (isMobileDevice()) {
+                  setExpandedMarker(marker);
+                  setHoveredMarker(null);
+                } else {
+                  setExpandedMarker(expandedMarker === marker ? null : marker);
+                }
+              }}
+            />
+          ))}
+          
+          {(hoveredMarker || expandedMarker) && markerPosition && (
+            <MarkerBlurb
+              drop={expandedMarker || hoveredMarker}
+              position={markerPosition}
+              expanded={!!expandedMarker}
+              onExpand={() => setExpandedMarker(hoveredMarker)}
+              onClaim={handleClaimDrop}
+              walletAddress={walletAddress}
+              onConnectWallet={() => setVisible(true)}
+            />
+          )}
 
-        {showForm && formPosition && (
-          <LootForm
-            position={formPosition}
-            onClose={handleCloseForm}
-            onSubmit={handleSubmitForm}
-            setTxStatus={setTxStatus}
-          />
-        )}
-      </GoogleMap>
-    </LoadScript>
+          {showForm && formPosition && (
+            <LootForm
+              position={formPosition}
+              onClose={handleCloseForm}
+              onSubmit={handleSubmitForm}
+              setTxStatus={setTxStatus}
+            />
+          )}
+        </GoogleMap>
+      </LoadScript>
+      <BottomBar />
+    </>
   );
 };
 
