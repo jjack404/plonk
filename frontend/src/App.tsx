@@ -3,13 +3,12 @@ import NavBar from './components/NavBar';
 import Map from './components/Map';
 import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
 import UserProfile from './components/UserProfile';
-import { WalletContextType, TransactionStatus } from './types';
+import { WalletContextType } from './types';
 import './App.css';
 import { DropsProvider } from './context/DropsContext';
 
 const App: React.FC = () => {
   const [showProfile, setShowProfile] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState<TransactionStatus | null>(null);
 
   const handleProfileClick = (): void => {
     setShowProfile(!showProfile);
@@ -38,7 +37,7 @@ const App: React.FC = () => {
         <div className="app-container">
           <NavBar onProfileClick={handleProfileClick} />
           <div className="map-wrapper">
-            <Map setTxStatus={setTxStatus} />
+            <Map setTxStatus={() => {}} />
           </div>
           <WalletContext.Consumer>
             {({ walletAddress, profile }: WalletContextType) => (
