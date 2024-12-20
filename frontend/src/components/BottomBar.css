@@ -11,43 +11,55 @@
   width: 100%;
   z-index: 1000;
 }
+
 .location-status {
   display: flex;
   align-items: center;
   font-size: 12px;
 }
-.status-active, .status-inactive {
+.status-active,
+.status-inactive {
   display: flex;
   align-items: center;
   gap: 4px;
 }
+
 .status-active {
   color: var(--color-success);
 }
+
 .status-inactive {
   color: var(--color-error);
 }
-.status-active svg, .status-inactive svg {
+
+.status-active svg,
+.status-inactive svg {
   font-size: 16px;
 }
-.status-active span, .status-inactive span {
+
+.status-active span,
+.status-inactive span {
   display: none;
 }
+
 @media (min-width: 768px) {
   .bottom-bar {
-      height: 60px;
-      padding: 0 1em;
- }
+    height: 60px;
+    padding: 0 1em;
+  }
   .location-status {
-      font-size: 14px;
- }
-  .status-active svg, .status-inactive svg {
-      font-size: 20px;
- }
-  .status-active span, .status-inactive span {
-      display: inline;
- }
+    font-size: 14px;
+  }
+  .status-active svg,
+  .status-inactive svg {
+    font-size: 20px;
+  }
+  .status-active span,
+  .status-inactive span {
+    display: inline;
+  }
 }
+
 .help-button {
   background: none;
   border: none;
@@ -60,13 +72,16 @@
   justify-content: center;
   transition: opacity 0.2s ease;
 }
+
 .help-button:hover {
   opacity: 0.8;
 }
+
 .button-group {
   display: flex;
   gap: 8px;
 }
+
 .history-button {
   background: none;
   border: none;
@@ -79,6 +94,11 @@
   justify-content: center;
   transition: all 0.2s ease;
 }
+
 .history-button:hover {
   opacity: 0.8;
+}
+
+.icon-default {
+  color: var(--color-text);
 }

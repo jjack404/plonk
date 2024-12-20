@@ -58,16 +58,16 @@ const BottomBar: React.FC<BottomBarProps> = ({ txStatus, setLocalTxStatus }) => 
       )}
       <div className="button-group">
         <button className="help-button">
-          <PiClockCounterClockwiseDuotone style={{ color: '#fffbbd' }} />
+          <PiClockCounterClockwiseDuotone className="icon-default" />
         </button>
         <button className="help-button">
-          <PiBellDuotone style={{ color: '#fffbbd' }} />
+          <PiBellDuotone className="icon-default" />
         </button>
         <button className="help-button">
           <PiSealQuestionDuotone />
         </button>
         <button className="help-button">
-          <PiGearDuotone style={{ color: '#fffbbd' }} />
+          <PiGearDuotone className="icon-default" />
         </button>
       </div>
     </div>

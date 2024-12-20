@@ -52,7 +52,7 @@ const MapMarker: React.FC<MapMarkerProps> = ({
         style={{ 
           cursor: 'pointer',
           fontSize: '32px',
-          color: '#2eb344',
+          color: 'var(--color-success)',
           filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7))',
           display: 'flex',
           alignItems: 'center',
@@ -65,7 +65,7 @@ const MapMarker: React.FC<MapMarkerProps> = ({
         onMouseOver={handleMouseOver}
         onMouseOut={() => !isMobileDevice() && onMouseOut()}
       >
-        <PiMapPinDuotone style={{ color: '#2eb344' }}/>
+        <PiMapPinDuotone style={{ color: 'var(--color-success)' }}/>
       </div>
     </OverlayView>
   );
