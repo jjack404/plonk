@@ -5,6 +5,7 @@ import { getLocationImage } from '../utils/locationImage';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
+import { PiWalletDuotone } from "react-icons/pi";
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -115,10 +116,11 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     if (!walletAddress) {
       return (
         <button 
-          className="claim-button"
+          className="claim-button wallet-connect"
           onClick={onConnectWallet}
         >
-          Select Wallet
+          <PiWalletDuotone className="wallet-icon" />
+          <span>Select Wallet</span>
         </button>
       );
     }

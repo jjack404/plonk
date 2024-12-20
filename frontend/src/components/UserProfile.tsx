@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { WalletContext } from '../context/WalletContext';
 import { UserProfileProps, WalletContextType } from '../types';
+import { PiPencilDuotone, PiCheck } from "react-icons/pi";
 import './UserProfile.css';
 
 const UserProfile: React.FC<UserProfileProps> = ({ walletAddress, profile, onClose }) => {
@@ -50,11 +51,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ walletAddress, profile, onClo
           <>
             {isEditing ? (
               <>
-                <button className="edit-button save" onClick={handleSaveClick}>✔</button>
+                <button className="edit-button save" onClick={handleSaveClick}><PiCheck /></button>
                 <button className="edit-button cancel" onClick={handleCancelClick}>⃠</button>
               </>
             ) : (
-              <button className="edit-button edit-pencil" onClick={handleEditClick}>✎</button>
+              <button className="edit-button edit-pencil" onClick={handleEditClick}>
+                <PiPencilDuotone />
+              </button>
             )}
           </>
         )}

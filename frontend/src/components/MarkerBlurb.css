@@ -157,3 +157,14 @@
     overflow-y: auto;
   }
 }
+
+.wallet-connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.wallet-icon {
+  font-size: 1.2em;
+}
