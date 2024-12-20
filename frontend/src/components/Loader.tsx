@@ -11,7 +11,7 @@ const Loader: React.FC<LoaderProps> = ({ isLoading }) => {
   useEffect(() => {
     if (isLoading) {
       const interval = setInterval(() => {
-        setActivePixel((prev) => (prev + 1) % 8);
+        setActivePixel((prev) => (prev + 1) % 9);
       }, 150);
       return () => clearInterval(interval);
     }
@@ -23,7 +23,7 @@ const Loader: React.FC<LoaderProps> = ({ isLoading }) => {
     <div className="loader-overlay">
       <div className="loader-content">
         <div className="pixel-loader">
-          {[...Array(8)].map((_, index) => (
+          {[...Array(9)].map((_, index) => (
             <div 
               key={index} 
               className={`pixel ${index === activePixel ? 'active' : ''}`}
