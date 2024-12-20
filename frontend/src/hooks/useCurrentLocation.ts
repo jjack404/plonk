@@ -1,62 +1,41 @@
 import { useState, useEffect } from 'react';
-import { isMobileDevice } from '../utils/device';
-
-interface LocationState {
-  latitude: number | null;
-  longitude: number | null;
-  error: string | null;
-}
 
 export const useCurrentLocation = () => {
-  const [location, setLocation] = useState<LocationState>({
-    latitude: null,
-    longitude: null,
-    error: null
-  });
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
 
   useEffect(() => {
-    const requestLocation = async () => {
-      if (!navigator.geolocation) {
-        setLocation(prev => ({ ...prev, error: 'Geolocation is not supported' }));
-        return;
-      }
+    let watchId: number;
 
-      try {
-        // Request permission explicitly on mobile
-        if (isMobileDevice()) {
-          const permission = await navigator.permissions.query({ name: 'geolocation' });
-          if (permission.state === 'denied') {
-            setLocation(prev => ({ ...prev, error: 'Location permission denied' }));
-            return;
-          }
-        }
-
-        const watchId = navigator.geolocation.watchPosition(
+    const setupLocationWatch = () => {
+      if ('geolocation' in navigator) {
+        // Get initial position quickly
+        navigator.geolocation.getCurrentPosition(
           (position) => {
-            setLocation({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              error: null
-            });
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
           },
-          (error) => {
-            setLocation(prev => ({ ...prev, error: error.message }));
-          },
-          {
-            enableHighAccuracy: true,
-            maximumAge: 30000,
-            timeout: 27000
-          }
+          (error) => console.error('Error getting location:', error),
+          { maximumAge: 0, timeout: 5000, enableHighAccuracy: true }
         );
 
-        return () => navigator.geolocation.clearWatch(watchId);
-      } catch (error) {
-        setLocation(prev => ({ ...prev, error: 'Failed to get location' }));
+        // Then watch for updates
+        watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+          },
+          (error) => console.error('Error watching location:', error),
+          { maximumAge: 0, timeout: 5000, enableHighAccuracy: true }
+        );
       }
     };
 
-    requestLocation();
+    setupLocationWatch();
+    return () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+    };
   }, []);
 
-  return location;
+  return { latitude, longitude };
 };

@@ -169,3 +169,16 @@
 .wallet-icon {
   font-size: 1.2em;
 }
+
+.drop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.drop-value {
+  color: #5bef6a;
+  font-size: 14px;
+  font-weight: bold;
+}

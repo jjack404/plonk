@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Drop } from '../types';
 import './MarkerBlurb.css';
 import { getLocationImage } from '../utils/locationImage';
@@ -6,6 +6,7 @@ import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
 import { PiWalletDuotone } from "react-icons/pi";
+import axios from 'axios';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -19,6 +20,16 @@ interface MarkerBlurbProps {
 
 const getStaticMapUrl = (lat: number, lng: number): string => {
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+};
+
+const fetchSolPrice = async (): Promise<number> => {
+  try {
+    const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+    return response.data.solana.usd;
+  } catch (error) {
+    console.error('Error fetching SOL price:', error);
+    return 0;
+  }
 };
 
 const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
@@ -44,6 +55,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     top: position.y,
     transform: 'translate(-50%, -100%)'
   });
+  const [estimatedValue, setEstimatedValue] = useState<number>(0);
 
   useEffect(() => {
     if (expanded && drop) {
@@ -51,21 +63,29 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     }
   }, [expanded, drop]);
 
-  useEffect(() => {
-    if (drop) {
-      setIsCheckingLocation(true);
-      if (latitude !== null && longitude !== null) {
-        const distance = calculateDistance(
-          latitude,
-          longitude,
-          drop.position.lat,
-          drop.position.lng
-        );
-        setIsInRange(distance <= 1);
-      }
+  const checkLocation = useCallback(() => {
+    if (drop && latitude !== null && longitude !== null) {
+      const distance = calculateDistance(
+        latitude,
+        longitude,
+        drop.position.lat,
+        drop.position.lng
+      );
+      setIsInRange(distance <= 1);
       setIsCheckingLocation(false);
     }
   }, [drop, latitude, longitude]);
+
+  useEffect(() => {
+    checkLocation();
+  }, [checkLocation]);
+
+  useEffect(() => {
+    if (expanded) {
+      const intervalId = setInterval(checkLocation, 2000);
+      return () => clearInterval(intervalId);
+    }
+  }, [expanded, checkLocation]);
 
   useEffect(() => {
     if (expanded) {
@@ -87,6 +107,23 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
       });
     }
   }, [position, expanded]);
+
+  useEffect(() => {
+    const calculateValue = async () => {
+      if (drop) {
+        const solPrice = await fetchSolPrice();
+        const value = drop.tokens.reduce((total, token) => {
+          if (token.symbol?.toLowerCase() === 'sol') {
+            return total + ((token.amount / Math.pow(10, token.decimals)) * solPrice);
+          }
+          return total;
+        }, 0);
+        setEstimatedValue(value);
+      }
+    };
+    
+    calculateValue();
+  }, [drop]);
 
   if (!drop) return null;
 
@@ -172,7 +209,11 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
       <div className="marker-blurb-content">
         {expanded ? (
           <>
-            {expanded && locationData && (
+            <div className="drop-header">
+              <h3>{drop.title}</h3>
+              <span className="drop-value">${estimatedValue.toFixed(2)}</span>
+            </div>
+            {locationData && (
               <div className="location-image">
                 {locationData.type === 'panorama' && locationData.location ? (
                   <PanoramaView 
@@ -187,7 +228,6 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
                 )}
               </div>
             )}
-            <h3>{drop.title}</h3>
             {renderTokens()}
             <p className="description">{drop.description}</p>
             <div className="drop-info">

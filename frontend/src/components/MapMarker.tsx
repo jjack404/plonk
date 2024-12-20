@@ -24,9 +24,7 @@ const MapMarker: React.FC<MapMarkerProps> = ({
       domEvent: e.nativeEvent
     } as google.maps.MapMouseEvent;
     
-    if (isMobileDevice()) {
-      onMouseOver(marker, syntheticEvent);
-    }
+    onMouseOver(marker, syntheticEvent);
     onClick();
   };
 
@@ -45,29 +43,31 @@ const MapMarker: React.FC<MapMarkerProps> = ({
     <OverlayView
       position={marker.position}
       mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-      getPixelPositionOffset={(width, height) => ({
-        x: -(width / 2),
-        y: -(height / 2)
+      getPixelPositionOffset={() => ({
+        x: -16,
+        y: -32
       })}
     >
       <div 
         style={{ 
           cursor: 'pointer',
           fontSize: '32px',
-          color: '#fffbbd',
-          filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5))',
-          transform: 'translateY(-30px) translateX(-16px)',
+          color: '#2eb344',
+          filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7))',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '32px',
-          height: '32px'
+          height: '32px',
+          position: 'relative',
+          willChange: 'transform',
+          transform: 'translate3d(0,0,0)'
         }}
         onClick={handleMarkerClick}
         onMouseOver={handleMouseOver}
         onMouseOut={() => !isMobileDevice() && onMouseOut()}
       >
-        <PiMapPinDuotone />
+        <PiMapPinDuotone style={{ color: '#2eb344' }}/>
       </div>
     </OverlayView>
   );
