@@ -9,24 +9,26 @@ export const useCurrentLocation = () => {
 
     const setupLocationWatch = () => {
       if ('geolocation' in navigator) {
-        // Get initial position quickly
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
-          },
-          (error) => console.error('Error getting location:', error),
-          { maximumAge: 0, timeout: 5000, enableHighAccuracy: true }
-        );
+        // Get multiple initial positions rapidly
+        for (let i = 0; i < 3; i++) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setLatitude(position.coords.latitude);
+              setLongitude(position.coords.longitude);
+            },
+            (error) => console.error('Error getting location:', error),
+            { maximumAge: 0, timeout: 1000, enableHighAccuracy: true }
+          );
+        }
 
-        // Then watch for updates
+        // Then watch for updates with high frequency
         watchId = navigator.geolocation.watchPosition(
           (position) => {
             setLatitude(position.coords.latitude);
             setLongitude(position.coords.longitude);
           },
           (error) => console.error('Error watching location:', error),
-          { maximumAge: 0, timeout: 5000, enableHighAccuracy: true }
+          { maximumAge: 0, timeout: 1000, enableHighAccuracy: true }
         );
       }
     };

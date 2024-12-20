@@ -124,12 +124,18 @@
 .location-checking {
   margin-top: 12px;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
   color: #ccc;
+  gap: 8px;
 }
 
 .location-checking p {
   font-size: 12px;
   margin-top: 8px;
+  line-height: 0;
 }
 
 .mini-loader {
@@ -138,7 +144,7 @@
   border: 2px solid #333;
   border-top: 2px solid #5bef6a;
   border-radius: 50%;
-  margin: 0 auto;
+  margin: 0;
   animation: spin 1s linear infinite;
 }
 
@@ -155,7 +161,6 @@
   
   .marker-blurb-content {
     max-height: 60vh;
-    overflow-y: auto;
   }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import './BottomBar.css';
-import { PiGpsDuotone, PiGpsSlashDuotone } from "react-icons/pi";
+import { PiGpsDuotone, PiGpsSlashDuotone, PiSealQuestionDuotone } from "react-icons/pi";
 
 const BottomBar: React.FC = () => {
   const { latitude, longitude } = useCurrentLocation();
@@ -22,6 +22,9 @@ const BottomBar: React.FC = () => {
           </div>
         )}
       </div>
+      <button className="help-button">
+        <PiSealQuestionDuotone />
+      </button>
     </div>
   );
 };

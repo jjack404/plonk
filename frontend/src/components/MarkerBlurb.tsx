@@ -6,7 +6,6 @@ import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
 import { PiWalletDuotone } from "react-icons/pi";
-import axios from 'axios';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -20,16 +19,6 @@ interface MarkerBlurbProps {
 
 const getStaticMapUrl = (lat: number, lng: number): string => {
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
-};
-
-const fetchSolPrice = async (): Promise<number> => {
-  try {
-    const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
-    return response.data.solana.usd;
-  } catch (error) {
-    console.error('Error fetching SOL price:', error);
-    return 0;
-  }
 };
 
 const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
@@ -55,7 +44,6 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     top: position.y,
     transform: 'translate(-50%, -100%)'
   });
-  const [estimatedValue, setEstimatedValue] = useState<number>(0);
 
   useEffect(() => {
     if (expanded && drop) {
@@ -65,13 +53,27 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
 
   const checkLocation = useCallback(() => {
     if (drop && latitude !== null && longitude !== null) {
-      const distance = calculateDistance(
+      const roughDistance = calculateDistance(
         latitude,
         longitude,
         drop.position.lat,
         drop.position.lng
       );
-      setIsInRange(distance <= 1);
+
+      if (roughDistance > 2) {
+        setIsInRange(false);
+        setIsCheckingLocation(false);
+        return;
+      }
+
+      setIsCheckingLocation(true);
+      const preciseDistance = calculateDistance(
+        latitude,
+        longitude,
+        drop.position.lat,
+        drop.position.lng
+      );
+      setIsInRange(preciseDistance <= 1);
       setIsCheckingLocation(false);
     }
   }, [drop, latitude, longitude]);
@@ -82,7 +84,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
 
   useEffect(() => {
     if (expanded) {
-      const intervalId = setInterval(checkLocation, 2000);
+      const intervalId = setInterval(checkLocation, 500);
       return () => clearInterval(intervalId);
     }
   }, [expanded, checkLocation]);
@@ -108,23 +110,6 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     }
   }, [position, expanded]);
 
-  useEffect(() => {
-    const calculateValue = async () => {
-      if (drop) {
-        const solPrice = await fetchSolPrice();
-        const value = drop.tokens.reduce((total, token) => {
-          if (token.symbol?.toLowerCase() === 'sol') {
-            return total + ((token.amount / Math.pow(10, token.decimals)) * solPrice);
-          }
-          return total;
-        }, 0);
-        setEstimatedValue(value);
-      }
-    };
-    
-    calculateValue();
-  }, [drop]);
-
   if (!drop) return null;
 
   const abbreviateAddress = (address: string): string => {
@@ -134,7 +119,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   const renderTokens = () => (
     <ul className="token-list">
       {drop.tokens.map((token, index) => (
-        <li key={index} className="token-list-item">
+        <li key={index} className="token-item">
           <div className="token-info">
             <img
               src={token.logoURI || `https://placehold.co/24x24?text=${token.symbol}`}
@@ -152,7 +137,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   const renderClaimButton = () => {
     if (!walletAddress) {
       return (
-        <button 
+        <button
           className="claim-button wallet-connect"
           onClick={onConnectWallet}
         >
@@ -188,7 +173,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     }
 
     return (
-      <button 
+      <button
         className="claim-button"
         onClick={() => drop && onClaim?.(drop)}
       >
@@ -206,52 +191,50 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         if (!expanded) onExpand();
       }}
     >
-      <div className="marker-blurb-content">
-        {expanded ? (
-          <>
-            <div className="drop-header">
-              <h3>{drop.title}</h3>
-              <span className="drop-value">${estimatedValue.toFixed(2)}</span>
+      {expanded ? (
+        <>
+          <div className="drop-header">
+            <h3>{drop.title}</h3>
+            <span className="drop-value">$0.00</span>
+          </div>
+          {locationData && (
+            <div className="location-image">
+              {locationData.type === 'panorama' && locationData.location ? (
+                <PanoramaView
+                  position={locationData.location}
+                  onError={() => setLocationData({
+                    type: 'static',
+                    url: getStaticMapUrl(drop.position.lat, drop.position.lng)
+                  })}
+                />
+              ) : (
+                <img src={locationData.url} alt="Location view" />
+              )}
             </div>
-            {locationData && (
-              <div className="location-image">
-                {locationData.type === 'panorama' && locationData.location ? (
-                  <PanoramaView 
-                    position={locationData.location}
-                    onError={() => setLocationData({ 
-                      type: 'static', 
-                      url: getStaticMapUrl(drop.position.lat, drop.position.lng) 
-                    })}
-                  />
-                ) : (
-                  <img src={locationData.url} alt="Location view" />
-                )}
-              </div>
-            )}
-            {renderTokens()}
-            <p className="description">{drop.description}</p>
-            <div className="drop-info">
-              <span className="wallet">By: {abbreviateAddress(drop.walletAddress)}</span>
-              <span className="location">
-                {drop.position.city && drop.position.country
-                  ? `${drop.position.city}, ${drop.position.country}`
-                  : drop.position.country || 'Unknown Location'}
-              </span>
-            </div>
-            {renderClaimButton()}
-          </>
-        ) : (
-          <>
-            {renderTokens()}
-            <div className="mini-location">
+          )}
+          {renderTokens()}
+          <p className="description">{drop.description}</p>
+          <div className="drop-info">
+            <span className="wallet">By: {abbreviateAddress(drop.walletAddress)}</span>
+            <span className="location">
               {drop.position.city && drop.position.country
                 ? `${drop.position.city}, ${drop.position.country}`
-                : drop.position.country || 
-                  `${drop.position.lat.toFixed(4)}, ${drop.position.lng.toFixed(4)}`}
-            </div>
-          </>
-        )}
-      </div>
+                : drop.position.country || 'Unknown Location'}
+            </span>
+          </div>
+          {renderClaimButton()}
+        </>
+      ) : (
+        <>
+          {renderTokens()}
+          <div className="mini-location">
+            {drop.position.city && drop.position.country
+              ? `${drop.position.city}, ${drop.position.country}`
+              : drop.position.country ||
+              `${drop.position.lat.toFixed(4)}, ${drop.position.lng.toFixed(4)}`}
+          </div>
+        </>
+      )}
     </div>
   );
 };
