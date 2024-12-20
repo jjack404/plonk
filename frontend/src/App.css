@@ -22,9 +22,15 @@ button:focus {
   flex-direction: column;
   height: 100dvh;
   width: 100dvw;
-  overflow: hidden; /* Hide overflow */
+  overflow: hidden;
 }
 
-.map-container {
-  overflow: hidden; /* Hide overflow */
+.map-wrapper {
+  height: calc(100% - 78px);
+}
+
+@media (min-width: 768px) {
+  .map-wrapper {
+    height: calc(100% - 120px);
+  }
 }

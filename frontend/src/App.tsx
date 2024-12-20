@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from './components/NavBar.tsx';
-import Map from './components/Map.tsx';
+import NavBar from './components/NavBar';
+import Map from './components/Map';
 import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
-import UserProfile from './components/UserProfile.tsx';
+import UserProfile from './components/UserProfile';
 import { WalletContextType, TransactionStatus } from './types';
 import './App.css';
-import Notification from './components/Notification.tsx';
+import Notification from './components/Notification';
 import { DropsProvider } from './context/DropsContext';
 
 const App: React.FC = () => {
@@ -38,7 +38,7 @@ const App: React.FC = () => {
       <DropsProvider>
         <div className="app-container">
           <NavBar onProfileClick={handleProfileClick} />
-          <div className="map-container">
+          <div className="map-wrapper">
             <Map setTxStatus={setTxStatus} />
           </div>
           <WalletContext.Consumer>

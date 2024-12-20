@@ -120,6 +120,32 @@
   margin-bottom: 8px;
 }
 
+.location-checking {
+  margin-top: 12px;
+  text-align: center;
+  color: #ccc;
+}
+
+.location-checking p {
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.mini-loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #333;
+  border-top: 2px solid #5bef6a;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
   .marker-blurb.expanded {
     width: 90vw;

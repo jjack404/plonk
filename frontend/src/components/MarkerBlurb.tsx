@@ -31,6 +31,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
 }) => {
   const { latitude, longitude } = useCurrentLocation();
   const [isInRange, setIsInRange] = useState(false);
+  const [isCheckingLocation, setIsCheckingLocation] = useState(true);
   const [locationData, setLocationData] = useState<{
     type: 'panorama' | 'static';
     url?: string;
@@ -50,15 +51,18 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
   }, [expanded, drop]);
 
   useEffect(() => {
-    if (drop && latitude && longitude) {
-      const distance = calculateDistance(
-        latitude,
-        longitude,
-        drop.position.lat,
-        drop.position.lng
-      );
-
-      setIsInRange(distance <= 1); // Within 1 mile
+    if (drop) {
+      setIsCheckingLocation(true);
+      if (latitude !== null && longitude !== null) {
+        const distance = calculateDistance(
+          latitude,
+          longitude,
+          drop.position.lat,
+          drop.position.lng
+        );
+        setIsInRange(distance <= 1);
+      }
+      setIsCheckingLocation(false);
     }
   }, [drop, latitude, longitude]);
 
@@ -116,6 +120,15 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         >
           Select Wallet
         </button>
+      );
+    }
+
+    if (isCheckingLocation) {
+      return (
+        <div className="location-checking">
+          <div className="mini-loader"></div>
+          <p>Checking your location...</p>
+        </div>
       );
     }
 

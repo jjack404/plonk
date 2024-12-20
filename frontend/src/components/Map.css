@@ -1,7 +1,7 @@
 .map-container {
   position: relative;
   width: 100%;
-  height: calc(100%);
+  height: 100%;
   filter: blur(0);
   transition: filter 0.3s ease-out;
 }
@@ -14,8 +14,4 @@
   filter: blur(8px);
   transition: filter 0.3s ease-out;
 }
-@media (min-width: 768px) {
-  .map-container {
-    height: calc(100% - 60px);
-  }
-}
+

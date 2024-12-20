@@ -28,11 +28,6 @@ interface MapProps {
   setTxStatus: (status: TransactionStatus | null) => void;
 }
 
-const containerStyle: React.CSSProperties = {
-  width: '100%',
-  height: 'calc(100% - 48px)'
-};
-
 const center: Position = {
   lat: 20,
   lng: 0
@@ -151,7 +146,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         <Loader isLoading={isLoading} />
         {dropsError && <div className="error-message">{dropsError}</div>}
         <GoogleMap
-          mapContainerStyle={containerStyle}
           mapContainerClassName={`map-container ${isLoading ? 'loading' : ''}`}
           center={center}
           zoom={2}
@@ -213,6 +207,8 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
               setTxStatus={setTxStatus}
             />
           )}
+
+          
         </GoogleMap>
       </LoadScript>
       <BottomBar />
