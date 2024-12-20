@@ -6,15 +6,18 @@ import {
   PiGpsSlashDuotone, 
   PiSealQuestionDuotone,
   PiBellDuotone,
-  PiClockCounterClockwiseDuotone
+  PiClockCounterClockwiseDuotone,
+  PiGearDuotone
 } from "react-icons/pi";
 import Notification from './Notification';
+import { TransactionStatus } from '../types/index';
 
 interface BottomBarProps {
-  txStatus: { type: 'pending' | 'success'; txId?: string; action?: 'drop' | 'claim' } | null;
+  txStatus: TransactionStatus | null;
+  setLocalTxStatus: (status: TransactionStatus | null) => void;
 }
 
-const BottomBar: React.FC<BottomBarProps> = ({ txStatus }) => {
+const BottomBar: React.FC<BottomBarProps> = ({ txStatus, setLocalTxStatus }) => {
   const { latitude, longitude } = useCurrentLocation();
   const isLocationActive = latitude !== null && longitude !== null;
 
@@ -22,6 +25,12 @@ const BottomBar: React.FC<BottomBarProps> = ({ txStatus }) => {
     if (!txStatus) return '';
     const action = txStatus.action === 'drop' ? 'Dropping' : 'Claiming';
     return txStatus.type === 'pending' ? `${action}...` : `${action} Complete!`;
+  };
+
+  const handleNotificationClose = () => {
+    if (txStatus?.type === 'success') {
+      setLocalTxStatus(null);
+    }
   };
 
   return (
@@ -44,7 +53,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ txStatus }) => {
           message={getMessage()}
           type={txStatus.type}
           txId={txStatus.txId}
-          onClose={() => {}}
+          onClose={handleNotificationClose}
         />
       )}
       <div className="button-group">
@@ -56,6 +65,9 @@ const BottomBar: React.FC<BottomBarProps> = ({ txStatus }) => {
         </button>
         <button className="help-button">
           <PiSealQuestionDuotone />
+        </button>
+        <button className="help-button">
+          <PiGearDuotone style={{ color: '#fffbbd' }} />
         </button>
       </div>
     </div>

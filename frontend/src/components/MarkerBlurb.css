@@ -187,3 +187,21 @@
   font-size: 14px;
   font-weight: bold;
 }
+
+.distance-display {
+  text-align: center;
+  margin-top: 12px;
+  color: #999;
+  font-size: 16px;
+}
+
+.distance-display span {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.distance-display .unit {
+  color: #999;
+  font-size: 14px;
+  margin-left: 4px;
+}

@@ -212,7 +212,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
           )}
         </GoogleMap>
       </LoadScript>
-      <BottomBar txStatus={localTxStatus} />
+      <BottomBar txStatus={localTxStatus} setLocalTxStatus={setLocalTxStatus} />
     </>
   );
 };

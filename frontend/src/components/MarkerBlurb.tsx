@@ -44,6 +44,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
     top: position.y,
     transform: 'translate(-50%, -100%)'
   });
+  const [distance, setDistance] = useState<number | null>(null);
 
   useEffect(() => {
     if (expanded && drop) {
@@ -60,6 +61,8 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         drop.position.lng
       );
 
+      setDistance(roughDistance);
+
       if (roughDistance > 2) {
         setIsInRange(false);
         setIsCheckingLocation(false);
@@ -73,6 +76,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
         drop.position.lat,
         drop.position.lng
       );
+      setDistance(preciseDistance);
       setIsInRange(preciseDistance <= 1);
       setIsCheckingLocation(false);
     }
@@ -166,9 +170,16 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = ({
 
     if (!isInRange) {
       return (
-        <div className="distance-warning">
-          <p>You must be within 1 mile of the drop location to claim it</p>
-        </div>
+        <>
+          {distance && (
+            <div className="distance-display">
+              <span>{distance.toFixed(2)} miles</span> away
+            </div>
+          )}
+          <div className="distance-warning">
+            <p>You must be within 1 mile of the drop location to claim it</p>
+          </div>
+        </>
       );
     }
 

@@ -231,103 +231,107 @@ const LootForm: React.FC<LootFormProps> = ({ position, onClose, onSubmit, setTxS
               </li>
             ))}
           </ul>
-          <div className="warning-text">
-            Warning: Drops are irreversible once confirmed
+          <div className="warning-button-wrapper">
+            <div className="warning-text">
+              Warning: Drops are irreversible once confirmed
+            </div>
+            <button className="confirm-button" onClick={handleConfirmDrop}>
+              Confirm Drop
+            </button>
           </div>
-          <button className="confirm-button" onClick={handleConfirmDrop}>
-            Confirm Drop
-          </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Title:</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-              className="title-input"
-              required
-            />
-          </div>
-          <div className="form-group desc-group">
-            <label>Description:</label>
-            <textarea
-              value={description}
-              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-              className="description-input"
-              required
-            />
-          </div>
-          <div className="form-inventory">
-            <div className="tabs">
-              <button
-                type="button"
-                className={activeTab === 'fungible' ? 'active' : ''}
-                onClick={() => setActiveTab('fungible')}
-              >
-                Fungible Tokens
-              </button>
-              <button
-                type="button"
-                className={activeTab === 'nft' ? 'active' : ''}
-                onClick={() => setActiveTab('nft')}
-              >
-                NFTs
-              </button>
+          <div className="form-container">
+            <div className="form-group">
+              <label>Title:</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                className="title-input"
+                required
+              />
             </div>
-            <div className="tokens-container">
-              {activeTab === 'fungible'
-                ? fungibleTokens.map((token) => (
-                    <div
-                      key={token.mint}
-                      className={`inventory-fungible-token ${selectedTokens.includes(token) ? 'selected' : ''}`}
-                      onClick={() => handleTokenClick(token)}
-                    >
-                      <div className="token-image-symbol-address">
-                        <div className="token-image-symbol">
-                          <img
-                            src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
-                            alt={token.symbol}
-                          />
-                          <span className="token-symbol">{token.symbol}</span>
+            <div className="form-group desc-group">
+              <label>Description:</label>
+              <textarea
+                value={description}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                className="description-input"
+                required
+              />
+            </div>
+            <div className="form-inventory">
+              <div className="tabs">
+                <button
+                  type="button"
+                  className={activeTab === 'fungible' ? 'active' : ''}
+                  onClick={() => setActiveTab('fungible')}
+                >
+                  Fungible Tokens
+                </button>
+                <button
+                  type="button"
+                  className={activeTab === 'nft' ? 'active' : ''}
+                  onClick={() => setActiveTab('nft')}
+                >
+                  NFTs
+                </button>
+              </div>
+              <div className="tokens-container">
+                {activeTab === 'fungible'
+                  ? fungibleTokens.map((token) => (
+                      <div
+                        key={token.mint}
+                        className={`inventory-fungible-token ${selectedTokens.includes(token) ? 'selected' : ''}`}
+                        onClick={() => handleTokenClick(token)}
+                      >
+                        <div className="token-image-symbol-address">
+                          <div className="token-image-symbol">
+                            <img
+                              src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
+                              alt={token.symbol}
+                            />
+                            <span className="token-symbol">{token.symbol}</span>
+                          </div>
+                        </div>
+                        <div className="fungible-balance-input-wrap">
+                          <span className="inventory-fungible-balance">
+                            Balance: {token.amount}
+                          </span>
+                          {selectedTokens.includes(token) && (
+                            <div className="inventory-fungible-input-wrap">
+                              <input
+                                type="number"
+                                className="fungible-input"
+                                value={tokenAmounts[token.mint] || ''}
+                                onChange={(e) => handleAmountChange(token, e.target.value)}
+                                onKeyDown={preventNegativeInput}
+                                min="0.001"
+                                step="0.001"
+                                max={token.amount}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="fungible-balance-input-wrap">
-                        <span className="inventory-fungible-balance">
-                          Balance: {token.amount}
-                        </span>
-                        {selectedTokens.includes(token) && (
-                          <div className="inventory-fungible-input-wrap">
-                            <input
-                              type="number"
-                              className="fungible-input"
-                              value={tokenAmounts[token.mint] || ''}
-                              onChange={(e) => handleAmountChange(token, e.target.value)}
-                              onKeyDown={preventNegativeInput}
-                              min="0.001"
-                              step="0.001"
-                              max={token.amount}
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                          </div>
-                        )}
+                    ))
+                  : nfts.map((token) => (
+                      <div
+                        key={token.mint}
+                        className={`inventory-nft-token ${selectedTokens.includes(token) ? 'selected' : ''}`}
+                        onClick={() => handleTokenClick(token)}
+                      >
+                        <img
+                          src={token.metadata?.image || `https://placehold.co/84x84?text=${token.symbol}`}
+                          alt={token.metadata?.name || token.symbol}
+                        />
+                        <div className="token-address">{abbreviateAddress(token.mint)}</div>
                       </div>
-                    </div>
-                  ))
-                : nfts.map((token) => (
-                    <div
-                      key={token.mint}
-                      className={`inventory-nft-token ${selectedTokens.includes(token) ? 'selected' : ''}`}
-                      onClick={() => handleTokenClick(token)}
-                    >
-                      <img
-                        src={token.metadata?.image || `https://placehold.co/84x84?text=${token.symbol}`}
-                        alt={token.metadata?.name || token.symbol}
-                      />
-                      <div className="token-address">{abbreviateAddress(token.mint)}</div>
-                    </div>
-                  ))}
+                    ))}
+              </div>
             </div>
           </div>
           <button

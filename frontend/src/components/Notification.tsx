@@ -27,7 +27,7 @@ const Notification: React.FC<NotificationProps> = ({ message, type, txId, onClos
           target="_blank"
           rel="noopener noreferrer"
         >
-          View Transaction
+          View Tx
         </a>
       )}
       <button className="close-button" onClick={onClose}>✕</button>
