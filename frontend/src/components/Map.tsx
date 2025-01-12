@@ -60,6 +60,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   const { setVisible } = useWalletModal();
   const [visibleMarkers, setVisibleMarkers] = useState<Drop[]>([]);
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
+  const [activeStreetView, setActiveStreetView] = useState<google.maps.StreetViewPanorama | null>(null);
 
   useEffect(() => {
     if (!dropsLoading && !dropsError) {
@@ -77,11 +78,23 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     setFormPosition(null);
   };
 
+  const isMarkerInBounds = useCallback((marker: Drop, bounds: google.maps.LatLngBounds) => {
+    return bounds.contains({
+      lat: marker.position.lat,
+      lng: marker.position.lng
+    });
+  }, []);
+
   const handleSubmitForm = useCallback(async (data: Drop): Promise<void> => {
     if (!formPosition) return;
+    
+    if (bounds && isMarkerInBounds(data, bounds)) {
+      setVisibleMarkers(prev => [...prev, data]);
+    }
+    
     setDrops(drops.concat(data));
     handleCloseForm();
-  }, [walletAddress, publicKey, connection, sendTransaction]);
+  }, [formPosition, bounds, isMarkerInBounds, drops, setDrops, handleCloseForm]);
 
   const handleMapLoad = useCallback((map: google.maps.Map): void => {
     mapRef.current = map;
@@ -93,6 +106,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     }
     
     const streetView = map.getStreetView();
+    setActiveStreetView(streetView);
     streetView.setOptions({
       imageDateControl: false,
       motionTracking: false,
@@ -104,6 +118,32 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
       visible: false
     });
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (activeStreetView) {
+        activeStreetView.setVisible(false);
+        setActiveStreetView(null);
+      }
+    };
+  }, [activeStreetView]);
+
+  const handleStreetViewVisibilityChange = useCallback(() => {
+    if (activeStreetView?.getVisible()) {
+      setExpandedMarker(null);
+      setHoveredMarker(null);
+    }
+  }, [setExpandedMarker, setHoveredMarker]);
+
+  useEffect(() => {
+    if (activeStreetView) {
+      google.maps.event.addListener(activeStreetView, 'visible_changed', handleStreetViewVisibilityChange);
+      
+      return () => {
+        google.maps.event.clearListeners(activeStreetView, 'visible_changed');
+      };
+    }
+  }, [activeStreetView, handleStreetViewVisibilityChange]);
 
   const handleClaimDrop = useCallback(async (drop: Drop) => {
     try {
@@ -149,13 +189,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
   }, [walletAddress, publicKey, connection, sendTransaction, updateTxStatus]);
 
   const isLoading = !dropsLoaded || !mapLoaded;
-
-  const isMarkerInBounds = useCallback((marker: Drop, bounds: google.maps.LatLngBounds) => {
-    return bounds.contains({
-      lat: marker.position.lat,
-      lng: marker.position.lng
-    });
-  }, []);
 
   useEffect(() => {
     if (bounds && Array.isArray(drops)) {

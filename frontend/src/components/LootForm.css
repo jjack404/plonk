@@ -53,18 +53,6 @@
   line-height: 1;
 }
 
-.coordinates {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--color-text);
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 .loot-form form {
   display: flex;
   flex-direction: column;
@@ -389,12 +377,6 @@
   margin-bottom: 1em;
 }
 
-.coordinates-row {
-  text-align: center;
-  font-size: 12px;
-  color: #fffbbd;
-}
-
 .location-info {
   width: 100%;
   display: flex;
@@ -458,3 +440,18 @@
   justify-content: center;
   gap: 16px;
 }
+
+.location-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.location-name {
+  font-size: 16px;
+  line-height: 1.2;
+}
+

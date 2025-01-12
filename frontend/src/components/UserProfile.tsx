@@ -65,48 +65,53 @@ const UserProfile: React.FC<UserProfileProps> = ({ walletAddress, profile, onClo
       </div>
       <div className="dashboard">
         <div className="profile-content">
-          <div className={`avatar-container ${isEditing ? 'editing' : ''}`} onClick={handleImageClick}>
-            <img
-              src={profile?.avatar || `https://placehold.co/100x100/020919/fffbbd/webp?text=${getAvatarText(walletAddress)}`}
-              alt="Avatar"
-            />
-            {isEditing && (
-              <div className="avatar-upload-overlay">
-                upload image
-              </div>
-            )}
-          </div>
           <div className="profile-info-container">
-            <span>{getAbbreviatedAddress(walletAddress, 16)}</span>
+            <div className="profile-info-row" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
+              <div className={`avatar-container ${isEditing ? 'editing' : ''}`} onClick={handleImageClick}>
+                <img
+                  src={profile?.avatar || `https://placehold.co/100x100/020919/fffbbd/webp?text=${getAvatarText(walletAddress)}`}
+                  alt="Avatar"
+                />
+                {isEditing && (
+                  <div className="avatar-upload-overlay">
+                    upload image
+                  </div>
+                )}
+              </div>
+              <div>
+                {isEditing ? (
+                  <>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="dashboard-username-input"
+                      placeholder="Enter name"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <h2 className="dashboard-username">{profile?.name || 'Anonymous'}</h2>
+
+              <span>{getAbbreviatedAddress(walletAddress, 16)}</span>
+                  </>
+                )}
+              </div>
+            </div>
             {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="dashboard-username-input"
-                  placeholder="Enter name"
-                />
-                <input
-                  type="text"
-                  value={twitterHandle}
-                  onChange={(e) => setTwitterHandle(e.target.value)}
-                  className="dashboard-username-input"
-                  placeholder="Twitter handle (optional)"
-                />
+              <div className="profile-info-row">
                 <textarea
                   value={info}
                   onChange={(e) => setInfo(e.target.value)}
                   className="dashboard-info-input"
                   placeholder="Enter bio"
-                />
-              </>
+                />              </div>
             ) : (
-              <>
-                <h2 className="dashboard-username">{profile?.name || 'Anonymous'}</h2>
-                <p className="dashboard-info">{profile?.info || 'No bio yet.'}</p>
-              </>
+              <div className="profile-info-row">
+                <div className="dashboard-info"><span>{profile?.info || <div style={{ textAlign: "center" }}>No bio yet.</div>}</span></div>
+              </div>
             )}
+
           </div>
         </div>
       </div>
