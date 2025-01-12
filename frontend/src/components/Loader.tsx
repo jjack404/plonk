@@ -6,13 +6,13 @@ interface LoaderProps {
 }
 
 const Loader: React.FC<LoaderProps> = ({ isLoading }) => {
-  const [activePixel, setActivePixel] = useState(0);
+  const [dots, setDots] = useState('');
 
   useEffect(() => {
     if (isLoading) {
       const interval = setInterval(() => {
-        setActivePixel((prev) => (prev + 1) % 9);
-      }, 150);
+        setDots(prev => prev.length >= 3 ? '' : prev + '.');
+      }, 500);
       return () => clearInterval(interval);
     }
   }, [isLoading]);
@@ -22,15 +22,7 @@ const Loader: React.FC<LoaderProps> = ({ isLoading }) => {
   return (
     <div className="loader-overlay">
       <div className="loader-content">
-        <div className="pixel-loader">
-          {[...Array(9)].map((_, index) => (
-            <div 
-              key={index} 
-              className={`pixel ${index === activePixel ? 'active' : ''}`}
-            />
-          ))}
-        </div>
-        <p>Loading drops...</p>
+        <p>Loading drops{dots}</p>
       </div>
     </div>
   );
