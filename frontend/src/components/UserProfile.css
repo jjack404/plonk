@@ -1,6 +1,6 @@
 .dashboard-container {
     padding: 4px 8px;
-    border: .5px solid #fffbbd;
+    border: 1px solid #fffbbd;
     background-color: rgba(2, 9, 25, 0.85);
     backdrop-filter: blur(25px);
     color: #fffbbd;
@@ -61,7 +61,7 @@
     width: 100%;
     padding: 8px;
     background-color: rgba(255, 255, 255, 0.1);
-    border: .5px solid #fffbbd;
+    border: 1px solid #fffbbd;
     color: #fffbbd;
     font-family: 'TheGoodMonolith';
 }
@@ -93,7 +93,7 @@
     height: 28px;
     width: 28px !important;
     background-color: transparent;
-    border: .5px solid #fffbbd;
+    border: 1px solid #fffbbd;
     color: #fffbbd;
     cursor: pointer;
     display: flex;
@@ -154,7 +154,7 @@
     width: 100%;
     padding: 5px;
     margin: 5px 0;
-    border: .5px solid #fffbbd;
+    border: 1px solid #fffbbd;
     border-radius: 0;
     background-color: rgba(255, 255, 255, 0.1);
     color: #fffbbd;
@@ -166,19 +166,19 @@
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border: .5px solid #fffbbd;
+    border: 1px solid #fffbbd;
     border-radius: 0;
     background-color: #020919;
     color: #fffbbd;
     cursor: pointer;
-    text-shadow: .5px 0px 0px #fffbbd;
+    text-shadow: 1px 0px 0px #fffbbd;
     font-family: 'TheGoodMonolith';
 }
 
 .dashboard button:hover {
     background-color: #5bef6a;
     color: #020919;
-    text-shadow: .5px 0px 0px #020919;
+    text-shadow: 1px 0px 0px #020919;
 }
 
 @media (min-width: 375px) {
@@ -222,7 +222,7 @@
 }
 
 .avatar-container.editing {
-    border: .5px dashed #fffbbd;
+    border: 1px dashed #fffbbd;
 }
 
 .avatar-container.editing .avatar-upload-overlay {
@@ -262,7 +262,7 @@
     height: 28px;
     width: 28px !important;
     background-color: transparent;
-    border: .5px solid #fffbbd;
+    border: 1px solid #fffbbd;
     color: #fffbbd;
     cursor: pointer;
     display: flex;

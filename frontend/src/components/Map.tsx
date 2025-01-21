@@ -17,6 +17,7 @@ import { Buffer } from 'buffer';
 import Loader from './Loader';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import BottomBar from './BottomBar';
+import WelcomeModal from './WelcomeModal';
 
 interface TransactionStatus {
   type: 'pending' | 'success';
@@ -275,6 +276,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
             />
           )}
         </GoogleMap>
+        <WelcomeModal />
       </LoadScript>
       <BottomBar txStatus={localTxStatus} setLocalTxStatus={setLocalTxStatus} />
     </>

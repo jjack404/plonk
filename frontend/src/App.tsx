@@ -6,10 +6,15 @@ import UserProfile from './components/UserProfile';
 import './App.css';
 import { DropsProvider } from './context/DropsContext';
 import { ModalProvider, useModal } from './context/ModalContext';
+import { PanelProvider, usePanel } from './context/PanelContext';
+import SidePanel from './components/SidePanel';
+import PanelContent from './components/PanelContent';
+import BottomBar from './components/BottomBar';
 
 const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
   const { walletAddress, profile } = useContext(WalletContext);
+  const { activePanel, setActivePanel } = usePanel();
 
   return (
     <div className="app-container">
@@ -26,19 +31,29 @@ const AppContent: React.FC = () => {
           />
         </div>
       )}
+      <SidePanel
+        isOpen={!!activePanel}
+        onClose={() => setActivePanel(null)}
+        title={activePanel ? activePanel.charAt(0).toUpperCase() + activePanel.slice(1) : ''}
+      >
+        {activePanel && <PanelContent type={activePanel} />}
+      </SidePanel>
+      <BottomBar txStatus={null} setLocalTxStatus={() => {}} />
     </div>
   );
 };
 
 const App: React.FC = () => {
   return (
-    <WalletProviderWrapper>
-      <DropsProvider>
-        <ModalProvider>
-          <AppContent />
-        </ModalProvider>
-      </DropsProvider>
-    </WalletProviderWrapper>
+    <PanelProvider>
+      <WalletProviderWrapper>
+        <DropsProvider>
+          <ModalProvider>
+            <AppContent />
+          </ModalProvider>
+        </DropsProvider>
+      </WalletProviderWrapper>
+    </PanelProvider>
   );
 };
 

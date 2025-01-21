@@ -1,0 +1,65 @@
+.welcome-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  background: rgba(2, 9, 25, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.welcome-content {
+  background: var(--color-background-transparent-heavy);
+  padding: 24px;
+  color: var(--color-text);
+  width: 80dvw;
+  max-width: 500px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.welcome-content h3 {
+  margin: 0 0 24px 0;
+  font-size: 20px;
+  text-align: center;
+  color: #fffbbd;
+  text-shadow: 01px 0px 0px #fffbbd;
+}
+
+.welcome-content p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  text-align: center;
+  color: #fffbbd;
+  text-shadow: 01px 0px 0px #fffbbd;
+}
+
+.continue-button {
+  width: 100%;
+  padding: 8px;
+  border: 01px solid #fffbbd;
+  background: transparent;
+  font-size: 16px;
+  color: #fffbbd;
+  font-family: "TheGoodMonolith";
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.continue-button:hover {
+  background-color: #fffbbd;
+  color: #020919;
+  text-shadow: 01px 0px 0px #020919;
+}
+
+@media (max-width: 768px) {
+  .welcome-content {
+    width: 90vw;
+    border-radius: 0;
+  }
+}

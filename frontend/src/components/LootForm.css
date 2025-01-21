@@ -15,7 +15,7 @@
   transform: translate(-50%, -50%);
   background-color: var(--color-background-transparent);
   backdrop-filter: blur(25px);
-  border: 0.5px solid var(--color-text);
+  border: 01px solid var(--color-text);
   padding: 16px;
   border-radius: 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,7 +25,7 @@
 
 .close-button {
   cursor: pointer;
-  border: 0.5px solid var(--color-text) !important;
+  border: 01px solid var(--color-text) !important;
   width: 28px !important;
   height: 28px;
   display: flex;
@@ -132,12 +132,12 @@
 .tabs button {
   padding: 10px;
   width: 100%;
-  border: 0.5px solid #fffbbd;
+  border: 01px solid #fffbbd;
   border-radius: 0;
   background-color: #020919;
   color: #fffbbd;
   cursor: pointer;
-  text-shadow: 0.5px 0px 0px #fffbbd;
+  text-shadow: 01px 0px 0px #fffbbd;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,7 +146,7 @@
 .tabs button.active {
   background-color: #5bef6a !important;
   color: #020919 !important;
-  text-shadow: 0.5px 0px 0px #020919;
+  text-shadow: 01px 0px 0px #020919;
 }
 
 .tokens-container {
@@ -168,7 +168,7 @@
   height: 33px;
   margin: 0;
   padding: 6px;
-  border: 0.5px solid rgba(255, 251, 189, 0.25);
+  border: 01px solid rgba(255, 251, 189, 0.25);
   border-radius: 0;
   display: flex;
   flex-direction: row;
@@ -207,7 +207,7 @@
 
 .inventory-fungible-token .token-symbol {
   font-size: 16px;
-  text-shadow: 0.5px 0 0 #fffbbd;
+  text-shadow: 01px 0 0 #fffbbd;
   color: #fffbbd;
 }
 
@@ -239,7 +239,7 @@
   font-size: 16px;
   color: #fffbbd;
   background-color: rgba(255, 255, 255, 0.1);
-  border: 0.5px solid rgba(255, 251, 189, 0.25);
+  border: 01px solid rgba(255, 251, 189, 0.25);
   border-radius: 0;
 }
 
@@ -251,7 +251,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 0.5px solid rgb(255, 251, 189, 0.5);
+  border: 01px solid rgb(255, 251, 189, 0.5);
   margin: 5px auto;
   padding: 4px;
   box-sizing: border-box;
@@ -260,7 +260,7 @@
 
 .inventory-nft-token.selected {
   border-color: #5bef6a;
-  border-width: 0.5px;
+  border-width: 01px;
 }
 
 .inventory-nft-token img {
@@ -299,13 +299,13 @@
 .confirm-button {
   position: relative;
   width: 100%;
-  border: 0.5px solid #fffbbd;
+  border: 01px solid #fffbbd;
   font-size: 20px;
   padding: 6px 18px;
   background-color: #020919;
   color: #fffbbd;
   cursor: pointer;
-  text-shadow: 0.5px 0px 0px #fffbbd;
+  text-shadow: 01px 0px 0px #fffbbd;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -329,7 +329,7 @@
 .confirm-button:hover {
   background-color: #fffbbd;
   color: #020919;
-  text-shadow: 0.5px 0px 0px #020919;
+  text-shadow: 01px 0px 0px #020919;
 }
 
 .token-list {
@@ -392,14 +392,14 @@
   align-items: flex-end;
   font-family: "TheGoodMonolith";
   font-size: 12px;
-  text-shadow: 0.5px 0px 0px #fffbbd;
+  text-shadow: 01px 0px 0px #fffbbd;
 }
 
 .location-name {
   font-family: "TheGoodMonolith";
   font-size: 16px;
   opacity: 0.8;
-  text-shadow: 0.5px 0px 0px #fffbbd;
+  text-shadow: 01px 0px 0px #fffbbd;
 }
 
 .location-image {
@@ -430,7 +430,7 @@
   backdrop-filter: blur(5px);
   display: flex;
   gap: 1rem;
-  border-top: 0.5px solid var(--color-text);
+  border-top: 01px solid var(--color-text);
 }
 
 .confirmation-view {

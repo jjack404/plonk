@@ -11,6 +11,7 @@ import {
 } from "react-icons/pi";
 import Notification from './Notification';
 import { TransactionStatus } from '../types/index';
+import { usePanel } from '../context/PanelContext';
 
 interface BottomBarProps {
   txStatus: TransactionStatus | null;
@@ -23,6 +24,7 @@ const BottomBar: React.FC<BottomBarProps> = React.memo(({
 }) => {
   const { latitude, longitude } = useCurrentLocation();
   const isLocationActive = latitude !== null && longitude !== null;
+  const { setActivePanel } = usePanel();
 
   const getMessage = useCallback(() => {
     if (!txStatus) return '';
@@ -60,17 +62,17 @@ const BottomBar: React.FC<BottomBarProps> = React.memo(({
         />
       )}
       <div className="button-group">
-        <button className="help-button">
-          <PiClockCounterClockwiseDuotone className="icon-default" />
+        <button className="help-button" onClick={() => setActivePanel('activity')}>
+          <PiClockCounterClockwiseDuotone />
         </button>
-        <button className="help-button">
-          <PiBellDuotone className="icon-default" />
+        <button className="help-button" onClick={() => setActivePanel('notifications')}>
+          <PiBellDuotone />
         </button>
-        <button className="help-button">
+        <button className="help-button" onClick={() => setActivePanel('help')}>
           <PiSealQuestionDuotone />
         </button>
-        <button className="help-button">
-          <PiGearDuotone className="icon-default" />
+        <button style={{ display: 'none' }} className="help-button">
+          <PiGearDuotone />
         </button>
       </div>
     </div>

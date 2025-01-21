@@ -1,0 +1,49 @@
+.panel-section {
+  padding: 16px;
+  color: var(--color-text);
+}
+
+.panel-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: #fffbbd;
+  text-shadow: 0.5px 0px 0px #fffbbd;
+}
+
+.activity-item,
+.notification-item {
+  padding: 12px;
+  border: 1px solid #fffbbd;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fffbbd;
+}
+
+.help-content {
+  color: #fffbbd;
+}
+
+.help-content h4 {
+  margin: 16px 0 8px 0;
+  font-size: 16px;
+  text-shadow: 0.5px 0px 0px #fffbbd;
+}
+
+.help-content p {
+  margin: 8px 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.activity-time,
+.notification-time {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.activity-text,
+.notification-text {
+  margin-right: 8px;
+} 

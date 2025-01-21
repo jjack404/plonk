@@ -22,6 +22,7 @@
 
 .logo h1 {
   display: flex;
+  font-family: 'FATPIXEL';
   font-size: 20px;
   color: var(--color-text);
   margin: 0;

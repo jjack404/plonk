@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { OverlayView } from '@react-google-maps/api';
 import { Drop } from '../types';
 import { PiMapPinDuotone } from "react-icons/pi";
@@ -11,7 +11,9 @@ interface MapMarkerProps {
   onClick: () => void;
 }
 
-const MapMarker: React.FC<MapMarkerProps> = ({
+const MARKER_OFFSET = { x: -16, y: -32 };
+
+const MapMarker: React.FC<MapMarkerProps> = React.memo(({
   marker,
   onMouseOver,
   onMouseOut,
@@ -39,28 +41,29 @@ const MapMarker: React.FC<MapMarkerProps> = ({
     }
   };
 
+  const markerStyle = useMemo(() => ({
+    cursor: 'pointer',
+    fontSize: '32px',
+    color: 'var(--color-success)',
+    filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7))',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '32px',
+    height: '32px',
+    position: 'relative' as const,
+    transform: 'translate3d(0, 0, 0)',
+    willChange: 'transform'
+  }), []);
+
   return (
     <OverlayView
       position={marker.position}
       mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-      getPixelPositionOffset={() => ({
-        x: -16,
-        y: -32
-      })}
+      getPixelPositionOffset={() => MARKER_OFFSET}
     >
       <div 
-        style={{ 
-          cursor: 'pointer',
-          fontSize: '32px',
-          color: 'var(--color-success)',
-          filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7))',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '32px',
-          height: '32px',
-          position: 'relative'
-        }}
+        style={markerStyle}
         onClick={handleMarkerClick}
         onMouseOver={handleMouseOver}
         onMouseOut={() => !isMobileDevice() && onMouseOut()}
@@ -69,13 +72,8 @@ const MapMarker: React.FC<MapMarkerProps> = ({
       </div>
     </OverlayView>
   );
-};
-
-// Memoize with custom comparison
-export default React.memo(MapMarker, (prevProps, nextProps) => {
-  return (
-    prevProps.marker._id === nextProps.marker._id &&
-    prevProps.marker.position.lat === nextProps.marker.position.lat &&
-    prevProps.marker.position.lng === nextProps.marker.position.lng
-  );
 });
+
+MapMarker.displayName = 'MapMarker';
+
+export default MapMarker;
