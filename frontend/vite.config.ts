@@ -13,5 +13,5 @@ export default defineConfig({
   server: {
     port: 5173,
   },
-  // You can add more configuration options here if needed
+  assetsInclude: ['**/*.ttf'],
 })
