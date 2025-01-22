@@ -3,14 +3,14 @@
 /* Define the custom font */
 @font-face {
   font-family: 'TheGoodMonolith';
-  src: url('./assets/fonts/TheGoodMonolith.ttf') format('truetype');
+  src: url('/fonts/TheGoodMonolith.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'FATPIXEL';
-  src: url('./assets/fonts/FATPIXEL.ttf') format('truetype');
+  src: url('/fonts/FATPIXEL.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
