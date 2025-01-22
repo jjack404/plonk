@@ -4,6 +4,7 @@ import {
   PiSealQuestionDuotone,
   PiBellDuotone,
   PiClockCounterClockwiseDuotone,
+  PiXDuotone,
 } from "react-icons/pi";
 
 interface SidePanelProps {
@@ -44,6 +45,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, title, children 
             {getIcon()}
             <h2>{title}</h2>
           </div>
+          <button className="close-button" onClick={onClose}>
+            <PiXDuotone />
+          </button>
         </div>
         <div className="panel-content">
           {children}

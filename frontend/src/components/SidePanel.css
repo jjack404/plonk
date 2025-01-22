@@ -54,6 +54,23 @@
   padding: 16px;
 }
 
+.close-button {
+  background: none !important;
+  border: none;
+  color: var(--color-text);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.close-button:hover {
+  opacity: 0.8;
+}
+
 @media (min-width: 768px) {
   .panel-overlay {
     top: 60px;
