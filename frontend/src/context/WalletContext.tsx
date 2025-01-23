@@ -14,7 +14,7 @@ export const WalletContext = createContext<WalletContextType>({
 const WalletContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const { publicKey, disconnect } = useWallet();
+  const { publicKey } = useWallet();
 
   useEffect(() => {
     const initializeProfile = async (address: string) => {
