@@ -56,7 +56,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const [dropsLoaded, setDropsLoaded] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [localTxStatus, setLocalTxStatus] = useState<TransactionStatus | null>(null);
   const { setVisible } = useWalletModal();
   const [visibleMarkers, setVisibleMarkers] = useState<Drop[]>([]);
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
@@ -70,7 +69,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
 
   const updateTxStatus = useCallback((status: TransactionStatus | null) => {
     setTxStatus(status);
-    setLocalTxStatus(status);
   }, [setTxStatus]);
 
   const handleCloseForm = (): void => {
