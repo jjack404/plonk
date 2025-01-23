@@ -16,7 +16,6 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Buffer } from 'buffer';
 import Loader from './Loader';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import BottomBar from './BottomBar';
 import WelcomeModal from './WelcomeModal';
 
 interface TransactionStatus {
@@ -69,10 +68,10 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
     }
   }, [dropsLoading, dropsError]);
 
-  const updateTxStatus = (status: TransactionStatus | null) => {
+  const updateTxStatus = useCallback((status: TransactionStatus | null) => {
     setTxStatus(status);
     setLocalTxStatus(status);
-  };
+  }, [setTxStatus]);
 
   const handleCloseForm = (): void => {
     setShowForm(false);
@@ -278,7 +277,6 @@ const Map: React.FC<MapProps> = ({ setTxStatus }) => {
         </GoogleMap>
         <WelcomeModal />
       </LoadScript>
-      <BottomBar txStatus={localTxStatus} setLocalTxStatus={setLocalTxStatus} />
     </>
   );
 };

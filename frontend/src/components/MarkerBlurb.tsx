@@ -140,18 +140,6 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
   );
 
   const renderClaimButton = () => {
-    if (!walletAddress) {
-      return (
-        <button
-          className="claim-button wallet-connect"
-          onClick={onConnectWallet}
-        >
-          <PiWalletDuotone className="wallet-icon" />
-          <span>Select Wallet</span>
-        </button>
-      );
-    }
-
     if (isCheckingLocation) {
       return (
         <div className="location-checking">
@@ -181,6 +169,21 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
             <p>You must be within 1 mile of the drop location to claim it</p>
           </div>
         </>
+      );
+    }
+
+    if (!walletAddress) {
+      return (
+        <button
+          className="claim-button wallet-connect"
+          onClick={(e) => {
+            e.stopPropagation();
+            onConnectWallet();
+          }}
+        >
+          <PiWalletDuotone className="wallet-icon" />
+          <span>Select Wallet</span>
+        </button>
       );
     }
 

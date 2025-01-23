@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import NavBar from './components/NavBar';
 import Map from './components/Map';
 import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
@@ -10,17 +10,19 @@ import { PanelProvider, usePanel } from './context/PanelContext';
 import SidePanel from './components/SidePanel';
 import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
+import { TransactionStatus } from './types';
 
 const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
   const { walletAddress, profile } = useContext(WalletContext);
   const { activePanel, setActivePanel } = usePanel();
+  const [txStatus, setTxStatus] = useState<TransactionStatus | null>(null);
 
   return (
     <div className="app-container">
       <NavBar />
       <div className="map-wrapper">
-        <Map setTxStatus={() => {}} />
+        <Map setTxStatus={setTxStatus} />
       </div>
       {activeModal === 'profile' && (
         <div className="self-profile">
@@ -38,7 +40,7 @@ const AppContent: React.FC = () => {
       >
         {activePanel && <PanelContent type={activePanel} />}
       </SidePanel>
-      <BottomBar txStatus={null} setLocalTxStatus={() => {}} />
+      <BottomBar txStatus={txStatus} setLocalTxStatus={setTxStatus} />
     </div>
   );
 };

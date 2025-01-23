@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { WalletContextType, Profile } from '../types';
 import axios from 'axios';
 
@@ -14,8 +14,7 @@ export const WalletContext = createContext<WalletContextType>({
 const WalletContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-
-  const { publicKey } = useWallet();
+  const { publicKey, disconnect } = useWallet();
 
   useEffect(() => {
     const initializeProfile = async (address: string) => {
@@ -69,17 +68,23 @@ const WalletContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   return (
-    <WalletContext.Provider value={{ walletAddress, profile, updateProfile }}>
+    <WalletContext.Provider value={{ 
+      walletAddress, 
+      profile, 
+      updateProfile
+    }}>
       {children}
     </WalletContext.Provider>
   );
 };
 
 export const WalletProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const wallets = [new PhantomWalletAdapter()];
-  const endpoint = import.meta.env.VITE_RPC_URL;
+  const wallets = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter()
+  ];
   
-  // Ensure endpoint starts with http:// or https://
+  const endpoint = import.meta.env.VITE_RPC_URL;
   const validEndpoint = endpoint.startsWith('http://') || endpoint.startsWith('https://')
     ? endpoint
     : `https://${endpoint}`;

@@ -28,7 +28,10 @@
   font-size: 20px;
   text-align: center;
   color: #fffbbd;
-  text-shadow: 01px 0px 0px #fffbbd;
+  text-shadow: 1px 0px 0px #fffbbd;
+  font-family: 'FATPIXEL';
+  line-height: 1.2;
+  padding-top: 12px;
 }
 
 .welcome-content p {
@@ -55,6 +58,53 @@
   background-color: #fffbbd;
   color: #020919;
   text-shadow: 01px 0px 0px #020919;
+}
+
+.wallet-buttons {
+  margin-top: 24px;
+}
+
+.wallet-button {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #fffbbd;
+  background: rgba(255, 251, 189, 0.05);
+  font-size: 16px;
+  color: #fffbbd;
+  font-family: "TheGoodMonolith";
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-shadow: 1px 0px 0px #fffbbd;
+}
+
+.wallet-button:hover {
+  background: rgba(255, 251, 189, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 251, 189, 0.2);
+}
+
+.wallet-button:active {
+  transform: translateY(0);
+}
+
+.wallet-button img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.disclaimer {
+  margin: 24px 0 !important;
+  color: #ff6b6b !important;
+  font-size: 14px !important;
+  text-shadow: none !important;
+  border: 1px solid #ff6b6b;
+  padding: 12px !important;
+  background: rgba(255, 107, 107, 0.1);
 }
 
 @media (max-width: 768px) {
