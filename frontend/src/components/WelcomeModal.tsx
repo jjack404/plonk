@@ -27,7 +27,7 @@ const WelcomeModal: React.FC = () => {
   return (
     <div className="welcome-modal">
       <div className="welcome-content">
-        <h3>Welcome to the Plonk alpha release!</h3>
+        <div style={{display: 'flex', alignItems: 'center', flexDirection: 'row', width: '100%', justifyContent: 'center', gap: '12px' }}><h3 style={{marginTop: '.5em'}}>Plonk</h3><span className="alpha"> alpha test</span></div>
         <p>Get ready to experience the ultimate web3 scavenger hunt.</p>
         <p>To get started, connect your wallet, navigate to a drop location, enable your devices location services, and claim your loot!</p>
         <p className="disclaimer">⚠️ During this alpha test, drops can only be claimed using Solflare wallet.</p>
