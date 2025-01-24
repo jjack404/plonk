@@ -10,12 +10,12 @@ import {
   PiGearDuotone
 } from "react-icons/pi";
 import Notification from './Notification';
-import { TransactionStatus } from '../types/index';
+import { TxStatus } from '../types/index';
 import { usePanel } from '../context/PanelContext';
 
 interface BottomBarProps {
-  txStatus: TransactionStatus | null;
-  setLocalTxStatus: (status: TransactionStatus | null) => void;
+  txStatus: TxStatus | null;
+  setLocalTxStatus: (status: TxStatus | null) => void;
 }
 
 const BottomBar: React.FC<BottomBarProps> = React.memo(({ 

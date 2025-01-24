@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { WalletContext } from '../context/WalletContext';
-import { Drop, Position } from '../types';
+import { Drop, Position, TxStatus } from '../types';
 import './Map.css';
 import { useDrops } from '../context/DropsContext';
 import { useMapInteractions } from '../hooks/useMapInteractions';
@@ -17,12 +17,6 @@ import Loader from './Loader';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import WelcomeModal from './WelcomeModal';
 import { usePanel } from '../context/PanelContext';
-
-interface TxStatus {
-  type: 'pending' | 'success';
-  txId?: string;
-  action?: 'drop' | 'claim';
-}
 
 interface MapProps {
   setTxStatus: (status: TxStatus | null) => void;
@@ -171,7 +165,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
         preflightCommitment: 'confirmed'
       });
 
-      updateTxStatus({ type: 'pending', txId: signature });
+      updateTxStatus({ type: 'pending', action: 'claim', txId: signature });
 
       await connection.confirmTransaction(signature, 'confirmed');
       
@@ -183,7 +177,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
 
       setDrops(drops.filter(d => d._id !== drop._id));
 
-      updateTxStatus({ type: 'success', txId: signature, action: 'claim' });
+      updateTxStatus({ type: 'success', action: 'claim', txId: signature });
       setExpandedMarker(null);
     } catch (error) {
       console.error('Claim error:', error);

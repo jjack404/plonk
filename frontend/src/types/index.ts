@@ -77,8 +77,6 @@ export interface TxStatus {
   txId?: string;
 }
 
-export type TransactionStatus = TxStatus;
-
 export interface LootFormProps {
   position?: Position;
   onClose: () => void;

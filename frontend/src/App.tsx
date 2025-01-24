@@ -35,7 +35,10 @@ const AppContent: React.FC = () => {
       <div className="map-wrapper">
         <Map 
           setDropPosition={handleMapClick} 
-          setTxStatus={(status: TxStatus | null) => setTxStatus(status)}
+          setTxStatus={(status: TxStatus | null) => {
+            if (status && !status.action) return; // Guard against invalid status
+            setTxStatus(status);
+          }}
         />
       </div>
       {activeModal === 'profile' && (
