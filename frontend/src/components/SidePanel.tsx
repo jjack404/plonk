@@ -17,6 +17,7 @@ interface SidePanelProps {
 
 const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, title, children }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const [isConfirmView, setIsConfirmView] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -27,6 +28,11 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, title, children 
       document.documentElement.classList.remove('panel-open');
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    const confirmView = document.querySelector('.confirm-view');
+    setIsConfirmView(!!confirmView);
+  });
 
   const handleClose = () => {
     setIsClosing(true);
@@ -50,6 +56,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, title, children 
   };
 
   const getFormattedTitle = (title: string): string => {
+    if (title.toLowerCase() === 'loot') {
+      return isConfirmView ? 'Confirm Drop' : 'Drop Loot';
+    }
     return title.charAt(0).toUpperCase() + title.slice(1);
   };
 

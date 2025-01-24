@@ -15,7 +15,6 @@ h2 {
 }
 
 .panel-section h3 {
-  margin: 0 0 16px 0;
   font-size: 18px;
   color: #fffbbd;
   text-shadow: 1px 0px 0px #fffbbd;
@@ -23,7 +22,6 @@ h2 {
 }
 
 .panel-section p {
-  margin: 0 0 12px 0;
   font-size: 16px;
   color: #fffbbd;
   text-shadow: 0.5px 0px 0px #fffbbd;
@@ -170,23 +168,26 @@ h2 {
 
 .tokens-container {
   flex: 1;
-  overflow-y: auto;
-  min-height: 200px;
-  max-height: 400px;
+  min-height: 50px;
+  max-height: 21.4dvh;
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  border-radius: 2px;
 }
 
 .tokens-container.fungible-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px;
+  gap: 0;
+  overflow-y: auto;
 }
 
 .tokens-container.nft-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 6px;
   width: 100%;
+  overflow-y: auto;
 }
 
 .inventory-fungible-token {
@@ -261,7 +262,7 @@ h2 {
   border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s ease;
-  aspect-ratio: 1;
+  padding: 4px;
 }
 
 .inventory-nft-token:hover {
@@ -276,9 +277,16 @@ h2 {
 }
 
 .nft-image-container {
-  flex: 1;
+  flex: none;
   width: 100%;
   position: relative;
+  margin-bottom: 4px;
+}
+
+.nft-image-container:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
 }
 
 .nft-image-container img {
@@ -292,11 +300,12 @@ h2 {
 }
 
 .nft-info {
-  padding: 4px 0;
+  padding: 2px;
 }
 
 .nft-name {
-  font-size: 12px;
+  font-size: 10px;
+  line-height: 1.2;
   color: #fffbbd;
   white-space: nowrap;
   overflow: hidden;
@@ -305,9 +314,10 @@ h2 {
 }
 
 .token-address {
-  font-size: 8px;
-  color: rgba(255, 251, 189, 0.6);
+  font-size: 7px;
+  color: rgba(255, 251, 189, 0.5);
   text-align: center;
+  margin-top: 1px;
 }
 
 .no-tokens-message {
@@ -337,6 +347,7 @@ h2 {
   margin-top: auto; /* Push to bottom */
   position: sticky;
   bottom: 0;
+  height: 32.5px;
   background: linear-gradient(
         to bottom,
         rgba(91, 239, 106, 0.1) 2px,
@@ -350,7 +361,6 @@ h2 {
   color: #5bef6a;
   font-family: "VT323", monospace;
   font-size: 18px;
-  padding: 12px;
   width: 100%;
   transition: all 0.2s ease;
 }
@@ -655,11 +665,12 @@ h2 {
 }
 
 .panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px;
-  border-bottom: 1px solid rgba(255, 251, 189, 0.2);
+  font-family: "FATPIXEL";
+  font-size: 24px;
+  color: #fffbbd;
+  text-shadow: 1px 0px 0px #fffbbd;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .panel-title {
@@ -903,7 +914,6 @@ h2 {
   min-height: 0; /* Important for flex child scrolling */
   display: flex;
   flex-direction: column;
-  margin: 16px 0;
 }
 
 .token-amount-input {
@@ -936,4 +946,45 @@ h2 {
   background: rgba(255, 251, 189, 0.05);
   border: 1px solid rgba(255, 251, 189, 0.2);
   border-radius: 2px;
+}
+
+.panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100vh;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.form-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  height: 100%;
+  padding-right: 8px;
+}
+
+/* Customize scrollbar for form area */
+.form-scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-scroll-area::-webkit-scrollbar-track {
+  background: rgba(255, 251, 189, 0.05);
+  border-radius: 3px;
+}
+
+.form-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(255, 251, 189, 0.2);
+  border-radius: 3px;
+}
+
+.form-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 251, 189, 0.3);
 }

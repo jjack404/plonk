@@ -158,258 +158,259 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
   };
 
   return (
-    <div className="panel-section">
-      {!isConfirming ? (
-        <form onSubmit={handleSubmit}>
-          <div className="location-info">
-            <div className="location-name">
-              {position.city && position.country 
-                ? `${position.city}, ${position.country}`
-                : position.country || 'Unknown Location'}
-            </div>
-            <div className="coordinates-row">
-              {position.lat.toFixed(4)}, {position.lng.toFixed(4)}
-            </div>
-          </div>
-          
-          <div className="location-image">
-            {locationData?.type === 'panorama' && locationData.location ? (
-              <PanoramaView 
-                position={locationData.location}
-                onError={() => setLocationData({ 
-                 type: 'static', 
-                 url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${position.lng}&zoom=14&size=600x300&scale=2&markers=color:red%7C${position.lat},${position.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
-                })}
-              />
-            ) : (
-              <img 
-                src={locationData?.url} 
-                alt="Location"
-              />
-            )}
-          </div>
-
-          <div className="form-fields">
-            <div className="form-field">
-              <label>Title <span className="required">*</span></label>
-              <input
-                type="text"
-                placeholder="Enter a title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={50}
-                required
-              />
-            </div>
-            <div className="form-field">
-              <label>Description (optional)</label>
-              <textarea
-                placeholder="Description (optional)"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                maxLength={280}
-              />
-            </div>
-          </div>
-
-          <div className="inventory-section">
-            <div className="token-tab-buttons">
-              <button
-                type="button"
-                className={`token-tab-button ${activeTab === 'fungible' ? 'active-fungible' : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab('fungible');
-                }}
-              >
-                Fungible Tokens
-              </button>
-              <button
-                type="button"
-                className={`token-tab-button ${activeTab === 'nft' ? 'active-nft' : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab('nft');
-                }}
-              >
-                NFTs
-              </button>
-            </div>
-            <div className={`tokens-container ${activeTab === 'nft' ? 'nft-grid' : 'fungible-list'}`}>
-              {activeTab === 'fungible' ? (
-                isLoading ? (
-                  <div className="token-status-message">Loading tokens...</div>
-                ) : error ? (
-                  <div className="token-status-message error">{error}</div>
-                ) : tokens.filter(t => !t.isNFT).length > 0 ? (
-                  tokens.filter(t => !t.isNFT).map(token => (
-                    <div 
-                      key={token.mint} 
-                      className={`inventory-fungible-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
-                      onClick={() => handleTokenSelect(token)}
-                    >
-                      <div className="token-image-symbol">
-                        <img
-                          src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
-                          alt={token.symbol}
-                        />
-                        <span className="token-symbol">{token.symbol}</span>
-                      </div>
-                      <div className="inventory-fungible-balance">
-                        {selectedTokens[token.mint] ? (
-                          <input
-                            type="number"
-                            value={selectedTokens[token.mint].amount}
-                            onChange={(e) => handleAmountChange(token.mint, parseFloat(e.target.value))}
-                            min={0.0001}
-                            max={token.amount}
-                            step={0.0001}
-                            onClick={(e) => e.stopPropagation()}
-                            className="token-amount-input"
-                          />
-                        ) : (
-                          `${token.amount.toFixed(token.decimals)} ${token.symbol}`
-                        )}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="token-status-message">No tokens found in wallet</div>
-                )
-              ) : (
-                isLoading ? (
-                  <div className="token-status-message">Loading NFTs...</div>
-                ) : error ? (
-                  <div className="token-status-message error">{error}</div>
-                ) : tokens.filter(t => t.isNFT).length > 0 ? (
-                  tokens.filter(t => t.isNFT).map(token => (
-                    <div 
-                      key={token.mint} 
-                      className={`inventory-nft-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
-                      onClick={() => handleTokenSelect(token)}
-                    >
-                      <div className="nft-image-container">
-                        <img
-                          src={token.logoURI || `https://placehold.co/150x150?text=NFT`}
-                          alt={token.symbol}
-                        />
-                      </div>
-                      <div className="nft-info">
-                        <span className="nft-name">{token.metadata?.name || 'Unnamed NFT'}</span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="token-status-message">No NFTs found in wallet</div>
-                )
-              )}
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="continue-button"
-            disabled={!isFormValid()}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsConfirming(true);
-            }}
-          >
-            Continue
-          </button>
-        </form>
-      ) : (
-        <div className="confirm-view">
-          <h3>Confirm Drop</h3>
-          
-          <div className="confirm-content">
-            <div className="confirm-summary">
-              <div className="confirm-location">
-                <span className="label">Location:</span>
-                <span>{position.city && position.country 
-                  ? `${position.city}, ${position.country}`
-                  : position.country || 'Unknown Location'}</span>
-              </div>
-              
-              <div className="confirm-title">
-                <span className="label">Title:</span>
-                <span>{title}</span>
-              </div>
-              
-              {description && (
-                <div className="confirm-description">
-                  <span className="label">Description:</span>
-                  <span>{description}</span>
+    <div className="form-container">
+      <div className="form-scroll-area">
+        {!isConfirming ? (
+          <>
+            <form style={{ height: '100%' }} onSubmit={handleSubmit}>
+              <div className="location-info">
+                <div className="location-name">
+                  {position.city && position.country 
+                    ? `${position.city}, ${position.country}`
+                    : position.country || 'Unknown Location'}
                 </div>
-              )}
+                <div className="coordinates-row">
+                  {position.lat.toFixed(4)}, {position.lng.toFixed(4)}
+                </div>
+              </div>
+              
+              <div className="location-image">
+                {locationData?.type === 'panorama' && locationData.location ? (
+                  <PanoramaView 
+                    position={locationData.location}
+                    onError={() => setLocationData({ 
+                     type: 'static', 
+                     url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${position.lng}&zoom=14&size=600x300&scale=2&markers=color:red%7C${position.lat},${position.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
+                    })}
+                  />
+                ) : (
+                  <img 
+                    src={locationData?.url} 
+                    alt="Location"
+                  />
+                )}
+              </div>
 
-              <div className="selected-tokens-container">
-                <span className="label">Selected Tokens:</span>
-                <div className="selected-tokens-scroll">
-                  {Object.values(selectedTokens)
-                    .filter(({ token }) => !token.isNFT)
-                    .map(({ token, amount }) => (
-                      <div key={token.mint} className="selected-token-item fungible">
-                        <img 
-                          src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
-                          alt={token.symbol}
-                        />
-                        <span className="token-details">
-                          <span className="token-symbol">{token.symbol}</span>
-                          <span className="token-amount">{amount} {token.symbol}</span>
-                        </span>
-                      </div>
-                    ))}
-                  
-                  {Object.values(selectedTokens)
-                    .filter(({ token }) => token.isNFT)
-                    .map(({ token }) => (
-                      <div key={token.mint} className="selected-token-item nft">
-                        <img 
-                          src={token.logoURI || `https://placehold.co/50x50?text=NFT`}
-                          alt={token.metadata?.name || 'NFT'}
-                        />
-                        <span className="token-details">
-                          <span className="token-name">{token.metadata?.name || 'Unnamed NFT'}</span>
-                        </span>
-                      </div>
-                    ))}
+              <div className="form-fields">
+                <div className="form-field">
+                  <label>Title <span className="required">*</span></label>
+                  <input
+                    type="text"
+                    placeholder="Enter a title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={50}
+                    required
+                  />
+                </div>
+                <div className="form-field">
+                  <label>Description (optional)</label>
+                  <textarea
+                    placeholder="Description (optional)"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    maxLength={280}
+                  />
                 </div>
               </div>
 
-              <div className="marker-selector-wrap">
+              <div className="inventory-section">
+                <div className="token-tab-buttons">
+                  <button
+                    type="button"
+                    className={`token-tab-button ${activeTab === 'fungible' ? 'active-fungible' : ''}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('fungible');
+                    }}
+                  >
+                    Fungible Tokens
+                  </button>
+                  <button
+                    type="button"
+                    className={`token-tab-button ${activeTab === 'nft' ? 'active-nft' : ''}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('nft');
+                    }}
+                  >
+                    NFTs
+                  </button>
+                </div>
+                <div className={`tokens-container ${activeTab === 'nft' ? 'nft-grid' : 'fungible-list'}`}>
+                  {activeTab === 'fungible' ? (
+                    isLoading ? (
+                      <div className="token-status-message">Loading tokens...</div>
+                    ) : error ? (
+                      <div className="token-status-message error">{error}</div>
+                    ) : tokens.filter(t => !t.isNFT).length > 0 ? (
+                      tokens.filter(t => !t.isNFT).map(token => (
+                        <div 
+                          key={token.mint} 
+                          className={`inventory-fungible-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
+                          onClick={() => handleTokenSelect(token)}
+                        >
+                          <div className="token-image-symbol">
+                            <img
+                              src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
+                              alt={token.symbol}
+                            />
+                            <span className="token-symbol">{token.symbol}</span>
+                          </div>
+                          <div className="inventory-fungible-balance">
+                            {selectedTokens[token.mint] ? (
+                              <input
+                                type="number"
+                                value={selectedTokens[token.mint].amount}
+                                onChange={(e) => handleAmountChange(token.mint, parseFloat(e.target.value))}
+                                min={0.0001}
+                                max={token.amount}
+                                step={0.0001}
+                                onClick={(e) => e.stopPropagation()}
+                                className="token-amount-input"
+                              />
+                            ) : (
+                              `${token.amount.toFixed(token.decimals)} ${token.symbol}`
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="token-status-message">No tokens found in wallet</div>
+                    )
+                  ) : (
+                    isLoading ? (
+                      <div className="token-status-message">Loading NFTs...</div>
+                    ) : error ? (
+                      <div className="token-status-message error">{error}</div>
+                    ) : tokens.filter(t => t.isNFT).length > 0 ? (
+                      tokens.filter(t => t.isNFT).map(token => (
+                        <div 
+                          key={token.mint} 
+                          className={`inventory-nft-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
+                          onClick={() => handleTokenSelect(token)}
+                        >
+                          <div className="nft-image-container">
+                            <img
+                              src={token.logoURI || `https://placehold.co/150x150?text=NFT`}
+                              alt={token.symbol}
+                            />
+                          </div>
+                          <div className="nft-info">
+                            <span className="nft-name">{token.metadata?.name || 'Unnamed NFT'}</span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="token-status-message">No NFTs found in wallet</div>
+                    )
+                  )}
+                </div>
+              </div>
+            </form>
+            <button
+              type="submit"
+              className="continue-button"
+              disabled={!isFormValid()}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsConfirming(true);
+              }}
+            >
+              Continue
+            </button>
+          </>
+        ) : (
+          <div className="confirm-view">
+            <div className="confirm-content">
+              <div className="confirm-summary">
+                <div className="confirm-location">
+                  <span className="label">Location:</span>
+                  <span>{position.city && position.country 
+                    ? `${position.city}, ${position.country}`
+                    : position.country || 'Unknown Location'}</span>
+                </div>
                 
-                <MarkerSelector 
-                  value={markerStyle}
-                  onChange={setMarkerStyle}
-                  small
-                />
+                <div className="confirm-title">
+                  <span className="label">Title:</span>
+                  <span>{title}</span>
+                </div>
+                
+                {description && (
+                  <div className="confirm-description">
+                    <span className="label">Description:</span>
+                    <span>{description}</span>
+                  </div>
+                )}
+
+                <div className="selected-tokens-container">
+                  <span className="label">Selected Tokens:</span>
+                  <div className="selected-tokens-scroll">
+                    {Object.values(selectedTokens)
+                      .filter(({ token }) => !token.isNFT)
+                      .map(({ token, amount }) => (
+                        <div key={token.mint} className="selected-token-item fungible">
+                          <img 
+                            src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
+                            alt={token.symbol}
+                          />
+                          <span className="token-details">
+                            <span className="token-symbol">{token.symbol}</span>
+                            <span className="token-amount">{amount} {token.symbol}</span>
+                          </span>
+                        </div>
+                      ))}
+                    
+                    {Object.values(selectedTokens)
+                      .filter(({ token }) => token.isNFT)
+                      .map(({ token }) => (
+                        <div key={token.mint} className="selected-token-item nft">
+                          <img 
+                            src={token.logoURI || `https://placehold.co/50x50?text=NFT`}
+                            alt={token.metadata?.name || 'NFT'}
+                          />
+                          <span className="token-details">
+                            <span className="token-name">{token.metadata?.name || 'Unnamed NFT'}</span>
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                <div className="marker-selector-wrap">
+                  
+                  <MarkerSelector 
+                    value={markerStyle}
+                    onChange={setMarkerStyle}
+                    small
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="confirm-footer">
+              <div className="warning-text">
+                Warning: Drops are irreversible once confirmed
+              </div>
+              
+              <div className="confirm-buttons">
+                <button 
+                  className="back-button"
+                  onClick={() => setIsConfirming(false)}
+                >
+                  Back
+                </button>
+                <button 
+                  className="confirm-button"
+                  onClick={handleConfirmDrop}
+                >
+                  Confirm Drop
+                </button>
               </div>
             </div>
           </div>
-
-          <div className="confirm-footer">
-            <div className="warning-text">
-              Warning: Drops are irreversible once confirmed
-            </div>
-            
-            <div className="confirm-buttons">
-              <button 
-                className="back-button"
-                onClick={() => setIsConfirming(false)}
-              >
-                Back
-              </button>
-              <button 
-                className="confirm-button"
-                onClick={handleConfirmDrop}
-              >
-                Confirm Drop
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }, (prevProps, nextProps) => {
