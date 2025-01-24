@@ -10,7 +10,7 @@ import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/sp
 import { IDrop } from '../models/Drop';
 import bs58 from 'bs58';
 
-const connection = new Connection(process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com');
+const connection = new Connection(process.env.HELIUS_RPC_URL!);
 
 // Lazy load the vault keypair
 const getVaultKeypair = () => {

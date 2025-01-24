@@ -1,0 +1,40 @@
+.marker-selector {
+  margin: 16px 0;
+}
+
+.marker-selector label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text);
+  font-family: "TheGoodMonolith";
+  font-size: 14px;
+}
+
+.marker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px;
+  background: rgba(255, 251, 189, 0.05);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+}
+
+.marker-option {
+  background: none;
+  border: 1px solid transparent;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.marker-option:hover {
+  background: rgba(255, 251, 189, 0.05);
+}
+
+.marker-option.selected {
+  border-color: var(--color-success);
+  background: rgba(91, 239, 106, 0.05);
+} 

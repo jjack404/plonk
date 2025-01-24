@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   filter: blur(0);
-  transition: filter 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
 
 .map-container:focus {
@@ -12,5 +12,11 @@
 
 .map-container.loading {
   filter: blur(8px);
+}
+
+/* Add transition for panel open state */
+:root.panel-open .map-container {
+  width: 67dvw !important;
+  transition: width 0.3s ease;
 }
 

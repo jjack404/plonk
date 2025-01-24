@@ -48,7 +48,7 @@
   .token-item img {
     width: 24px;
     height: 24px;
-    border-radius: 0%;
+    border-radius: 2%;
   }
   
   .drop-info {
@@ -99,7 +99,7 @@
     border: 1px solid #666;
     color: white;
     font-size: 12px;
-    border-radius: 0;
+    border-radius: 2;
     cursor: pointer;
     transition: all 0.2s ease;
     width: 100%;
@@ -149,7 +149,7 @@
   @media (max-width: 768px) {
     .marker-blurb.expanded {
       width: 90vw;
-      border-radius: 0;
+      border-radius: 2;
     }
     
     .marker-blurb-content {

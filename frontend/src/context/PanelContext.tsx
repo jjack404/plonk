@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 
-type PanelType = 'activity' | 'notifications' | 'help' | null;
+type PanelType = 'activity' | 'notifications' | 'help' | 'loot' | null;
 
 interface PanelContextType {
   activePanel: PanelType;

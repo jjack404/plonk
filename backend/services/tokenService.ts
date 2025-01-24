@@ -1,22 +1,83 @@
-import { AppError } from '../middleware/errorHandler';
-import { 
-  fetchTokenAccounts, 
-  fetchNFTMetadata, 
-  fetchFungibleMetadata, 
-  fetchSolBalance 
-} from '../utils/apiUtils';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { makeApiRequest } from '../config/cache';
+import { Token } from '../types';
+import axios from 'axios';
 
-export const getWalletTokens = async (walletAddress: string) => {
+const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
+const TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
+const JUPITER_TOKEN_LIST_URL = 'https://token.jup.ag/strict';
+
+let tokenList: { [key: string]: any } = {};
+
+async function getJupiterTokenList() {
+  if (Object.keys(tokenList).length > 0) return tokenList;
   try {
-    const tokens = await fetchTokenAccounts(walletAddress);
-    const [nftMetadata, fungibleMetadata] = await Promise.all([
-      fetchNFTMetadata(tokens),
-      fetchFungibleMetadata(tokens)
-    ]);
-    const solToken = await fetchSolBalance(walletAddress);
-    
-    return [...nftMetadata, solToken, ...fungibleMetadata];
+    const response = await axios.get(JUPITER_TOKEN_LIST_URL);
+    tokenList = response.data.reduce((acc: any, token: any) => {
+      acc[token.address] = token;
+      return acc;
+    }, {});
+    return tokenList;
   } catch (error) {
-    throw new AppError('Failed to fetch wallet tokens', 500);
+    console.error('Error fetching Jupiter token list:', error);
+    return {};
+  }
+}
+
+export const getWalletTokens = async (walletAddress: string): Promise<Token[]> => {
+  try {
+    const jupiterTokens = await getJupiterTokenList();
+
+    // 1. Fetch all token accounts
+    const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
+      new PublicKey(walletAddress),
+      { programId: new PublicKey(TOKEN_PROGRAM_ID) }
+    );
+
+    // 2. Process token accounts
+    const tokens = tokenAccounts.value
+      .map(account => {
+        const tokenInfo = account.account.data.parsed.info;
+        const amount = Number(tokenInfo.tokenAmount.uiAmount);
+        
+        if (!amount || amount <= 0) return null;
+
+        const isNFT = tokenInfo.tokenAmount.decimals === 0 && amount === 1;
+        const jupiterToken = jupiterTokens[tokenInfo.mint];
+
+        return {
+          mint: tokenInfo.mint,
+          amount,
+          decimals: tokenInfo.tokenAmount.decimals,
+          isNFT,
+          symbol: isNFT ? 'NFT' : (jupiterToken?.symbol || 'Unknown'),
+          logoURI: isNFT ? 'https://placehold.co/32x32?text=NFT' : jupiterToken?.logoURI,
+          metadata: {
+            name: isNFT ? 'NFT' : jupiterToken?.name,
+            image: isNFT ? 'https://placehold.co/32x32?text=NFT' : jupiterToken?.logoURI
+          }
+        };
+      })
+      .filter((token): token is NonNullable<typeof token> => token !== null);
+
+    // 3. Add SOL balance
+    const solBalance = await connection.getBalance(new PublicKey(walletAddress));
+    const solToken: Token = {
+      mint: 'So11111111111111111111111111111111111111112',
+      amount: solBalance / Math.pow(10, 9),
+      decimals: 9,
+      symbol: 'SOL',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png',
+      isNFT: false,
+      metadata: {
+        name: 'Solana',
+        image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png'
+      }
+    };
+
+    return [solToken, ...tokens];
+  } catch (error) {
+    console.error('Error in getWalletTokens:', error);
+    return [];
   }
 };

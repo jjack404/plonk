@@ -81,7 +81,7 @@ button {
   background: #020919 !important;
   color: #fffbbd !important;
   font-family: 'TheGoodMonolith' !important;
-  border-radius: 0 !important;
+  border-radius: 2px !important;
   cursor: pointer;
 }
 

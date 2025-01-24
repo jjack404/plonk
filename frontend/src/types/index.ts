@@ -8,8 +8,9 @@ export interface Position {
 }
 
 export interface TokenMetadata {
-  image?: string;
   name?: string;
+  symbol?: string;
+  image?: string;
   description?: string;
 }
 
@@ -17,10 +18,11 @@ export interface Token {
   mint: string;
   amount: number;
   decimals: number;
-  isNFT?: boolean;
-  metadata?: TokenMetadata;
-  logoURI?: string;
+  isNFT: boolean;
   symbol?: string;
+  logoURI?: string;
+  uri?: string;
+  metadata?: TokenMetadata;
 }
 
 export interface Drop {
@@ -61,20 +63,31 @@ export interface UserProfileProps {
   onClose: () => void;
 }
 
-export interface TransactionStatus {
-  type: 'pending' | 'success';
-  txId?: string;
-  action?: 'drop' | 'claim';
+export type TxStatusType = 'pending' | 'success' | 'error';
+
+export interface MarkerOption {
+  id: string;
+  icon: 'pin' | 'gift';
+  color: string;
 }
+
+export type TxStatus = {
+  type: TxStatusType;
+  action: string;
+  txId?: string;
+};
 
 export interface LootFormProps {
   position: Position;
   onClose: () => void;
   onSubmit: (data: Drop) => Promise<void>;
-  setTxStatus: (status: TransactionStatus | null) => void;
+  setTxStatus: (status: TxStatus | null) => void;
 }
 
-export interface MapProps {}
+export interface MapProps {
+  setDropPosition: (position: Position) => void;
+  setTxStatus: (status: TransactionStatus | null) => void;
+}
 
 export interface MapStyler {
   saturation?: number;
@@ -99,3 +112,11 @@ export interface MapRef {
   getBounds: () => google.maps.LatLngBounds;
   getProjection: () => google.maps.Projection;
 }
+
+export interface MarkerStyle {
+  id: string;
+  icon: string;
+  color: string;
+}
+
+export type TransactionStatus = TxStatus;

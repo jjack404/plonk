@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { OverlayView } from '@react-google-maps/api';
 import { Drop } from '../types';
 import { PiMapPinDuotone } from "react-icons/pi";
 import { isMobileDevice } from '../utils/device';
+import Bullet from '../components/Bullet';
 
 interface MapMarkerProps {
   marker: Drop;
@@ -41,21 +42,6 @@ const MapMarker: React.FC<MapMarkerProps> = React.memo(({
     }
   };
 
-  const markerStyle = useMemo(() => ({
-    cursor: 'pointer',
-    fontSize: '32px',
-    color: 'var(--color-success)',
-    filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7))',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '32px',
-    height: '32px',
-    position: 'relative' as const,
-    transform: 'translate3d(0, 0, 0)',
-    willChange: 'transform'
-  }), []);
-
   return (
     <OverlayView
       position={marker.position}
@@ -63,12 +49,15 @@ const MapMarker: React.FC<MapMarkerProps> = React.memo(({
       getPixelPositionOffset={() => MARKER_OFFSET}
     >
       <div 
-        style={markerStyle}
         onClick={handleMarkerClick}
         onMouseOver={handleMouseOver}
         onMouseOut={() => !isMobileDevice() && onMouseOut()}
       >
-        <PiMapPinDuotone style={{ color: 'var(--color-success)' }}/>
+        <Bullet 
+          icon={<PiMapPinDuotone />} 
+          color="var(--color-success)"
+          size="medium"
+        />
       </div>
     </OverlayView>
   );

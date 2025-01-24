@@ -26,11 +26,14 @@ button:focus {
 }
 
 .map-wrapper {
-  height: calc(100% - 78px);
+  height: calc(100% - 77px);
+  position: relative;
+  top: 30px;
 }
 
 @media (min-width: 768px) {
   .map-wrapper {
-    height: calc(100% - 120px);
+    height: calc(100% - 109px);
+    top: 60px;
   }
 }

@@ -10,19 +10,43 @@ import { PanelProvider, usePanel } from './context/PanelContext';
 import SidePanel from './components/SidePanel';
 import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
-import { TransactionStatus } from './types';
+import { TransactionStatus, Position } from './types';
+
+interface AppState {
+  dropPosition: Position | null;
+  activePanelType: 'activity' | 'notifications' | 'help' | 'loot' | null;
+}
 
 const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
   const { walletAddress, profile } = useContext(WalletContext);
   const { activePanel, setActivePanel } = usePanel();
   const [txStatus, setTxStatus] = useState<TransactionStatus | null>(null);
+  const [dropPosition, setDropPosition] = useState<Position | null>(null);
+  const [activePanelType, setActivePanelType] = useState<AppState['activePanelType']>(null);
+
+  const handleMapClick = (position: Position) => {
+    setDropPosition(position);
+    setActivePanelType('loot');
+  };
+
+  const handlePanelClose = () => {
+    setActivePanelType(null);
+    setDropPosition(null);
+  };
+
+  const handleDropSubmit = (position: any) => {
+    // Implementation of handleDropSubmit
+  };
 
   return (
     <div className="app-container">
       <NavBar />
       <div className="map-wrapper">
-        <Map setTxStatus={setTxStatus} />
+        <Map 
+          setDropPosition={handleMapClick} 
+          setTxStatus={setTxStatus}
+        />
       </div>
       {activeModal === 'profile' && (
         <div className="self-profile">
@@ -33,13 +57,20 @@ const AppContent: React.FC = () => {
           />
         </div>
       )}
-      <SidePanel
-        isOpen={!!activePanel}
-        onClose={() => setActivePanel(null)}
-        title={activePanel ? activePanel.charAt(0).toUpperCase() + activePanel.slice(1) : ''}
-      >
-        {activePanel && <PanelContent type={activePanel} />}
-      </SidePanel>
+      {activePanel && (
+        <SidePanel 
+          isOpen={true} 
+          onClose={() => setActivePanel(null)}
+          title={activePanel}
+        >
+          <PanelContent 
+            type={activePanel}
+            position={dropPosition}
+            onSubmit={handleDropSubmit}
+            setTxStatus={setTxStatus}
+          />
+        </SidePanel>
+      )}
       <BottomBar txStatus={txStatus} setLocalTxStatus={setTxStatus} />
     </div>
   );

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SidePanel.css';
 import { 
   PiSealQuestionDuotone,
   PiBellDuotone,
   PiClockCounterClockwiseDuotone,
   PiXDuotone,
+  PiMapPinDuotone,
 } from "react-icons/pi";
 
 interface SidePanelProps {
@@ -15,37 +16,54 @@ interface SidePanelProps {
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, title, children }) => {
+  const [isClosing, setIsClosing] = useState(false);
+
   useEffect(() => {
-    document.documentElement.classList.toggle('panel-open', isOpen);
+    if (isOpen) {
+      setIsClosing(false);
+      document.documentElement.classList.add('panel-open');
+    }
     return () => {
       document.documentElement.classList.remove('panel-open');
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 300); // Match this with CSS transition duration
+  };
 
   const getIcon = () => {
     switch (title.toLowerCase()) {
-      case 'activity':
-        return <PiClockCounterClockwiseDuotone />;
-      case 'notifications':
-        return <PiBellDuotone />;
       case 'help':
         return <PiSealQuestionDuotone />;
+      case 'notifications':
+        return <PiBellDuotone />;
+      case 'activity':
+        return <PiClockCounterClockwiseDuotone />;
       default:
-        return null;
+        return <PiMapPinDuotone />;
     }
   };
 
+  const getFormattedTitle = (title: string): string => {
+    return title.charAt(0).toUpperCase() + title.slice(1);
+  };
+
+  if (!isOpen && !isClosing) return null;
+
   return (
-    <div className="panel-overlay">
-      <div className="side-panel">
+    <div className={`panel-overlay ${isClosing ? 'closing' : ''}`}>
+      <div className={`side-panel ${isClosing ? 'closing' : ''}`}>
         <div className="panel-header">
           <div className="header-content">
             {getIcon()}
-            <h2>{title}</h2>
+            <h2>{getFormattedTitle(title)}</h2>
           </div>
-          <button className="close-button" onClick={onClose}>
+          <button className="panel-control-button" onClick={handleClose}>
             <PiXDuotone />
           </button>
         </div>

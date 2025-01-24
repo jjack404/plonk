@@ -1,11 +1,27 @@
 .panel-section {
-  padding: 16px;
   color: var(--color-text);
+  font-size: 16px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 4px !important;
+  text-shadow: 1px 0px 0px #fffbbd;
+  font-family: 'FATPIXEL';
+  text-transform: uppercase;
 }
 
 .panel-section h3 {
   margin: 0 0 16px 0;
   font-size: 18px;
+  color: #fffbbd;
+  text-shadow: 1px 0px 0px #fffbbd;
+  font-family: 'TheGoodMonolith';
+}
+
+.panel-section p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
   color: #fffbbd;
   text-shadow: 0.5px 0px 0px #fffbbd;
 }
@@ -19,6 +35,8 @@
   justify-content: space-between;
   align-items: center;
   color: #fffbbd;
+  font-size: 16px;
+  text-shadow: 0.5px 0px 0px #fffbbd;
 }
 
 .help-content {
@@ -27,13 +45,15 @@
 
 .help-content h4 {
   margin: 16px 0 8px 0;
-  font-size: 16px;
-  text-shadow: 0.5px 0px 0px #fffbbd;
+  font-size: 18px;
+  font-family: 'TheGoodMonolith';
+  text-shadow: 1px 0px 0px #fffbbd;
 }
 
 .help-content p {
   margin: 8px 0;
-  font-size: 14px;
+  font-size: 16px;
+  text-shadow: 0.5px 0px 0px #fffbbd;
   opacity: 0.9;
 }
 
@@ -46,4 +66,510 @@
 .activity-text,
 .notification-text {
   margin-right: 8px;
-} 
+}
+
+/* Loot Form Styles */
+.location-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 3px;
+}
+
+.location-name {
+  font-size: 18px;
+  color: #fffbbd;
+  font-family: 'TheGoodMonolith';
+  text-shadow: 1px 0px 0px #fffbbd;
+}
+
+.coordinates-row {
+  font-size: 16px;
+  color: rgba(255, 251, 189, 0.8);
+  text-shadow: 0.5px 0px 0px rgba(255, 251, 189, 0.8);
+}
+
+.location-image {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  border-radius: 2;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 4px;
+  color: #fffbbd;
+  font-size: 16px;
+  text-shadow: 0.5px 0px 0px #fffbbd;
+}
+
+.form-field label .required {
+  color: #ff4b4b;
+}
+
+.form-field input,
+.form-field textarea {
+  background: rgba(255, 251, 189, 0.05);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  border-radius: 2px;
+  padding: 4px;
+  color: #fffbbd;
+  font-family: inherit;
+  font-size: 16px;
+  resize: none;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #fffbbd;
+  outline: none;
+}
+
+/* Required field styling */
+.form-field.required label:after {
+  content: "*";
+  color: #ff6b6b;
+}
+
+.form-field input:invalid {
+  border-color: #ff6b6b;
+}
+
+.form-field input[required],
+.form-field textarea[required] {
+  border: 1px solid rgba(255, 251, 189, 0.4);
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5em;
+  gap: 4px;
+  width: 100%;
+}
+
+.tabs button {
+  padding: 12px;
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.1) 1px, rgba(255, 251, 189, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.05) !important;
+  border: 1px solid #fffbbd;
+  color: #fffbbd;
+  font-family: "TheGoodMonolith";
+  text-shadow: 1px 0px 0px #fffbbd;
+  width: 100%;
+}
+
+.tabs button:hover {
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.2) 1px, rgba(255, 251, 189, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.1) !important;
+}
+
+.tabs button.active-fungible {
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.2) 1px, rgba(91, 239, 106, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(91, 239, 106, 0.1) !important;
+  border-color: #5bef6a;
+  color: #5bef6a;
+  text-shadow: 1px 0px 0px #5bef6a;
+}
+
+.tabs button.active-nft {
+  background: linear-gradient(to bottom, transparent 2px, rgba(239, 91, 91, 0.2) 1px, rgba(239, 91, 91, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(239, 91, 91, 0.1) !important;
+  border-color: #ef5b5b;
+  color: #ef5b5b;
+  text-shadow: 1px 0px 0px #ef5b5b;
+}
+
+.tokens-container {
+  margin-bottom: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  justify-content: center;
+  text-align: center;
+  margin: auto;
+  padding: 0;
+}
+
+.tokens-container.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 8px;
+}
+
+.tokens-container.fungible-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.inventory-fungible-token {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px;
+  background: rgba(255, 251, 189, 0.05);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.inventory-fungible-token:hover {
+  background: rgba(255, 251, 189, 0.1);
+}
+
+.inventory-fungible-token.selected {
+  background: rgba(91, 239, 106, 0.1);
+  border-color: #5bef6a;
+}
+
+.token-image-symbol {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.token-image-symbol img {
+  width: 24px;
+  height: 24px;
+  border-radius: 2;
+}
+
+.token-symbol {
+  font-size: 16px;
+  text-shadow: 0.5px 0px 0px #fffbbd;
+}
+
+.fungible-balance-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inventory-fungible-balance {
+  font-size: 14px;
+  text-shadow: 0.5px 0px 0px rgba(255, 251, 189, 0.6);
+}
+
+.inventory-fungible-input-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.fungible-input {
+  width: 100%;
+  background: rgba(255, 251, 189, 0.1);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  padding: 4px;
+  color: #fffbbd;
+  font-size: 12px;
+  text-align: right;
+}
+
+.inventory-nft-token {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 251, 189, 0.05);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  aspect-ratio: 1;
+}
+
+.inventory-nft-token img {
+  width: 100%;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 2;
+}
+
+.nft-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.nft-name {
+  font-size: 10px;
+  color: #fffbbd;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 64px;
+  line-height: 1.2;
+}
+
+.token-address {
+  font-size: 8px;
+  color: rgba(255, 251, 189, 0.6);
+  text-align: center;
+}
+
+.no-tokens-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 16px;
+  color: rgba(255, 251, 189, 0.6);
+}
+
+.drop-button {
+  width: 100%;
+  background: rgba(91, 239, 106, 0.1);
+  border: 1px solid #5bef6a;
+  color: #5bef6a;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 12px;
+  margin-top: 16px;
+  position: relative;
+}
+
+.drop-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: calc(100% - 6px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(91, 239, 106, 0.6), transparent);
+}
+
+.drop-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirm-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.token-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.token-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 251, 189, 0.05);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+}
+
+.token-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.token-list-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 2;
+}
+
+.warning-text {
+  font-size: 16px;
+  text-shadow: 0.5px 0px 0px #ff4b4b;
+}
+
+.marker-selector-container {
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-button {
+  flex: 1;
+}
+
+.back-button {
+  flex: 1;
+}
+
+.back-button:hover {
+  background: rgba(255, 251, 189, 0.1);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px;
+  border-bottom: 1px solid rgba(255, 251, 189, 0.2);
+}
+
+.panel-title {
+  font-size: 18px;
+  color: #fffbbd;
+}
+
+.panel-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.panel-control-button {
+  background: none;
+  border: none;
+  color: #fffbbd;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.panel-control-button:hover {
+  opacity: 1;
+}
+
+.panel-expanded {
+  width: 50% !important;
+  transition: width 0.3s ease;
+}
+
+.tab-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 251, 189, 0.4), transparent);
+  animation: shine 3s infinite;
+}
+
+.tab-button.active::after {
+  background: linear-gradient(90deg, transparent, rgba(91, 239, 106, 0.4), transparent);
+}
+
+.styled-button {
+  padding: 12px;
+  border: 1px solid #fffbbd;
+  background: rgba(255, 251, 189, 0.05);
+  font-size: 16px;
+  color: #fffbbd;
+  font-family: "TheGoodMonolith";
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-shadow: 1px 0px 0px #fffbbd;
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.1) 1px, rgba(255, 251, 189, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.05) !important;
+}
+
+.styled-button:hover {
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.2) 1px, rgba(255, 251, 189, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.1) !important;
+}
+
+.styled-button:active {
+  transform: translateY(1px);
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.05) 1px, rgba(255, 251, 189, 0.3) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.02) !important;
+}
+
+.styled-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.styled-button.success {
+  border: none;
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.1) 1px, rgba(91, 239, 106, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, #5bef6a !important;
+  color: #020919;
+  text-shadow: 1px 0px 0px #020919;
+}
+
+.styled-button.success:hover {
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.2) 1px, rgba(91, 239, 106, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, #5bef6a !important;
+}
+
+.styled-button.success:active {
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.05) 1px, rgba(91, 239, 106, 0.3) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, #5bef6a !important;
+}
+
+.token-tab-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.token-tab-button {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ef5b5b;
+  background: linear-gradient(to bottom, transparent 2px, rgba(239, 91, 91, 0.1) 1px, rgba(239, 91, 91, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(239, 91, 91, 0.05) !important;
+  color: #ef5b5b;
+  font-family: "TheGoodMonolith";
+  text-shadow: 1px 0px 0px #ef5b5b;
+  cursor: pointer;
+}
+
+.token-tab-button:hover {
+  background: linear-gradient(to bottom, transparent 2px, rgba(239, 91, 91, 0.2) 1px, rgba(239, 91, 91, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(239, 91, 91, 0.1) !important;
+}
+
+.token-tab-button:active {
+  transform: translateY(1px);
+  background: linear-gradient(to bottom, transparent 2px, rgba(239, 91, 91, 0.05) 1px, rgba(239, 91, 91, 0.3) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(239, 91, 91, 0.02) !important;
+}
+
+.token-tab-button.active-fungible, .token-tab-button.active-nft {
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.1) 1px, rgba(91, 239, 106, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(91, 239, 106, 0.05) !important;
+  border-color: #5bef6a;
+  color: #5bef6a;
+  text-shadow: 1px 0px 0px #5bef6a;
+}
+
+.token-tab-button.active-fungible:hover, .token-tab-button.active-nft:hover {
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.2) 1px, rgba(91, 239, 106, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(91, 239, 106, 0.1) !important;
+}
+
+.token-tab-button.active-fungible:active, .token-tab-button.active-nft:active {
+  background: linear-gradient(to bottom, transparent 2px, rgba(91, 239, 106, 0.05) 1px, rgba(91, 239, 106, 0.3) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(91, 239, 106, 0.02) !important;
+}

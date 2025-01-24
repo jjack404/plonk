@@ -40,6 +40,12 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.token-list {
+  padding: 0;
+  margin: 0;
+}
+
 .token-item {
   display: flex;
   align-items: center;
@@ -48,7 +54,7 @@
 .token-item img {
   width: 24px;
   height: 24px;
-  border-radius: 0%;
+  border-radius: 2%;
 }
 .drop-info {
   display: flex;
@@ -72,6 +78,8 @@
   pointer-events: none;
 }
 .claim-button {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   padding: 8px;
   margin-top: 12px;
@@ -87,6 +95,27 @@
   color: var(--color-background) !important;
   opacity: 0.9;
 }
+.claim-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 251, 189, 0.4), transparent);
+  animation: shine 3s infinite;
+}
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
 .enable-location-button {
   margin-top: 8px;
   padding: 6px 12px;
@@ -94,7 +123,7 @@
   border: 1px solid var(--color-border-transparent);
   color: var(--color-text);
   font-size: 12px;
-  border-radius: 0;
+  border-radius: 2;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
@@ -146,7 +175,7 @@
 @media (max-width: 768px) {
   .marker-blurb.expanded {
       width: 90vw;
-      border-radius: 0;
+      border-radius: 2;
  }
   .marker-blurb-content {
       max-height: 60vh;

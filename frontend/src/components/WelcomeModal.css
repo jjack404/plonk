@@ -14,10 +14,12 @@
 
 .welcome-content {
   background: var(--color-background-transparent-heavy);
-  padding: 24px;
+  padding: 32px;
+  border-radius: 2px;
   color: var(--color-text);
   width: 80dvw;
   max-width: 500px;
+  border: 1px solid #fffbbd;
   backdrop-filter: blur(5px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   position: relative;
@@ -25,7 +27,7 @@
 
 .welcome-content h3 {
   margin: 0 0 24px 0;
-  font-size: 20px;
+  font-size: 28px;
   text-align: center;
   color: #fffbbd;
   text-shadow: 1px 0px 0px #fffbbd;
@@ -42,22 +44,11 @@
   text-shadow: 01px 0px 0px #fffbbd;
 }
 
-.continue-button {
-  width: 100%;
-  padding: 8px;
-  border: 01px solid #fffbbd;
-  background: transparent;
-  font-size: 16px;
-  color: #fffbbd;
-  font-family: "TheGoodMonolith";
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.continue-button:hover {
-  background-color: #fffbbd;
-  color: #020919;
-  text-shadow: 01px 0px 0px #020919;
+.welcome-intro {
+  font-size: 18px !important;
+  margin-bottom: 24px !important;
+  font-family: 'TheGoodMonolith';
+  text-shadow: 1px 0px 0px #fffbbd;
 }
 
 .wallet-buttons {
@@ -79,16 +70,16 @@
   justify-content: center;
   gap: 12px;
   text-shadow: 1px 0px 0px #fffbbd;
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.1) 1px, rgba(255, 251, 189, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.05) !important;
 }
 
 .wallet-button:hover {
-  background: rgba(255, 251, 189, 0.1);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(255, 251, 189, 0.2);
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.2) 1px, rgba(255, 251, 189, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.1) !important;
 }
 
 .wallet-button:active {
-  transform: translateY(0);
+  transform: translateY(1px);
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.05) 1px, rgba(255, 251, 189, 0.3) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.02) !important;
 }
 
 .wallet-button img {
@@ -97,19 +88,86 @@
   object-fit: contain;
 }
 
+.header-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 251, 189, 0.2);
+  margin: 0 0 24px 0;
+}
+
+.step-icon {
+  font-size: 24px;
+  color: #fffbbd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 251, 189, 0.1);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  border-radius: 50%;
+}
+
+.steps {
+  text-align: center;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.step-text {
+  font-family: 'TheGoodMonolith';
+  font-size: 18px;
+  color: #fffbbd;
+  text-shadow: 1px 0px 0px #fffbbd;
+  line-height: 1.2;
+  text-align: left;
+  flex: 1;
+}
+
 .disclaimer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   margin: 24px 0 !important;
   color: #ff6b6b !important;
   font-size: 14px !important;
   text-shadow: none !important;
   border: 1px solid #ff6b6b;
+  border-radius: 2px;
   padding: 12px !important;
   background: rgba(255, 107, 107, 0.1);
+}
+
+.disclaimer div {
+  display: flex;
+  align-items: center;
+  height: auto;
+  font-size: 30px;
+  aspect-ratio: 1/1;
+}
+
+.disclaimer span {
+  text-align: center;
+  font-size: 16px !important;
 }
 
 @media (max-width: 768px) {
   .welcome-content {
     width: 90vw;
-    border-radius: 0;
+    border-radius: 2;
   }
 }

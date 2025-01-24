@@ -4,12 +4,18 @@
   align-items: center;
   height: 48px;
   padding: 0 12px;
-  background-color: var(--color-background);
+  background: linear-gradient(
+    to bottom,
+    rgba(38, 45, 59, 0.85) 0%,
+    rgba(2, 9, 25, 0.95) 100%
+  );
+  backdrop-filter: blur(8px);
   color: var(--color-text);
   position: fixed;
   bottom: 0;
   width: 100%;
   z-index: 1000;
+  border-top: 1px solid rgba(255, 251, 189, 0.1);
 }
 
 .location-status {
@@ -44,7 +50,6 @@
 
 @media (min-width: 768px) {
   .bottom-bar {
-    height: 60px;
     padding: 0 1em;
   }
   .location-status {
@@ -61,7 +66,7 @@
 }
 
 .help-button {
-  background: none;
+  background: none !important;
   border: none;
   color: var(--color-text);
   font-size: 24px;
