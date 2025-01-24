@@ -162,7 +162,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
       <div className="form-scroll-area">
         {!isConfirming ? (
           <>
-            <form style={{ height: '100%' }} onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <div className="location-info">
                 <div className="location-name">
                   {position.city && position.country 
