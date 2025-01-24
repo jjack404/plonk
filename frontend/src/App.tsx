@@ -12,11 +12,6 @@ import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
 import { Position, TxStatus, Drop } from './types';
 
-interface AppState {
-  dropPosition: Position | null;
-  activePanelType: 'activity' | 'notifications' | 'help' | 'loot' | null;
-}
-
 const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
   const { walletAddress, profile } = useContext(WalletContext);

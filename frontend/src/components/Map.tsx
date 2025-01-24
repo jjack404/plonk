@@ -18,14 +18,14 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import WelcomeModal from './WelcomeModal';
 import { usePanel } from '../context/PanelContext';
 
-interface TransactionStatus {
+interface TxStatus {
   type: 'pending' | 'success';
   txId?: string;
   action?: 'drop' | 'claim';
 }
 
 interface MapProps {
-  setTxStatus: (status: TransactionStatus | null) => void;
+  setTxStatus: (status: TxStatus | null) => void;
   setDropPosition: (position: Position) => void;
 }
 
@@ -71,7 +71,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
     }
   }, [dropsLoading, dropsError]);
 
-  const updateTxStatus = useCallback((status: TransactionStatus | null) => {
+  const updateTxStatus = useCallback((status: TxStatus | null) => {
     setTxStatus(status);
   }, [setTxStatus]);
 

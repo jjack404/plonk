@@ -3,13 +3,13 @@ import { ActivityPanel } from './panels/ActivityPanel';
 import { NotificationsPanel } from './panels/NotificationsPanel';
 import { HelpPanel } from './panels/HelpPanel';
 import { LootFormPanel } from '../components/panels/LootFormPanel';
-import { Position, Drop, TransactionStatus } from '../types';
+import { Position, Drop, TxStatus } from '../types';
 
 interface PanelContentProps {
   type: 'activity' | 'notifications' | 'help' | 'loot';
   position?: Position;
   onSubmit?: (data: Drop) => void;
-  setTxStatus?: (status: TransactionStatus | null) => void;
+  setTxStatus?: (status: TxStatus | null) => void;
 }
 
 const PanelContent: React.FC<PanelContentProps> = ({ type, position, onSubmit, setTxStatus }) => {
