@@ -75,23 +75,6 @@
     pointer-events: none;
   }
   
-  .claim-button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 12px;
-    border: 1px solid #5bef6a;
-    background: #5bef6a;
-    color: #020919;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .claim-button:hover {
-    background: #4bd659 !important; 
-    color: #020919 !important;
-  }
-  
   .enable-location-button {
     margin-top: 8px;
     padding: 6px 12px;

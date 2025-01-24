@@ -35,7 +35,7 @@ const WelcomeModal: React.FC = () => {
         <div className="steps">
           <div className="step">
             <span className="step-icon"><PiWalletDuotone /></span>
-            <span className="step-text">Connect with <span style={{fontWeight: 'bold', color: '#ff6b6b'}}>Solflare</span> wallet</span>
+            <span className="step-text">Connect with Solflare wallet</span>
           </div>
           <div className="step">
             <span className="step-icon"><PiMapPinDuotone /></span>

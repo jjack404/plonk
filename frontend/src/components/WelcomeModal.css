@@ -13,7 +13,7 @@
 }
 
 .welcome-content {
-  background: var(--color-background-transparent-heavy);
+  background: linear-gradient(136deg, rgba(235, 241, 255, 0.1) 0%, rgba(2, 9, 25, 0.85) 33%, rgba(2, 9, 25, 0.5) 66%, rgba(235, 241, 255, 0.1) 100%);
   padding: 32px;
   border-radius: 2px;
   color: var(--color-text);

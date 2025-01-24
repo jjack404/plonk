@@ -12,13 +12,14 @@
 }
 
 .marker-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 48px);
+  display: flex;
+  flex-direction: row;
   gap: 12px;
   padding: 8px;
   background: rgba(255, 251, 189, 0.02);
   border: 1px solid rgba(255, 251, 189, 0.1);
   border-radius: 2px;
+  flex-wrap: wrap;
 }
 
 .marker-option {

@@ -77,7 +77,8 @@ export interface MarkerOption {
 
 export interface TxStatus {
   type: TxStatusType;
-  action: string;
+  action: 'drop' | 'claim';
+  message?: string;
   txId?: string;
 }
 

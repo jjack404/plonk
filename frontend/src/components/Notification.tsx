@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './Notification.css';
 import { TxStatusType } from '../types';
-
+import { PiXDuotone } from 'react-icons/pi';
 interface NotificationProps {
   message: string;
   type: TxStatusType;
@@ -16,12 +16,15 @@ const Notification: React.FC<NotificationProps> = React.memo(({
   onClose
 }) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 6000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+    // Only auto-close success notifications
+    if (type === 'success') {
+      const timer = setTimeout(onClose, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [onClose, type]);
 
   return (
-    <div className="notification">
+    <div className={`notification notification-${type}`}>
       {type === 'pending' && <div className="loading-spinner" />}
       <span>{message}</span>
       {txId && (
@@ -33,7 +36,9 @@ const Notification: React.FC<NotificationProps> = React.memo(({
           View Tx
         </a>
       )}
-      <button className="close-button" onClick={onClose}>✕</button>
+      {type === 'error' && (
+        <button className="close-button" onClick={onClose}><PiXDuotone /></button>
+      )}
     </div>
   );
 }, (prevProps, nextProps) => {

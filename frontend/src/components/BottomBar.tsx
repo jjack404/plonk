@@ -28,8 +28,19 @@ const BottomBar: React.FC<BottomBarProps> = React.memo(({
 
   const getMessage = useCallback(() => {
     if (!txStatus) return '';
+    
+    // Use the message from txStatus if provided
+    if (txStatus.message) {
+      return txStatus.message;
+    }
+
+    // Fallback to generic messages
     const action = txStatus.action === 'drop' ? 'Dropping' : 'Claiming';
-    return txStatus.type === 'pending' ? `${action}...` : `${action} Complete!`;
+    return {
+      pending: `${action}...`,
+      success: `${action} Complete!`,
+      error: `${action} Failed`
+    }[txStatus.type] || '';
   }, [txStatus]);
 
   const handleNotificationClose = useCallback(() => {
