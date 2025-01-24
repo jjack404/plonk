@@ -95,12 +95,12 @@ button {
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 6px !important;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #fffbbd;
-
-  border-radius: 5px;
+  border-radius: 2px;
 }
 
 html, body {

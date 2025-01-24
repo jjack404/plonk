@@ -12,6 +12,7 @@ export interface MarkerOption {
 interface MarkerSelectorProps {
   value: MarkerOption;
   onChange: (option: MarkerOption) => void;
+  small?: boolean;
 }
 
 const MARKER_OPTIONS: MarkerOption[] = [
@@ -23,13 +24,13 @@ const MARKER_OPTIONS: MarkerOption[] = [
   { id: 'gift-blue', icon: 'gift', color: '#61dafb' },
 ];
 
-const MarkerSelector: React.FC<MarkerSelectorProps> = ({ value, onChange }) => {
+const MarkerSelector: React.FC<MarkerSelectorProps> = ({ value, onChange, small }) => {
   const getIcon = (type: 'pin' | 'gift') => {
     return type === 'pin' ? <PiMapPinDuotone /> : <PiGiftDuotone />;
   };
 
   return (
-    <div className="marker-selector">
+    <div className={`marker-selector ${small ? 'small' : ''}`}>
       <div className="marker-grid">
         {MARKER_OPTIONS.map((option) => (
           <button

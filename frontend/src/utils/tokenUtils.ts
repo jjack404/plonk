@@ -1,16 +1,16 @@
 import { Token } from '../types';
+import axios from 'axios';
 
-export interface EnrichedToken extends Token {
-  logoURI?: string;
-  symbol: string;
-  name?: string;
-}
-
-// No need for Jupiter list or enrichment - backend already provides metadata
-export const enrichTokenWithMetadata = (token: Token): EnrichedToken => {
-  return {
-    ...token,
-    symbol: token.symbol || 'Unknown',
-    logoURI: token.logoURI || `https://placehold.co/32x32?text=${token.symbol || '?'}`
-  };
+export const fetchFungibleTokens = async (walletAddress: string): Promise<Token[]> => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/tokens`, {
+      headers: {
+        'wallet-address': walletAddress
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching tokens:', error);
+    return [];
+  }
 }; 

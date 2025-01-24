@@ -32,9 +32,13 @@ export interface Drop {
   position: Position;
   tokens: Token[];
   walletAddress: string;
-  status?: 'Active' | 'Claimed';
-  txId?: string;
-  createdAt?: Date;
+  status: string;
+  txId: string;
+  markerStyle?: {
+    id: string;
+    icon: 'pin' | 'gift';
+    color: string;
+  };
 }
 
 export interface Profile {

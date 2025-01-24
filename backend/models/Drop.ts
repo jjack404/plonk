@@ -10,6 +10,11 @@ export interface IDrop extends Document {
   status: 'Active' | 'Claimed';
   txId: string;
   createdAt: Date;
+  markerStyle: {
+    id: string;
+    icon: 'pin' | 'gift';
+    color: string;
+  };
 }
 
 const dropSchema = new Schema<IDrop>({
@@ -57,6 +62,11 @@ const dropSchema = new Schema<IDrop>({
   createdAt: { 
     type: Date, 
     default: Date.now 
+  },
+  markerStyle: {
+    id: { type: String, required: true },
+    icon: { type: String, enum: ['pin', 'gift'], required: true },
+    color: { type: String, required: true }
   }
 });
 

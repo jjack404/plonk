@@ -1,7 +1,7 @@
 import React from 'react';
 import { OverlayView } from '@react-google-maps/api';
 import { Drop } from '../types';
-import { PiMapPinDuotone } from "react-icons/pi";
+import { PiMapPinDuotone, PiGiftDuotone } from "react-icons/pi";
 import { isMobileDevice } from '../utils/device';
 import Bullet from '../components/Bullet';
 
@@ -20,6 +20,14 @@ const MapMarker: React.FC<MapMarkerProps> = React.memo(({
   onMouseOut,
   onClick
 }) => {
+  const defaultMarkerStyle = {
+    id: 'pin-cream',
+    icon: 'pin' as const,
+    color: '#fffbbd'
+  };
+
+  const markerStyle = marker.markerStyle || defaultMarkerStyle;
+
   const handleMarkerClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     const syntheticEvent = {
@@ -42,6 +50,10 @@ const MapMarker: React.FC<MapMarkerProps> = React.memo(({
     }
   };
 
+  const getIcon = (type: 'pin' | 'gift') => {
+    return type === 'pin' ? <PiMapPinDuotone /> : <PiGiftDuotone />;
+  };
+
   return (
     <OverlayView
       position={marker.position}
@@ -54,8 +66,8 @@ const MapMarker: React.FC<MapMarkerProps> = React.memo(({
         onMouseOut={() => !isMobileDevice() && onMouseOut()}
       >
         <Bullet 
-          icon={<PiMapPinDuotone />} 
-          color="var(--color-success)"
+          icon={getIcon(markerStyle.icon)} 
+          color={markerStyle.color}
           size="medium"
         />
       </div>

@@ -143,13 +143,13 @@
   justify-content: center;
   gap: 12px;
   margin: 24px 0 !important;
-  color: #ff6b6b !important;
+  color: #fff56b !important;
   font-size: 14px !important;
   text-shadow: none !important;
-  border: 1px solid #ff6b6b;
+  border: 1px solid #fff56b;
   border-radius: 2px;
   padding: 12px !important;
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(255, 245, 107, 0.1);
 }
 
 .disclaimer div {

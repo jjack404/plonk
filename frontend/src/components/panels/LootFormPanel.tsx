@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState, FormEvent } from 'react';
+import React, { useContext, useEffect, useState, FormEvent } from 'react';
 import { WalletContext } from '../../context/WalletContext';
-import { Token, WalletContextType, MarkerOption } from '../../types';
+import { WalletContextType, MarkerOption, Token } from '../../types';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import { getLocationImage } from '../../utils/locationImage';
 import PanoramaView from '../PanoramaView';
 import MarkerSelector from '../MarkerSelector';
 import './PanelStyles.css';
-import { enrichTokenWithMetadata } from '../../utils/tokenUtils';
+import { useTokens } from '../../hooks/useTokens';
 
 interface LootFormPanelProps {
   position: { lat: number; lng: number; city?: string; country?: string };
@@ -22,19 +22,15 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
   onSubmit, 
   setTxStatus 
 }) => {
-  const { walletAddress } = useContext<WalletContextType>(WalletContext);
+  const { walletAddress } = useContext(WalletContext) as WalletContextType;
   const { publicKey, sendTransaction } = useWallet();
   const connection = new Connection(import.meta.env.VITE_HELIUS_RPC_URL);
   
   // Form state
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [selectedTokens, setSelectedTokens] = useState<Token[]>([]);
-  const [tokens, setTokens] = useState<Token[]>([]);
   const [activeTab, setActiveTab] = useState<'fungible' | 'nft'>('fungible');
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
-  const [tokenAmounts, setTokenAmounts] = useState<Record<string, number>>({});
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [locationData, setLocationData] = useState<{
     type: 'panorama' | 'static';
     url?: string;
@@ -46,30 +42,13 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
     color: '#fffbbd'
   });
 
-  // Fetch tokens when wallet changes
-  useEffect(() => {
-    const fetchTokens = async (): Promise<void> => {
-      if (!walletAddress) return;
-      
-      try {
-        setIsLoading(true);
-        const response = await axios.get<Token[]>(
-          `${import.meta.env.VITE_BACKEND_URL}/api/tokens`,
-          { headers: { 'wallet-address': walletAddress } }
-        );
+  // Token state
+  const { tokens, isLoading, error } = useTokens(walletAddress);
 
-        const enrichedTokens = response.data.map(token => enrichTokenWithMetadata(token));
-        console.log('Enriched tokens:', enrichedTokens);
-        setTokens(enrichedTokens);
-      } catch (error) {
-        console.error('Error fetching tokens:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTokens();
-  }, [walletAddress]);
+  // Add these after other state declarations
+  const [selectedTokens, setSelectedTokens] = useState<{
+    [key: string]: { amount?: number; token: Token }
+  }>({});
 
   // Fetch location image
   useEffect(() => {
@@ -78,37 +57,10 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
     }
   }, [position]);
 
-  // Token handling
-  const handleTokenClick = useCallback((token: Token) => {
-    setSelectedTokens(prev => 
-      prev.includes(token) 
-        ? prev.filter(t => t !== token)
-        : [...prev, token]
-    );
-  }, []);
-
-  const handleAmountChange = useCallback((mint: string, amount: number) => {
-    setTokenAmounts(prev => ({
-      ...prev,
-      [mint]: amount
-    }));
-  }, []);
-
-  const isAmountValid = useCallback((): boolean => {
-    return selectedTokens.every(token => {
-      const specifiedAmount = tokenAmounts[token.mint] || 0;
-      return token.isNFT 
-        ? specifiedAmount === 1
-        : (specifiedAmount >= 0.001 && specifiedAmount <= token.amount);
-    });
-  }, [selectedTokens, tokenAmounts]);
-
   // Form submission
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (isAmountValid()) {
-      setIsConfirming(true);
-    }
+    setIsConfirming(true);
   };
 
   // Drop confirmation
@@ -118,17 +70,20 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
         throw new Error('Wallet not connected');
       }
 
-      const tokensToDrop = selectedTokens.map(token => ({
-        token,
-        amount: tokenAmounts[token.mint] || token.amount,
-      }));
-
       setTxStatus({ type: 'pending', action: 'drop' });
+      
+      // Create a minimal token object to satisfy the type requirement
+      const dummyToken = {
+        mint: 'So11111111111111111111111111111111111111112',
+        amount: 0,
+        decimals: 9,
+        isNFT: false
+      };
       
       const transaction = await createDropTransaction(
         publicKey,
-        tokensToDrop[0].token,
-        tokensToDrop[0].amount
+        dummyToken,
+        0
       );
 
       const signature = await sendTransaction(transaction, connection);
@@ -137,13 +92,13 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
       const dropData = {
         title,
         description,
-        tokens: tokensToDrop.map(({ token, amount }) => ({
-          ...token,
-          amount
-        })),
         position,
         walletAddress,
-        markerStyle
+        markerStyle,
+        tokens: Object.values(selectedTokens).map(({ token, amount }) => ({
+          ...token,
+          amount: amount || token.amount
+        }))
       };
 
       const response = await axios.post(
@@ -173,28 +128,33 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
   };
 
   // Utility functions
-  const fungibleTokens = tokens.filter(token => !token.isNFT);
-  const nfts = tokens.filter(token => token.isNFT);
-
-  const abbreviateAddress = (address: string): string => {
-    return `${address.slice(0, 4)}...${address.slice(-4)}`;
-  };
-
-  const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === '-' || e.key === 'e') {
-      e.preventDefault();
-    }
-  };
-
-  const isFormValid = () => {
-    return (
-      title.trim().length > 0 && 
-      selectedTokens.length > 0 && 
-      selectedTokens.every(token => 
-        token.isNFT || 
-        (tokenAmounts[token.mint] && tokenAmounts[token.mint] > 0)
-      )
+  const isFormValid = (): boolean => {
+    const hasSelectedTokens = Object.keys(selectedTokens).length > 0;
+    const allFungiblesHaveValidAmounts = Object.values(selectedTokens).every(
+      ({ amount, token }) => !token.isNFT ? (amount && amount >= 0.0001) : true
     );
+    return title.trim().length > 0 && hasSelectedTokens && allFungiblesHaveValidAmounts;
+  };
+
+  // Add these handler functions
+  const handleTokenSelect = (token: Token) => {
+    setSelectedTokens(prev => {
+      if (prev[token.mint]) {
+        const { [token.mint]: _, ...rest } = prev;
+        return rest;
+      }
+      return {
+        ...prev,
+        [token.mint]: { token, amount: token.isNFT ? undefined : 0.0001 }
+      };
+    });
+  };
+
+  const handleAmountChange = (mint: string, amount: number) => {
+    setSelectedTokens(prev => ({
+      ...prev,
+      [mint]: { ...prev[mint], amount }
+    }));
   };
 
   return (
@@ -218,7 +178,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
                 position={locationData.location}
                 onError={() => setLocationData({ 
                  type: 'static', 
-url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${position.lng}&zoom=14&size=600x300&scale=2&markers=color:red%7C${position.lat},${position.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
+                 url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${position.lng}&zoom=14&size=600x300&scale=2&markers=color:red%7C${position.lat},${position.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
                 })}
               />
             ) : (
@@ -255,152 +215,198 @@ url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${po
           <div className="inventory-section">
             <div className="token-tab-buttons">
               <button
+                type="button"
                 className={`token-tab-button ${activeTab === 'fungible' ? 'active-fungible' : ''}`}
-                onClick={() => setActiveTab('fungible')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveTab('fungible');
+                }}
               >
                 Fungible Tokens
               </button>
               <button
+                type="button"
                 className={`token-tab-button ${activeTab === 'nft' ? 'active-nft' : ''}`}
-                onClick={() => setActiveTab('nft')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveTab('nft');
+                }}
               >
                 NFTs
               </button>
             </div>
             <div className={`tokens-container ${activeTab === 'nft' ? 'nft-grid' : 'fungible-list'}`}>
-              {isLoading ? (
-                <div className="tokens-loading">
-                  <div className="loader"></div>
-                  <span>Fetching {activeTab === 'fungible' ? 'tokens' : 'NFTs'}...</span>
-                </div>
-              ) : activeTab === 'fungible' ? (
-                fungibleTokens.length > 0 ? (
-                  fungibleTokens.map((token) => (
-                    <div
-                      key={token.mint}
-                      className={`inventory-fungible-token ${selectedTokens.includes(token) ? 'selected' : ''}`}
-                      onClick={() => handleTokenClick(token)}
+              {activeTab === 'fungible' ? (
+                isLoading ? (
+                  <div className="token-status-message">Loading tokens...</div>
+                ) : error ? (
+                  <div className="token-status-message error">{error}</div>
+                ) : tokens.filter(t => !t.isNFT).length > 0 ? (
+                  tokens.filter(t => !t.isNFT).map(token => (
+                    <div 
+                      key={token.mint} 
+                      className={`inventory-fungible-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
+                      onClick={() => handleTokenSelect(token)}
                     >
-                      <div className="token-image-symbol-address">
-                        <div className="token-image-symbol">
-                          <img
-                            src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
-                            alt={token.symbol}
-                          />
-                          <span className="token-symbol">{token.symbol}</span>
-                        </div>
+                      <div className="token-image-symbol">
+                        <img
+                          src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
+                          alt={token.symbol}
+                        />
+                        <span className="token-symbol">{token.symbol}</span>
                       </div>
-                      <div className="fungible-balance-input-wrap">
-                        <span className="inventory-fungible-balance">
-                          {token.amount}
-                        </span>
-                        {selectedTokens.includes(token) && (
-                          <div className="inventory-fungible-input-wrap">
-                            <input
-                              type="number"
-                              className="fungible-input"
-                              value={tokenAmounts[token.mint] || ''}
-                              onChange={(e) => handleAmountChange(token.mint, parseFloat(e.target.value))}
-                              onKeyDown={preventNegativeInput}
-                              min="0.001"
-                              step="0.001"
-                              max={token.amount}
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                          </div>
+                      <div className="inventory-fungible-balance">
+                        {selectedTokens[token.mint] ? (
+                          <input
+                            type="number"
+                            value={selectedTokens[token.mint].amount}
+                            onChange={(e) => handleAmountChange(token.mint, parseFloat(e.target.value))}
+                            min={0.0001}
+                            max={token.amount}
+                            step={0.0001}
+                            onClick={(e) => e.stopPropagation()}
+                            className="token-amount-input"
+                          />
+                        ) : (
+                          `${token.amount.toFixed(token.decimals)} ${token.symbol}`
                         )}
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="no-tokens-message">
-                    No tokens found in wallet
-                  </div>
+                  <div className="token-status-message">No tokens found in wallet</div>
                 )
               ) : (
-                nfts.length > 0 ? (
-                  nfts.map((token) => (
-                    <div
-                      key={token.mint}
-                      className={`inventory-nft-token ${selectedTokens.includes(token) ? 'selected' : ''}`}
-                      onClick={() => handleTokenClick(token)}
+                isLoading ? (
+                  <div className="token-status-message">Loading NFTs...</div>
+                ) : error ? (
+                  <div className="token-status-message error">{error}</div>
+                ) : tokens.filter(t => t.isNFT).length > 0 ? (
+                  tokens.filter(t => t.isNFT).map(token => (
+                    <div 
+                      key={token.mint} 
+                      className={`inventory-nft-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
+                      onClick={() => handleTokenSelect(token)}
                     >
-                      <img
-                        src={token.metadata?.image || token.uri || token.logoURI}
-                        alt={token.metadata?.name || 'NFT'}
-                        onError={(e) => {
-                          console.log('Image load failed for NFT:', {
-                            mint: token.mint,
-                            metadata: token.metadata,
-                            uri: token.uri,
-                            logoURI: token.logoURI
-                          });
-                          e.currentTarget.src = `https://placehold.co/84x84?text=NFT`;
-                        }}
-                      />
+                      <div className="nft-image-container">
+                        <img
+                          src={token.logoURI || `https://placehold.co/150x150?text=NFT`}
+                          alt={token.symbol}
+                        />
+                      </div>
                       <div className="nft-info">
-                        <div className="nft-name">{token.metadata?.name || 'Unnamed NFT'}</div>
-                        <div className="token-address">{abbreviateAddress(token.mint)}</div>
+                        <span className="nft-name">{token.metadata?.name || 'Unnamed NFT'}</span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="no-tokens-message">
-                    No NFTs found in wallet
-                  </div>
+                  <div className="token-status-message">No NFTs found in wallet</div>
                 )
               )}
             </div>
           </div>
+
           <button
             type="submit"
-            className="drop-button"
+            className="continue-button"
             disabled={!isFormValid()}
-            onClick={handleConfirmDrop}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsConfirming(true);
+            }}
           >
-            Drop Loot
+            Continue
           </button>
         </form>
       ) : (
         <div className="confirm-view">
           <h3>Confirm Drop</h3>
-          <div className="token-list">
-            {selectedTokens.map((token, index) => (
-              <div key={index} className="token-list-item">
-                <div className="token-info">
-                  <img
-                    src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
-                    alt={token.symbol}
-                    className="token-list-image"
-                  />
-                  <span>{token.symbol}</span>
-                </div>
-                <span className="token-amount">{tokenAmounts[token.mint] || token.amount}</span>
+          
+          <div className="confirm-content">
+            <div className="confirm-summary">
+              <div className="confirm-location">
+                <span className="label">Location:</span>
+                <span>{position.city && position.country 
+                  ? `${position.city}, ${position.country}`
+                  : position.country || 'Unknown Location'}</span>
               </div>
-            ))}
+              
+              <div className="confirm-title">
+                <span className="label">Title:</span>
+                <span>{title}</span>
+              </div>
+              
+              {description && (
+                <div className="confirm-description">
+                  <span className="label">Description:</span>
+                  <span>{description}</span>
+                </div>
+              )}
+
+              <div className="selected-tokens-container">
+                <span className="label">Selected Tokens:</span>
+                <div className="selected-tokens-scroll">
+                  {Object.values(selectedTokens)
+                    .filter(({ token }) => !token.isNFT)
+                    .map(({ token, amount }) => (
+                      <div key={token.mint} className="selected-token-item fungible">
+                        <img 
+                          src={token.logoURI || `https://placehold.co/32x32?text=${token.symbol}`}
+                          alt={token.symbol}
+                        />
+                        <span className="token-details">
+                          <span className="token-symbol">{token.symbol}</span>
+                          <span className="token-amount">{amount} {token.symbol}</span>
+                        </span>
+                      </div>
+                    ))}
+                  
+                  {Object.values(selectedTokens)
+                    .filter(({ token }) => token.isNFT)
+                    .map(({ token }) => (
+                      <div key={token.mint} className="selected-token-item nft">
+                        <img 
+                          src={token.logoURI || `https://placehold.co/50x50?text=NFT`}
+                          alt={token.metadata?.name || 'NFT'}
+                        />
+                        <span className="token-details">
+                          <span className="token-name">{token.metadata?.name || 'Unnamed NFT'}</span>
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              <div className="marker-selector-wrap">
+                
+                <MarkerSelector 
+                  value={markerStyle}
+                  onChange={setMarkerStyle}
+                  small
+                />
+              </div>
+            </div>
           </div>
-          <div className="warning-text">
-            Warning: Drops are irreversible once confirmed
-          </div>
-          <div className="marker-selector-container">
-            <MarkerSelector 
-              value={markerStyle}
-              onChange={setMarkerStyle}
-            />
-          </div>
-          <div className="confirm-buttons">
-            <button 
-              className="confirm-button"
-              onClick={handleConfirmDrop}
-            >
-              Confirm Drop
-            </button>
-            <button 
-              className="back-button"
-              onClick={() => setIsConfirming(false)}
-            >
-              Back
-            </button>
+
+          <div className="confirm-footer">
+            <div className="warning-text">
+              Warning: Drops are irreversible once confirmed
+            </div>
+            
+            <div className="confirm-buttons">
+              <button 
+                className="back-button"
+                onClick={() => setIsConfirming(false)}
+              >
+                Back
+              </button>
+              <button 
+                className="confirm-button"
+                onClick={handleConfirmDrop}
+              >
+                Confirm Drop
+              </button>
+            </div>
           </div>
         </div>
       )}

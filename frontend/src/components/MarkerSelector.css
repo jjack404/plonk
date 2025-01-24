@@ -1,5 +1,6 @@
 .marker-selector {
-  margin: 16px 0;
+  display: flex;
+  align-items: center;
 }
 
 .marker-selector label {
@@ -12,29 +13,68 @@
 
 .marker-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(3, 48px);
+  gap: 12px;
   padding: 8px;
-  background: rgba(255, 251, 189, 0.05);
-  border: 1px solid rgba(255, 251, 189, 0.2);
+  background: rgba(255, 251, 189, 0.02);
+  border: 1px solid rgba(255, 251, 189, 0.1);
+  border-radius: 2px;
 }
 
 .marker-option {
-  background: none;
-  border: 1px solid transparent;
+  width: 48px;
+  height: 48px;
   padding: 8px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 251, 189, 0.05);
+  border: 1px solid rgba(255, 251, 189, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
   transition: all 0.2s ease;
 }
 
+.marker-option svg {
+  width: 28px;
+  height: 28px;
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 0 2px rgba(255, 251, 189, 0.2));
+}
+
 .marker-option:hover {
-  background: rgba(255, 251, 189, 0.05);
+  background: rgba(255, 251, 189, 0.1);
+  transform: scale(1.05);
+}
+
+.marker-option:active {
+  transform: scale(0.95);
 }
 
 .marker-option.selected {
-  border-color: var(--color-success);
-  background: rgba(91, 239, 106, 0.05);
+  background: rgba(91, 239, 106, 0.1);
+  border-color: #5bef6a;
+  box-shadow: 0 0 10px rgba(91, 239, 106, 0.2);
+}
+
+.marker-option.selected svg {
+  filter: drop-shadow(0 0 3px rgba(91, 239, 106, 0.4));
+}
+
+.marker-selector.small .marker-grid {
+  grid-template-columns: repeat(3, 36px);
+  gap: 8px;
+  padding: 6px;
+}
+
+.marker-selector.small .marker-option {
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+}
+
+.marker-selector.small .marker-option svg {
+  width: 20px;
+  height: 20px;
 } 

@@ -2,7 +2,9 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { makeApiRequest } from '../config/cache';
 import { Token } from '../types';
 import axios from 'axios';
+import NodeCache from 'node-cache';
 
+const tokenCache = new NodeCache({ stdTTL: 300 }); // 5 minute cache
 const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
 const TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
 const JUPITER_TOKEN_LIST_URL = 'https://token.jup.ag/strict';
@@ -25,10 +27,13 @@ async function getJupiterTokenList() {
 }
 
 export const getWalletTokens = async (walletAddress: string): Promise<Token[]> => {
+  // Check cache first
+  const cacheKey = `tokens-${walletAddress}`;
+  const cachedTokens = tokenCache.get<Token[]>(cacheKey);
+  if (cachedTokens) return cachedTokens;
+
   try {
     const jupiterTokens = await getJupiterTokenList();
-
-    // 1. Fetch all token accounts
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
       new PublicKey(walletAddress),
       { programId: new PublicKey(TOKEN_PROGRAM_ID) }
@@ -51,10 +56,10 @@ export const getWalletTokens = async (walletAddress: string): Promise<Token[]> =
           decimals: tokenInfo.tokenAmount.decimals,
           isNFT,
           symbol: isNFT ? 'NFT' : (jupiterToken?.symbol || 'Unknown'),
-          logoURI: isNFT ? 'https://placehold.co/32x32?text=NFT' : jupiterToken?.logoURI,
+          logoURI: isNFT ? undefined : jupiterToken?.logoURI,
           metadata: {
-            name: isNFT ? 'NFT' : jupiterToken?.name,
-            image: isNFT ? 'https://placehold.co/32x32?text=NFT' : jupiterToken?.logoURI
+            name: isNFT ? undefined : jupiterToken?.name,
+            image: isNFT ? undefined : jupiterToken?.logoURI
           }
         };
       })
@@ -75,9 +80,11 @@ export const getWalletTokens = async (walletAddress: string): Promise<Token[]> =
       }
     };
 
-    return [solToken, ...tokens];
+    const result = [solToken, ...tokens];
+    tokenCache.set(cacheKey, result);
+    return result;
   } catch (error) {
     console.error('Error in getWalletTokens:', error);
-    return [];
+    throw error; // Let the error handler deal with it
   }
 };
