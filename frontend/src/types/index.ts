@@ -71,11 +71,13 @@ export interface MarkerOption {
   color: string;
 }
 
-export type TxStatus = {
+export interface TxStatus {
   type: TxStatusType;
   action: string;
   txId?: string;
-};
+}
+
+export type TransactionStatus = TxStatus;
 
 export interface LootFormProps {
   position?: Position;

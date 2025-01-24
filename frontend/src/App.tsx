@@ -27,22 +27,16 @@ const AppContent: React.FC = () => {
   const { walletAddress, profile } = useContext(WalletContext);
   const { activePanel, setActivePanel } = usePanel();
   const [txStatus, setTxStatus] = useState<TxStatus | null>(null);
-  const [dropPosition, setDropPosition] = useState<Position | null>(null);
-  const [activePanelType, setActivePanelType] = useState<AppState['activePanelType']>(null);
   const [selectedPosition, setSelectedPosition] = useState<Position>();
 
   const handleMapClick = (position: Position) => {
-    setDropPosition(position);
-    setActivePanelType('loot');
-  };
-
-  const handlePanelClose = () => {
-    setActivePanelType(null);
-    setDropPosition(null);
+    setSelectedPosition(position);
+    setActivePanel('loot');
   };
 
   const handleSubmit = async (data: Drop) => {
-    // Implementation of handleDropSubmit
+    console.log('Submitting drop:', data);
+    // Implementation here
   };
 
   return (
@@ -51,7 +45,7 @@ const AppContent: React.FC = () => {
       <div className="map-wrapper">
         <Map 
           setDropPosition={handleMapClick} 
-          setTxStatus={setTxStatus}
+          setTxStatus={(status: TxStatus | null) => setTxStatus(status)}
         />
       </div>
       {activeModal === 'profile' && (
