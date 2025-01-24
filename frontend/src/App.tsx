@@ -10,7 +10,12 @@ import { PanelProvider, usePanel } from './context/PanelContext';
 import SidePanel from './components/SidePanel';
 import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
-import { TransactionStatus, Position } from './types';
+import { 
+  Position, 
+  TxStatus,
+  Drop, 
+  Profile 
+} from './types';
 
 interface AppState {
   dropPosition: Position | null;
@@ -21,9 +26,10 @@ const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
   const { walletAddress, profile } = useContext(WalletContext);
   const { activePanel, setActivePanel } = usePanel();
-  const [txStatus, setTxStatus] = useState<TransactionStatus | null>(null);
+  const [txStatus, setTxStatus] = useState<TxStatus | null>(null);
   const [dropPosition, setDropPosition] = useState<Position | null>(null);
   const [activePanelType, setActivePanelType] = useState<AppState['activePanelType']>(null);
+  const [selectedPosition, setSelectedPosition] = useState<Position>();
 
   const handleMapClick = (position: Position) => {
     setDropPosition(position);
@@ -35,7 +41,7 @@ const AppContent: React.FC = () => {
     setDropPosition(null);
   };
 
-  const handleDropSubmit = (position: any) => {
+  const handleSubmit = async (data: Drop) => {
     // Implementation of handleDropSubmit
   };
 
@@ -65,8 +71,8 @@ const AppContent: React.FC = () => {
         >
           <PanelContent 
             type={activePanel}
-            position={dropPosition}
-            onSubmit={handleDropSubmit}
+            position={selectedPosition}
+            onSubmit={handleSubmit}
             setTxStatus={setTxStatus}
           />
         </SidePanel>

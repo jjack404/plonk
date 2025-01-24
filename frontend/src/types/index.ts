@@ -78,7 +78,7 @@ export type TxStatus = {
 };
 
 export interface LootFormProps {
-  position: Position;
+  position?: Position;
   onClose: () => void;
   onSubmit: (data: Drop) => Promise<void>;
   setTxStatus: (status: TxStatus | null) => void;
@@ -86,7 +86,7 @@ export interface LootFormProps {
 
 export interface MapProps {
   setDropPosition: (position: Position) => void;
-  setTxStatus: (status: TransactionStatus | null) => void;
+  setTxStatus: (status: TxStatus | null) => void;
 }
 
 export interface MapStyler {
@@ -119,4 +119,3 @@ export interface MarkerStyle {
   color: string;
 }
 
-export type TransactionStatus = TxStatus;
