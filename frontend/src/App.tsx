@@ -10,12 +10,7 @@ import { PanelProvider, usePanel } from './context/PanelContext';
 import SidePanel from './components/SidePanel';
 import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
-import { 
-  Position, 
-  TxStatus,
-  Drop, 
-  Profile 
-} from './types';
+import { Position, TxStatus, Drop } from './types';
 
 interface AppState {
   dropPosition: Position | null;

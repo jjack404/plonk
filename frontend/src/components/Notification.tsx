@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import './Notification.css';
+import { TxStatusType } from '../types';
 
 interface NotificationProps {
   message: string;
-  type: 'pending' | 'success';
+  type: TxStatusType;
   txId?: string;
   onClose: () => void;
 }
