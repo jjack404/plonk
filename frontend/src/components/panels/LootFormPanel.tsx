@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, FormEvent } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { WalletContextType, MarkerOption, Token } from '../../types';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Connection } from '@solana/web3.js';
+import { Connection, clusterApiUrl } from '@solana/web3.js';
 import axios from 'axios';
 import { createDropTransaction } from '../../utils/solanaTransactions';
 import { getLocationImage } from '../../utils/locationImage';
@@ -24,7 +24,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
 }) => {
   const { walletAddress } = useContext(WalletContext) as WalletContextType;
   const { publicKey, sendTransaction } = useWallet();
-  const connection = new Connection(import.meta.env.VITE_HELIUS_RPC_URL);
+  const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
   
   // Form state
   const [title, setTitle] = useState<string>('');
@@ -67,63 +67,116 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
   const handleConfirmDrop = async (): Promise<void> => {
     try {
       if (!publicKey || !walletAddress) {
-        throw new Error('Wallet not connected');
+        setTxStatus({ 
+          type: 'error', 
+          action: 'drop',
+          message: 'Wallet not connected'
+        });
+        return;
       }
 
-      setTxStatus({ type: 'pending', action: 'drop' });
-      
-      // Create a minimal token object to satisfy the type requirement
-      const dummyToken = {
-        mint: 'So11111111111111111111111111111111111111112',
-        amount: 0,
-        decimals: 9,
-        isNFT: false
-      };
-      
-      const transaction = await createDropTransaction(
-        publicKey,
-        dummyToken,
-        0
-      );
-
-      const signature = await sendTransaction(transaction, connection);
-      setTxStatus({ type: 'success', txId: signature, action: 'drop' });
-
-      const dropData = {
-        title,
-        description,
-        position,
-        walletAddress,
-        markerStyle,
-        tokens: Object.values(selectedTokens).map(({ token, amount }) => ({
-          ...token,
-          amount: amount || token.amount
-        }))
-      };
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/drops`,
-        dropData,
-        { headers: { 'wallet-address': walletAddress } }
-      );
-
-      await connection.confirmTransaction(signature);
-
-      await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/drops/${response.data._id}/transaction`,
-        { txId: signature },
-        { headers: { 'wallet-address': walletAddress } }
-      );
-
-      onSubmit({
-        ...dropData,
-        _id: response.data._id,
-        txId: signature
+      setTxStatus({ 
+        type: 'pending', 
+        action: 'drop',
+        message: 'Creating transaction...' 
       });
 
+      const selectedTokenArray = Object.values(selectedTokens).map(({ token, amount }) => ({
+        token,
+        amount: amount || token.amount
+      }));
+
+      let transaction;
+      try {
+        transaction = await createDropTransaction(
+          publicKey,
+          selectedTokenArray
+        );
+      } catch (error) {
+        setTxStatus({ 
+          type: 'error', 
+          action: 'drop',
+          message: 'Failed to create transaction'
+        });
+        throw error;
+      }
+
+      setTxStatus({ 
+        type: 'pending', 
+        action: 'drop',
+        message: 'Please approve the transaction in your wallet' 
+      });
+
+      try {
+        const signature = await sendTransaction(transaction, connection);
+
+        setTxStatus({ 
+          type: 'pending', 
+          action: 'drop',
+          message: 'Confirming transaction...',
+          txId: signature 
+        });
+
+        // Create drop in database with pending status
+        const dropData = {
+          title,
+          description,
+          position,
+          walletAddress,
+          markerStyle,
+          tokens: selectedTokenArray,
+          status: 'pending',
+          txId: signature
+        };
+
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/drops`,
+          dropData,
+          { headers: { 'wallet-address': walletAddress } }
+        );
+
+        // Wait for confirmation
+        await connection.confirmTransaction(signature, 'confirmed');
+
+        // Update drop status
+        await axios.put(
+          `${import.meta.env.VITE_BACKEND_URL}/api/drops/${response.data._id}/transaction`,
+          { 
+            txId: signature,
+            status: 'Active'
+          },
+          { headers: { 'wallet-address': walletAddress } }
+        );
+
+        setTxStatus({ 
+          type: 'success', 
+          action: 'drop',
+          message: 'Drop created successfully!',
+          txId: signature 
+        });
+
+        onSubmit(response.data);
+
+      } catch (txError) {
+        console.error('Transaction error:', txError);
+        setTxStatus({ 
+          type: 'error', 
+          action: 'drop',
+          message: txError instanceof Error 
+            ? txError.message 
+            : 'Transaction failed or was rejected'
+        });
+        throw txError;
+      }
     } catch (error) {
-      console.error('Error confirming drop:', error);
-      setTxStatus({ type: 'error', action: 'drop' });
+      console.error('Drop error:', error);
+      setTxStatus({ 
+        type: 'error', 
+        action: 'drop',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Failed to create drop'
+      });
     }
   };
 
