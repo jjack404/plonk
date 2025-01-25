@@ -7,7 +7,8 @@ import {
 } from '@solana/web3.js';
 import { 
   createTransferInstruction,
-  getAssociatedTokenAddress
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction
 } from '@solana/spl-token';
 import { Token } from '../types';
 
@@ -45,15 +46,24 @@ export async function createDropTransaction(
         );
       } else {
         // SPL Token transfer
-        const fromATA = await getAssociatedTokenAddress(
-          new PublicKey(token.mint),
-          fromPubkey
-        );
-          
-        const toATA = await getAssociatedTokenAddress(
-          new PublicKey(token.mint),
-          toPubkey
-        );
+        const mintPubkey = new PublicKey(token.mint);
+        const fromATA = await getAssociatedTokenAddress(mintPubkey, fromPubkey);
+        const toATA = await getAssociatedTokenAddress(mintPubkey, toPubkey);
+
+        // Check if destination ATA exists
+        try {
+          await connection.getAccountInfo(toATA);
+        } catch {
+          // If not, create it
+          transaction.add(
+            createAssociatedTokenAccountInstruction(
+              fromPubkey,  // payer
+              toATA,       // ata
+              toPubkey,    // owner
+              mintPubkey   // mint
+            )
+          );
+        }
 
         transaction.add(
           createTransferInstruction(
