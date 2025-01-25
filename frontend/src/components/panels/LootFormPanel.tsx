@@ -124,7 +124,15 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
           position,
           walletAddress,
           markerStyle,
-          tokens: selectedTokenArray,
+          tokens: selectedTokenArray.map(({ token, amount }) => ({
+            mint: token.mint,
+            amount: amount,
+            decimals: token.decimals,
+            symbol: token.symbol,
+            logoURI: token.logoURI,
+            metadata: token.metadata,
+            isNFT: token.isNFT || false
+          })),
           status: 'pending',
           txId: signature
         };
