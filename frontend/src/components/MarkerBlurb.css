@@ -7,6 +7,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 999;
   margin-top: -30px;
+  border-radius: 2px;
   cursor: pointer;
   pointer-events: auto;
 }
@@ -77,6 +78,7 @@
   user-select: none;
   pointer-events: none;
 }
+
 .claim-button {
   position: relative;
   overflow: hidden;
@@ -90,11 +92,13 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .claim-button:hover {
-  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.2) 1px, rgba(255, 251, 189, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.1) !important;
-  color: #fffbbd !important;
+  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.2) 1px, rgba(255, 251, 189, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(91, 239, 106, 0.8) !important;
+  color: #020919 !important;
   opacity: 0.9;
 }
+
 .claim-button::after {
   content: '';
   position: absolute;
@@ -105,6 +109,7 @@
   background: linear-gradient(90deg, transparent, rgba(255, 251, 189, 0.4), transparent);
   animation: shine 3s infinite;
 }
+
 @keyframes shine {
   0% {
     left: -100%;

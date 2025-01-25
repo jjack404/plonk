@@ -17,6 +17,7 @@ import Loader from './Loader';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import WelcomeModal from './WelcomeModal';
 import { usePanel } from '../context/PanelContext';
+import { PiCrosshairDuotone } from "react-icons/pi";
 
 interface MapProps {
   setTxStatus: (status: TxStatus | null) => void;
@@ -54,6 +55,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
   const [activeStreetView, setActiveStreetView] = useState<google.maps.StreetViewPanorama | null>(null);
   const { setActivePanel } = usePanel();
+  const [isLocating, setIsLocating] = useState(false);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -239,6 +241,39 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
     setActivePanel('loot');
   }, [setDropPosition, setActivePanel]);
 
+  const handlePanToLocation = () => {
+    if (navigator.geolocation) {
+      setIsLocating(true);
+      const timeoutId = setTimeout(() => {
+        setIsLocating(false);
+      }, 10000); // Timeout after 10 seconds
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          if (mapRef.current) {
+            mapRef.current.panTo({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            });
+            mapRef.current.setZoom(15);
+          }
+          setIsLocating(false);
+          clearTimeout(timeoutId);
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          setIsLocating(false);
+          clearTimeout(timeoutId);
+        },
+        { 
+          maximumAge: 30000,      // Use cached position if less than 30 seconds old
+          timeout: 10000,         // Wait max 10 seconds for response
+          enableHighAccuracy: false // Don't need high accuracy for map panning
+        }
+      );
+    }
+  };
+
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
@@ -300,6 +335,16 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
           />
         )}
       </GoogleMap>
+      {navigator.geolocation && (
+        <button 
+          className={`map-control-button ${isLocating ? 'locating' : ''}`}
+          onClick={handlePanToLocation}
+          disabled={isLocating}
+          aria-label="Center on my location"
+        >
+          <PiCrosshairDuotone size={20} className={isLocating ? 'spinning' : ''} />
+        </button>
+      )}
       <WelcomeModal />
     </>
   );

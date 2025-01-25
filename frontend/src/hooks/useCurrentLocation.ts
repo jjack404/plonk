@@ -1,91 +1,68 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-interface LocationOptions {
-  enableHighAccuracy: boolean;
-  timeout: number;
-  maximumAge: number;
+interface CachedLocation {
+  latitude: number;
+  longitude: number;
+  timestamp: number;
 }
 
+let cachedLocation: CachedLocation | null = null;
+const CACHE_DURATION = 30000; // 30 seconds
+
 export const useCurrentLocation = () => {
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
+  const [location, setLocation] = useState<{latitude: number | null, longitude: number | null}>({
+    latitude: null,
+    longitude: null
+  });
   const [error, setError] = useState<string | null>(null);
-  const [isRetrying, setIsRetrying] = useState(false);
-
-  const options: LocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 5000,      // Reduced timeout to 5 seconds
-    maximumAge: 10000   // Reduced cache time to 10 seconds
-  };
-
-  const handleSuccess = useCallback((position: GeolocationPosition) => {
-    setLatitude(position.coords.latitude);
-    setLongitude(position.coords.longitude);
-    setError(null);
-    setIsRetrying(false);
-  }, []);
-
-  const handleError = useCallback((error: GeolocationPositionError) => {
-    console.warn('Location error:', error.message);
-    
-    if (error.code === error.TIMEOUT && !isRetrying) {
-      setIsRetrying(true);
-      // Keep previous coordinates if we have them
-      return;
-    }
-
-    if (!isRetrying) {
-      setLatitude(null);
-      setLongitude(null);
-      setError(error.message);
-    }
-  }, [isRetrying]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!('geolocation' in navigator)) {
+    if (!navigator.geolocation) {
       setError('Geolocation is not supported');
+      setIsLoading(false);
       return;
     }
 
-    let watchId: number;
-    let retryTimeout: NodeJS.Timeout;
-
     const getCurrentPosition = () => {
+      // Check cache first
+      if (cachedLocation && Date.now() - cachedLocation.timestamp < CACHE_DURATION) {
+        setLocation({
+          latitude: cachedLocation.latitude,
+          longitude: cachedLocation.longitude
+        });
+        setIsLoading(false);
+        return;
+      }
+
       navigator.geolocation.getCurrentPosition(
-        handleSuccess,
-        handleError,
-        options
+        (position) => {
+          const newLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            timestamp: Date.now()
+          };
+          cachedLocation = newLocation;
+          setLocation({
+            latitude: newLocation.latitude,
+            longitude: newLocation.longitude
+          });
+          setIsLoading(false);
+        },
+        (error) => {
+          setError(error.message);
+          setIsLoading(false);
+        },
+        {
+          maximumAge: CACHE_DURATION,
+          timeout: 10000,
+          enableHighAccuracy: true // Need accuracy for distance calculations
+        }
       );
     };
 
-    // Initial position request
     getCurrentPosition();
+  }, []);
 
-    // Set up watching with more frequent updates
-    watchId = navigator.geolocation.watchPosition(
-      handleSuccess,
-      handleError,
-      {
-        ...options,
-        timeout: 3000,     // Even shorter timeout for continuous updates
-        maximumAge: 5000   // More frequent cache refresh
-      }
-    );
-
-    // If we get a timeout, retry after a short delay
-    if (isRetrying) {
-      retryTimeout = setTimeout(getCurrentPosition, 2000);
-    }
-
-    return () => {
-      if (watchId) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-      if (retryTimeout) {
-        clearTimeout(retryTimeout);
-      }
-    };
-  }, [handleSuccess, handleError, isRetrying]);
-
-  return { latitude, longitude, error };
+  return { ...location, error, isLoading };
 };
