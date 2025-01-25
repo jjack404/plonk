@@ -20,3 +20,76 @@
   transition: width 0.3s ease;
 }
 
+.map-control-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background: #020919;
+  border: 1px solid #fffbbd;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.map-control-button:hover {
+  background: #fffbbd !important;
+  border-color: #020919;
+  color: #020919 !important;  
+}
+
+.map-control-button.locating {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.map-control-button .spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.gm-style-mtc-bbw {
+  gap: 8px !important;
+}
+
+.gm-style-mtc-bbw button {
+  border: 1px solid #fffbbd !important;
+  border-radius: 2px !important;
+  padding: 8px !important;
+}
+
+.gm-style-mtc-bbw button:hover {
+  background: #fffbbd !important;
+  border-color: #020919 !important;
+  color: #020919 !important;  
+}
+
+.gm-style-mtc-bbw ul {
+  background: #fffbbd !important;
+  border: 1px solid #020919 !important;
+  color: #020919 !important;  
+  padding: 1px !important;
+  border-radius: 2px !important;
+}
+
+.gm-style-mtc-bbw li {
+  background: #fffbbd !important;
+  border: 1px solid #020919 !important;
+  color: #020919 !important;  
+  border-radius: 2px !important;
+  font-family: 'TheGoodMonolith' !important;
+} 
+
+.gm-style-mtc-bbw ul {
+  right: initial !important;  
+}
