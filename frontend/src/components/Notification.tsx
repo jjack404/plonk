@@ -23,6 +23,11 @@ const Notification: React.FC<NotificationProps> = React.memo(({
     }
   }, [onClose, type]);
 
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
+    onClose();
+  };
+
   return (
     <div className={`notification notification-${type}`}>
       {type === 'pending' && <div className="loading-spinner" />}
@@ -37,7 +42,7 @@ const Notification: React.FC<NotificationProps> = React.memo(({
         </a>
       )}
       {type === 'error' && (
-        <button className="close-button" onClick={onClose}><PiXDuotone /></button>
+        <button className="close-button" onClick={handleClose}><PiXDuotone /></button>
       )}
     </div>
   );
