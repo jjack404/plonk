@@ -10,10 +10,14 @@
   border-radius: 2px;
   cursor: pointer;
   pointer-events: auto;
+  border: 1px solid var(--manilla-60);
+  box-shadow: 0 0 10px var(--black-90); 
 }
+
 .marker-blurb:not(.expanded) {
   pointer-events: none;
 }
+
 .marker-blurb.expanded {
   pointer-events: auto;
   cursor: default;
@@ -85,11 +89,12 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  padding: 8px;
+  padding: 8px 0;
   margin-top: 12px;
   border: 1px solid var(--green);
   background: linear-gradient(to bottom, transparent 2px, var(--black-10) 1px, var(--green) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, var(--green-20) !important;
   color: var(--green) !important;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -107,9 +112,8 @@
 }
 
 .claim-button:hover {
-  background: linear-gradient(to bottom, transparent 2px, var(--manilla-10) 1px, var(--manilla) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, var(--green-20) !important;
+  background: linear-gradient(to bottom, transparent 2px, var(--green-10) 1px, var(--black) 3px, var(--green) 0px) 3px 0 / 100% no-repeat, var(--green) !important;
   color: var(--black) !important;
-  opacity: 0.9;
 }
 
 .claim-button::after {
@@ -134,6 +138,7 @@
     left: 100%;
   }
 }
+
 .enable-location-button {
   margin-top: 8px;
   padding: 6px 12px;
@@ -146,18 +151,22 @@
   transition: all 0.2s ease;
   width: 100%;
 }
+
 .enable-location-button:hover {
   background: var(--manilla-10);
 }
+
 .distance-warning {
   margin-top: 12px;
   text-align: center;
 }
+
 .distance-warning p {
   font-size: 12px;
   color: var(--red);
   margin-bottom: 8px;
 }
+
 .location-checking {
   margin-top: 12px;
   text-align: center;
@@ -168,11 +177,13 @@
   color: var(--manilla-80);
   gap: 8px;
 }
+
 .location-checking p {
   font-size: 12px;
   margin-top: 8px;
   line-height: 0;
 }
+
 .mini-loader {
   width: 16px;
   height: 16px;
@@ -182,6 +193,7 @@
   margin: 0;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
   0% {
       transform: rotate(0deg);
@@ -199,26 +211,31 @@
       max-height: 60vh;
  }
 }
+
 .wallet-connect {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
+
 .wallet-icon {
   font-size: 1.2em;
 }
+
 .drop-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
+
 .drop-value {
   color: var(--green);
   font-size: 14px;
   font-weight: bold;
 }
+
 .distance-display {
   text-align: center;
   margin-top: 12px;

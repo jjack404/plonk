@@ -5,11 +5,11 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 import axios from 'axios';
 import { createDropTransaction } from '../../utils/solanaTransactions';
-import { getLocationImage } from '../../utils/locationImage';
 import PanoramaView from '../PanoramaView';
 import MarkerSelector from '../MarkerSelector';
 import './PanelStyles.css';
 import { useTokens } from '../../hooks/useTokens';
+import MiniMap from '../MiniMap';
 
 interface LootFormPanelProps {
   position: { lat: number; lng: number; city?: string; country?: string };
@@ -31,11 +31,6 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
   const [description, setDescription] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'fungible' | 'nft'>('fungible');
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
-  const [locationData, setLocationData] = useState<{
-    type: 'panorama' | 'static';
-    url?: string;
-    location?: { lat: number; lng: number; pano?: string };
-  } | null>(null);
   const [markerStyle, setMarkerStyle] = useState<MarkerOption>({
     id: 'pin-cream',
     icon: 'pin',
@@ -50,11 +45,19 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
     [key: string]: { amount?: number; token: Token }
   }>({});
 
-  // Fetch location image
+  const [useStreetView, setUseStreetView] = useState<boolean>(true);
+  
   useEffect(() => {
-    if (position) {
-      getLocationImage(position).then(setLocationData);
-    }
+    // Check for street view availability
+    const sv = new google.maps.StreetViewService();
+    sv.getPanorama({
+      location: { lat: position.lat, lng: position.lng },
+      radius: 80, // About 0.05 miles in meters
+      source: google.maps.StreetViewSource.OUTDOOR
+    }).then(
+      () => setUseStreetView(true),
+      () => setUseStreetView(false)
+    );
   }, [position]);
 
   // Form submission
@@ -236,19 +239,13 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
               </div>
               
               <div className="location-image">
-                {locationData?.type === 'panorama' && locationData.location ? (
+                {useStreetView ? (
                   <PanoramaView 
-                    position={locationData.location}
-                    onError={() => setLocationData({ 
-                     type: 'static', 
-                     url: `https://maps.googleapis.com/maps/api/staticmap?center=${position.lat},${position.lng}&zoom=14&size=600x300&scale=2&markers=color:red%7C${position.lat},${position.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
-                    })}
+                    position={position}
+                    onError={() => setUseStreetView(false)}
                   />
                 ) : (
-                  <img 
-                    src={locationData?.url} 
-                    alt="Location"
-                  />
+                  <MiniMap position={position} />
                 )}
               </div>
 

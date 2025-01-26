@@ -1,8 +1,7 @@
 import { Position } from '../types';
 
 interface LocationImageResult {
-  type: 'panorama' | 'static';
-  url?: string;
+  type: 'panorama' | 'map';
   location?: {
     lat: number;
     lng: number;
@@ -55,19 +54,15 @@ export const getLocationImage = async (position: Position): Promise<LocationImag
       };
     }
 
-    // Fallback to static map
+    // Fallback to map
     return {
-      type: 'static',
-      url: getStaticMapUrl(lat, lng)
+      type: 'map',
+      location: { lat, lng }
     };
   } catch (error) {
     return {
-      type: 'static',
-      url: getStaticMapUrl(lat, lng)
+      type: 'map',
+      location: { lat, lng }
     };
   }
-};
-
-const getStaticMapUrl = (lat: number, lng: number): string => {
-  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
 };

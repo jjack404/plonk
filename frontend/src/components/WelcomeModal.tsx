@@ -26,7 +26,7 @@ const WelcomeModal: React.FC = () => {
   return (
     <div className="welcome-modal">
       <div className="welcome-content">
-        <div style={{display: 'flex', alignItems: 'center', flexDirection: 'row', height: 'auto', width: '100%', justifyContent: 'center', gap: '12px', marginBottom: '12px' }}>
+        <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column', height: 'auto', width: '100%', justifyContent: 'center', gap: '3px', marginBottom: '12px' }}>
           <img src="/plonk-logo-main.png" alt="Plonk" height="58" />
           <span className="alpha"> alpha test</span>
         </div>
