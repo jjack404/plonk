@@ -91,7 +91,7 @@ h1 {
 }
 
 button {
-  background: #020919 !important;
+  background: #020919;
   color: var(--manilla) !important;
   font-family: 'TheGoodMonolith' !important;
   border-radius: 2px !important;
