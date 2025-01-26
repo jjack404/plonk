@@ -1,10 +1,10 @@
 .marker-blurb {
-    background: rgba(0, 0, 0, 0.85);
+    background: var(--black-80);
     padding: 12px;
     color: white;
     min-width: 200px;
     backdrop-filter: blur(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px var(--black-20);
     z-index: 1000;
     margin-top: -30px;
     cursor: pointer;
@@ -62,6 +62,7 @@
   .location-image {
     overflow: hidden;
     height: 150px;
+    border-radius: 2px;
   }
   
   .location-image img {
@@ -118,7 +119,7 @@
     width: 16px;
     height: 16px;
     border: 2px solid #333;
-    border-top: 2px solid #5bef6a;
+    border-top: 2px solid var(--green);
     border-radius: 50%;
     margin: 0 auto;
     animation: spin 1s linear infinite;

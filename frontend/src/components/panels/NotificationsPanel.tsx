@@ -4,7 +4,6 @@ import './PanelStyles.css';
 export const NotificationsPanel: React.FC = () => {
   return (
     <div className="panel-section">
-      <h3>Notifications</h3>
       <div className="notifications-list">
         <div className="notification-item">
           <span className="notification-text">New drop available nearby!</span>

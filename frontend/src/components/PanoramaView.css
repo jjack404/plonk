@@ -14,9 +14,9 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: var(--color-background-transparent);
-    border: 1px solid var(--color-text);
-    color: var(--color-text);
+    background: var(--black-80) !important;
+    border: 1px solid var(--manilla);
+    color: var(--manilla) !important;
     padding: 8px;
     cursor: pointer;
     font-size: 16px;
@@ -25,7 +25,30 @@
   }
   
   .panorama-button:hover {
-    background: var(--color-background-transparent-heavy);
+    background: linear-gradient(
+      to bottom,
+      transparent 2px,
+      var(--manilla-20) 1px,
+      var(--manilla) 3px,
+      transparent 0px
+    ) 3px 0 / calc(100% - 6px) 100% no-repeat,
+    var(--manilla-10) !important;
+    box-shadow: 0 0 10px var(--manilla-50);
+  }
+  
+  .panorama-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 3px;
+    width: calc(100% - 6px);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--manilla-60),
+      transparent
+    );
   }
   
   .panorama-button.left {
@@ -40,4 +63,5 @@
     width: 100%;
     height: 100%;
     min-height: 150px;
+    border-radius: 2px;
   }

@@ -23,7 +23,7 @@ const MapMarker: React.FC<MapMarkerProps> = React.memo(({
   const defaultMarkerStyle = {
     id: 'pin-cream',
     icon: 'pin' as const,
-    color: '#fffbbd'
+    color: 'var(--manilla)'
   };
 
   const markerStyle = marker.markerStyle || defaultMarkerStyle;

@@ -55,7 +55,7 @@ export const mapStyles = [
     "elementType": "geometry",
     "stylers": [
       { "color": "#fffbbd" },
-      { "lightness": 60 },
+      { "lightness": 30 },
       { "saturation": -20 }
     ]
   },
@@ -64,8 +64,8 @@ export const mapStyles = [
     "elementType": "geometry",
     "stylers": [
       { "color": "#fffbbd" },
-      { "lightness": 21 },
-      { "saturation": 25 }
+      { "lightness": -40 },
+      { "saturation": -100 }
     ]
   },
   {
@@ -81,17 +81,19 @@ export const mapStyles = [
     "featureType": "road.highway",
     "elementType": "geometry.stroke",
     "stylers": [
-      { "color": "#5bef6a" },
-      { "lightness": 20 },
-      { "weight": 0.4 }
+      { "color": "#7bf7d5" },
+      { "saturation": 40 },
+      { "lightness": 10 },
+      { "weight": .9 }
     ]
   },
   {
     "featureType": "road.arterial",
     "elementType": "geometry",
     "stylers": [
-      { "color": "#020919" },
-      { "lightness": 40 },
+      { "color": "#ff5a5a" },
+      { "lightness": 20 },
+      { "saturation": 100 },
       { "weight": 0.3 }
     ]
   },
@@ -100,14 +102,16 @@ export const mapStyles = [
     "elementType": "geometry",
     "stylers": [
       { "color": "#020919" },
-      { "lightness": 55 }
+      { "saturation": -100 },
+      { "lightness": 65 },
+      { "weight": 0.3 }
     ]
   },
   {
     "featureType": "transit",
     "elementType": "geometry",
     "stylers": [
-      { "color": "#5bef6a" },
+      { "color": "var(--green)" },
       { "lightness": 100 }
     ]
   },
@@ -116,8 +120,8 @@ export const mapStyles = [
     "elementType": "geometry",
     "stylers": [
       { "color": "#020919" },
-      { "lightness": 30 },
-      { "saturation": -40 }
+      { "lightness": 10 },
+      { "saturation": -30 }
     ]
   },
   {

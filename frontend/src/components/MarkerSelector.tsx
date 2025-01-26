@@ -16,11 +16,11 @@ interface MarkerSelectorProps {
 }
 
 const MARKER_OPTIONS: MarkerOption[] = [
-  { id: 'pin-cream', icon: 'pin', color: '#fffbbd' },
-  { id: 'pin-green', icon: 'pin', color: '#5bef6a' },
+  { id: 'pin-cream', icon: 'pin', color: 'var(--manilla)' },
+  { id: 'pin-green', icon: 'pin', color: 'var(--green)' },
   { id: 'pin-blue', icon: 'pin', color: '#61dafb' },
-  { id: 'gift-cream', icon: 'gift', color: '#fffbbd' },
-  { id: 'gift-green', icon: 'gift', color: '#5bef6a' },
+  { id: 'gift-cream', icon: 'gift', color: 'var(--manilla)' },
+  { id: 'gift-green', icon: 'gift', color: 'var(--green)' },
   { id: 'gift-blue', icon: 'gift', color: '#61dafb' },
 ];
 

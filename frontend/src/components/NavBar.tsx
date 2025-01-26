@@ -12,7 +12,9 @@ const NavBar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="logo">
+        <img src="/plonk-logo-sm.png" alt="" className="logo-small" />
         <h1>PLONK</h1>
+        <img src="/plonk-logo-top.png" alt="PLONK" className="logo-large" />
       </div>
       <div className="walletButton">
         {walletAddress && (
