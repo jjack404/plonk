@@ -370,7 +370,8 @@ h2 {
   3px 0 / calc(100% - 6px) 100% no-repeat,
   var(--green-05) !important;
   border: 1px solid var(--green);
-  color: var(--green);
+  color: var(--green) !important;
+  text-shadow: 1px 0px 0px var(--green);
   font-family: "VT323", monospace;
   font-size: 18px;
   width: 100%;
@@ -381,7 +382,7 @@ h2 {
 
 .continue-button:hover {
   color: var(--black) !important;
-  text-shadow: 0.5px 0px 0px var(--black);
+  text-shadow: 1px 0px 0px var(--black);
   background: linear-gradient(
     to bottom,
     var(--green-05) 2px,
@@ -549,6 +550,7 @@ h2 {
   flex: 1;
   padding: 8px;
   border-radius: 2px;
+  font-size: 16px;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -556,7 +558,8 @@ h2 {
 
 .confirm-button {
   border: 1px solid var(--green);
-  color: var(--green);
+  color: var(--green) !important;
+  text-shadow: 1px 0px 0px var(--green);
   background: linear-gradient(
         to bottom,
         var(--green-05) 2px,
@@ -579,7 +582,8 @@ h2 {
       3px 0 / calc(100% - 6px) 100% no-repeat,
     var(--red-05) !important;
   border: 1px solid var(--red);
-  color: var(--red);
+  color: var(--red) !important;
+  text-shadow: 1px 0px 0px var(--red);
 }
 
 .confirm-button:hover {
@@ -592,6 +596,8 @@ h2 {
       )
       3px 0 / calc(100% - 6px) 100% no-repeat,
     var(--green-80) !important;
+    color: var(--black) !important;
+    text-shadow: 1px 0px 0px var(--black);
     box-shadow: 0 0 10px var(--green-60);
 }
 
@@ -605,6 +611,8 @@ h2 {
       )
       3px 0 / calc(100% - 6px) 100% no-repeat,
     var(--red-80) !important;
+    color: var(--black) !important;
+    text-shadow: 1px 0px 0px var(--black);
     box-shadow: 0 0 10px var(--red-60);
 }
 
