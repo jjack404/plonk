@@ -26,40 +26,53 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  /* Theme Colors */
-  --color-primary: #020919;
-  --color-secondary: #fffbbd;
+  /* Base colors */
+  --black: #020919;
+  --manilla: #fffbbd;
+  --green: #7bf7d5;
+  --red: #ff5a5a;
+  --yellow: #fff566;
   
-  /* Semantic Colors */
-  --color-background: var(--color-primary);
-  --color-text: var(--color-secondary);
+  /* Accent colors */
+  --accent-dark: #131925;    /* darker blue accent for subtle backgrounds */
+  --accent-border: #353e53;  /* muted blue accent for subtle borders */
   
-  /* Status Colors */
-  --color-success: #5bef6a;
-  --color-error: #ff6b6b;
-  
-  /* Opacity Variants */
-  --color-background-85: rgba(2, 9, 25, 0.85);
-  --color-background-95: rgba(2, 9, 25, 0.95);
-  
-  /* Background Variations */
-  --color-background-transparent: rgba(2, 9, 25, 0.85);
-  --color-background-transparent-heavy: rgba(2, 9, 25, 0.95);
-  
-  /* Border Colors */
-  --color-border: #fffbbd;
-  --color-border-transparent: rgba(255, 251, 189, 0.2);
-  
-  /* Marker Colors */
-  --color-marker: #2eb344;
-  
-  /* UI Element Colors */
-  --color-input-background: rgba(255, 255, 255, 0.05);
-  --color-overlay-background: rgba(26, 27, 30, 0.95);
-  
-  /* Text Colors */
-  --color-text-muted: #999;
-  --color-text-secondary: #ccc;
+  /* Manilla with opacity */
+  --manilla-05: rgba(255, 251, 189, 0.05);
+  --manilla-10: rgba(255, 251, 189, 0.1);
+  --manilla-20: rgba(255, 251, 189, 0.2);
+  --manilla-30: rgba(255, 251, 189, 0.3);
+  --manilla-40: rgba(255, 251, 189, 0.4);
+  --manilla-60: rgba(255, 251, 189, 0.6);
+  --manilla-80: rgba(255, 251, 189, 0.8);
+
+  /* Black with opacity */
+  --black-05: rgba(2, 9, 25, 0.05);
+  --black-10: rgba(2, 9, 25, 0.1);
+  --black-20: rgba(2, 9, 25, 0.2);
+  --black-30: rgba(2, 9, 25, 0.3);
+  --black-40: rgba(2, 9, 25, 0.4);
+  --black-60: rgba(2, 9, 25, 0.6);
+  --black-80: rgba(2, 9, 25, 0.8);
+  --black-90: rgba(2, 9, 25, 0.9);
+
+  /* Green with opacity */
+  --green-05: rgba(123, 247, 213, 0.05);
+  --green-10: rgba(123, 247, 213, 0.1);
+  --green-20: rgba(123, 247, 213, 0.2);
+  --green-30: rgba(123, 247, 213, 0.3);
+  --green-40: rgba(123, 247, 213, 0.4);
+  --green-60: rgba(123, 247, 213, 0.6);
+  --green-80: rgba(123, 247, 213, 0.8);
+
+  /* Red with opacity */
+  --red-05: rgba(255, 90, 90, 0.05);
+  --red-10: rgba(255, 90, 90, 0.1);
+  --red-20: rgba(255, 90, 90, 0.2);
+  --red-30: rgba(255, 90, 90, 0.3);
+  --red-40: rgba(255, 90, 90, 0.4);
+  --red-60: rgba(255, 90, 90, 0.6);
+  --red-80: rgba(255, 90, 90, 0.8);
 }
 
 body {
@@ -79,7 +92,7 @@ h1 {
 
 button {
   background: #020919 !important;
-  color: #fffbbd !important;
+  color: var(--manilla) !important;
   font-family: 'TheGoodMonolith' !important;
   border-radius: 2px !important;
   cursor: pointer;
@@ -99,7 +112,7 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #fffbbd;
+  background-color: var(--manilla);
   border-radius: 2px;
 }
 

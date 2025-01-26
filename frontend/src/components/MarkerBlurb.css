@@ -1,10 +1,10 @@
 .marker-blurb {
-  background: var(--color-background-transparent-heavy);
+  background: var(--black-90);
   padding: 12px;
-  color: var(--color-text);
+  color: var(--manilla);
   min-width: 200px;
   backdrop-filter: blur(5px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px var(--black-20);
   z-index: 999;
   margin-top: -30px;
   border-radius: 2px;
@@ -24,7 +24,6 @@
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
   max-height: calc(100vh - 120px);
-  margin-top: 30px;
   overflow-y: auto;
 }
 .marker-blurb h3 {
@@ -34,7 +33,7 @@
 .marker-blurb .description {
   margin: 8px 0;
   font-size: 14px;
-  color: var(--color-text-secondary);
+  color: var(--manilla-80);
 }
 .token-preview {
   display: flex;
@@ -62,12 +61,15 @@
   justify-content: space-between;
   margin-top: 12px;
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: var(--manilla-60);
 }
+
 .location-image {
   overflow: hidden;
   height: 150px;
+  border-radius: 2px;
 }
+
 .location-image img {
   width: 100%;
   height: 100%;
@@ -85,17 +87,28 @@
   width: 100%;
   padding: 8px;
   margin-top: 12px;
-  border: 1px solid var(--color-success);
-  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.1) 1px, rgba(255, 251, 189, 0.6) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(255, 251, 189, 0.05) !important;
-  color: #fffbbd;
+  border: 1px solid var(--green);
+  background: linear-gradient(to bottom, transparent 2px, var(--black-10) 1px, var(--green) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, var(--green-20) !important;
+  color: var(--green) !important;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 0 10px var(--green);
+  animation: green-glow 3s infinite alternate;
+}
+
+@keyframes green-glow {
+  0% {
+    box-shadow: 0 0 2px var(--green);
+  }
+  100% {
+    box-shadow: 0 0 8px var(--green);
+  }
 }
 
 .claim-button:hover {
-  background: linear-gradient(to bottom, transparent 2px, rgba(255, 251, 189, 0.2) 1px, rgba(255, 251, 189, 0.9) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, rgba(91, 239, 106, 0.8) !important;
-  color: #020919 !important;
+  background: linear-gradient(to bottom, transparent 2px, var(--manilla-10) 1px, var(--manilla) 3px, transparent 0px) 3px 0 / calc(100% - 6px) 100% no-repeat, var(--green-20) !important;
+  color: var(--black) !important;
   opacity: 0.9;
 }
 
@@ -106,7 +119,7 @@
   left: -100%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 251, 189, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, var(--manilla-40), transparent);
   animation: shine 3s infinite;
 }
 
@@ -124,17 +137,17 @@
 .enable-location-button {
   margin-top: 8px;
   padding: 6px 12px;
-  background: var(--color-input-background);
-  border: 1px solid var(--color-border-transparent);
-  color: var(--color-text);
+  background: var(--black);
+  border: 1px solid var(--manilla-20);
+  color: var(--manilla);
   font-size: 12px;
-  border-radius: 2;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
 }
 .enable-location-button:hover {
-  background: #5a5a5a;
+  background: var(--manilla-10);
 }
 .distance-warning {
   margin-top: 12px;
@@ -142,7 +155,7 @@
 }
 .distance-warning p {
   font-size: 12px;
-  color: var(--color-error);
+  color: var(--red);
   margin-bottom: 8px;
 }
 .location-checking {
@@ -152,7 +165,7 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  color: var(--color-text-secondary);
+  color: var(--manilla-80);
   gap: 8px;
 }
 .location-checking p {
@@ -163,8 +176,8 @@
 .mini-loader {
   width: 16px;
   height: 16px;
-  border: 2px solid var(--color-border-transparent);
-  border-top: 2px solid var(--color-success);
+  border: 2px solid var(--manilla-20);
+  border-top: 2px solid var(--green);
   border-radius: 50%;
   margin: 0;
   animation: spin 1s linear infinite;
@@ -180,7 +193,7 @@
 @media (max-width: 768px) {
   .marker-blurb.expanded {
       width: 90vw;
-      border-radius: 2;
+      border-radius: 2px;
  }
   .marker-blurb-content {
       max-height: 60vh;
@@ -202,22 +215,33 @@
   margin-bottom: 12px;
 }
 .drop-value {
-  color: var(--color-success);
+  color: var(--green);
   font-size: 14px;
   font-weight: bold;
 }
 .distance-display {
   text-align: center;
   margin-top: 12px;
-  color: var(--color-text-muted);
+  color: var(--manilla-60);
   font-size: 16px;
 }
 .distance-display span {
-  color: var(--color-error);
+  color: var(--red);
   font-weight: bold;
 }
 .distance-display .unit {
-  color: var(--color-text-muted);
+  color: var(--manilla-60);
   font-size: 14px;
   margin-left: 4px;
+}
+.connect-wallet-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.connect-wallet-button svg {
+  color: var(--manilla);
 }

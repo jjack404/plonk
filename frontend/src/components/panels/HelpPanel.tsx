@@ -4,7 +4,6 @@ import './PanelStyles.css';
 export const HelpPanel: React.FC = () => {
   return (
     <div className="panel-section">
-      <h3>Help & FAQ</h3>
       <div className="help-content">
         <h4>How to Play</h4>
         <p>1. Connect your wallet</p>

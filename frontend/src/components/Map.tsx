@@ -244,31 +244,29 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
   const handlePanToLocation = () => {
     if (navigator.geolocation) {
       setIsLocating(true);
-      const timeoutId = setTimeout(() => {
-        setIsLocating(false);
-      }, 10000); // Timeout after 10 seconds
-
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          if (mapRef.current) {
-            mapRef.current.panTo({
+          if (mapRef.current && position.coords) {
+            const center = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
-            });
-            mapRef.current.setZoom(15);
+            };
+            
+            mapRef.current.panTo(center);
+            // Ensure we're at the right zoom level
+            mapRef.current.setZoom(11);
+            
+            setIsLocating(false);
           }
-          setIsLocating(false);
-          clearTimeout(timeoutId);
         },
         (error) => {
-          console.error('Geolocation error:', error);
+          console.error('Error getting location:', error);
           setIsLocating(false);
-          clearTimeout(timeoutId);
         },
-        { 
-          maximumAge: 30000,      // Use cached position if less than 30 seconds old
-          timeout: 10000,         // Wait max 10 seconds for response
-          enableHighAccuracy: false // Don't need high accuracy for map panning
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
         }
       );
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Drop } from '../types';
 import './MarkerBlurb.css';
 import { getLocationImage } from '../utils/locationImage';
@@ -6,6 +6,7 @@ import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
 import { PiWalletDuotone } from "react-icons/pi";
+import { useSettings } from '../context/SettingsContext';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -30,9 +31,8 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
   walletAddress,
   onConnectWallet
 }) => {
-  const { latitude, longitude } = useCurrentLocation();
-  const [isInRange, setIsInRange] = useState(false);
-  const [isCheckingLocation, setIsCheckingLocation] = useState(true);
+  const { latitude, longitude, isLoading: locationLoading, error: locationError } = useCurrentLocation();
+  const [isInRange, setIsInRange] = useState<boolean | null>(null);
   const [locationData, setLocationData] = useState<{
     type: 'panorama' | 'static';
     url?: string;
@@ -45,6 +45,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
     transform: 'translate(-50%, -100%)'
   });
   const [distance, setDistance] = useState<number | null>(null);
+  const { distanceUnit } = useSettings();
 
   useEffect(() => {
     if (expanded && drop) {
@@ -52,46 +53,32 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
     }
   }, [expanded, drop]);
 
-  const checkLocation = useCallback(() => {
-    if (drop && latitude !== null && longitude !== null) {
-      const roughDistance = calculateDistance(
-        latitude,
-        longitude,
-        drop.position.lat,
-        drop.position.lng
-      );
-
-      setDistance(roughDistance);
-
-      if (roughDistance > 2) {
-        setIsInRange(false);
-        setIsCheckingLocation(false);
-        return;
-      }
-
-      setIsCheckingLocation(true);
-      const preciseDistance = calculateDistance(
-        latitude,
-        longitude,
-        drop.position.lat,
-        drop.position.lng
-      );
-      setDistance(preciseDistance);
-      setIsInRange(preciseDistance <= 1);
-      setIsCheckingLocation(false);
-    }
-  }, [drop, latitude, longitude]);
-
   useEffect(() => {
-    checkLocation();
-  }, [checkLocation]);
-
-  useEffect(() => {
-    if (expanded) {
-      const intervalId = setInterval(checkLocation, 500);
-      return () => clearInterval(intervalId);
+    if (!expanded || !drop) {
+      return;
     }
-  }, [expanded, checkLocation]);
+
+    if (locationError) {
+      setIsInRange(false);
+      return;
+    }
+
+    if (locationLoading || !latitude || !longitude) {
+      setIsInRange(null);
+      return;
+    }
+
+    const currentDistance = calculateDistance(
+      latitude,
+      longitude,
+      drop.position.lat,
+      drop.position.lng
+    );
+
+    setDistance(currentDistance);
+    setIsInRange(currentDistance <= 1);
+
+  }, [expanded, drop, latitude, longitude, locationLoading, locationError]);
 
   useEffect(() => {
     if (expanded) {
@@ -139,60 +126,59 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
     </ul>
   );
 
-  const renderClaimButton = () => {
-    if (isCheckingLocation) {
+  const renderLocationStatus = () => {
+    if (!expanded) return null;
+
+    if (locationError) {
       return (
-        <div className="location-checking">
-          <div className="mini-loader"></div>
-          <p>Checking your location...</p>
+        <div className="location-status error">
+          <p>Location access needed to claim drop</p>
+          <button 
+            className="enable-location-button"
+            onClick={() => window.location.reload()}
+          >
+            Enable Location
+          </button>
         </div>
       );
     }
 
-    if (latitude === null || longitude === null) {
+    if (locationLoading || isInRange === null) {
       return (
-        <div className="distance-warning">
-          <p>Please enable location services to see if you can claim</p>
+        <div className="location-checking">
+          <div className="loading-spinner" />
+          <p>Checking location...</p>
         </div>
       );
     }
 
     if (!isInRange) {
+      const displayDistance = distanceUnit === 'mi' 
+        ? (distance! * 0.621371).toFixed(2)
+        : distance!.toFixed(2);
+      
       return (
-        <>
+        <div className="distance-warning">
+          <p>You need to be within {distanceUnit === 'mi' ? '0.62' : '1'} {distanceUnit} to claim this drop</p>
           {distance && (
-            <div className="distance-display">
-              <span>{distance.toFixed(2)} miles</span> away
-            </div>
+            <span>Currently {displayDistance} {distanceUnit} away</span>
           )}
-          <div className="distance-warning">
-            <p>You must be within 1 mile of the drop location to claim it</p>
-          </div>
-        </>
-      );
-    }
-
-    if (!walletAddress) {
-      return (
-        <button
-          className="claim-button wallet-connect"
-          onClick={(e) => {
-            e.stopPropagation();
-            onConnectWallet();
-          }}
-        >
-          <PiWalletDuotone className="wallet-icon" />
-          <span>Select Wallet</span>
-        </button>
+        </div>
       );
     }
 
     return (
-      <button
+      <button 
         className="claim-button"
-        onClick={() => drop && onClaim?.(drop)}
+        onClick={() => onClaim?.(drop)}
+        disabled={!walletAddress}
       >
-        Claim Drop
+        {walletAddress ? 'Claim Drop' : (
+          <div onClick={onConnectWallet} className="connect-wallet-button">
+            <PiWalletDuotone size={20} />
+            <span>Connect Wallet to Claim</span>
+          </div>
+        )}
       </button>
     );
   };
@@ -237,7 +223,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
                 : drop.position.country || 'Unknown Location'}
             </span>
           </div>
-          {renderClaimButton()}
+          {renderLocationStatus()}
         </>
       ) : (
         <>

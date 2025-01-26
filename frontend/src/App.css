@@ -8,7 +8,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  color: #fffbbd;
+  color: var(--manilla);
 }
 
 input:focus,
@@ -26,14 +26,16 @@ button:focus {
 }
 
 .map-wrapper {
-  height: calc(100% - 77px);
+  height: calc(100% - 84px);
   position: relative;
-  top: 30px;
+  top: 42px;
+  padding: 6px;
+  background: var(--black);
 }
 
 @media (min-width: 768px) {
   .map-wrapper {
-    height: calc(100% - 109px);
+    height: calc(100% - 103px);
     top: 60px;
   }
 }

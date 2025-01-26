@@ -1,9 +1,9 @@
 .dashboard-container {
     padding: 4px 8px;
-    border: 1px solid #fffbbd;
-    background-color: rgba(2, 9, 25, 0.85);
+    border: 1px solid var(--manilla);
+    background-color: var(--black-80);
     backdrop-filter: blur(25px);
-    color: #fffbbd;
+    color: var(--manilla);
     border-radius: 2;
     position: fixed;
     top: 50%;
@@ -13,7 +13,7 @@
     height: 66%;
     transform: translate(-50%, -50%);
     z-index: 1001;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px var(--black-60);
 }
 
 @media (max-width: 768px) {
@@ -27,7 +27,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    color: #fffbbd;
+    color: var(--manilla);
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -60,9 +60,9 @@
 .dashboard-info-input {
     width: 100%;
     padding: 8px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid #fffbbd;
-    color: #fffbbd;
+    background-color: var(--black-10);
+    border: 1px solid var(--manilla);
+    color: var(--manilla);
     font-family: 'TheGoodMonolith';
 }
 
@@ -79,7 +79,7 @@
 .dashboard-info {
     margin: 0;
     font-size: 14px;
-    color: rgba(255, 251, 189, 0.8);
+    color: var(--manilla-80);
 }
 
 .edit-buttons {
@@ -93,8 +93,8 @@
     height: 28px;
     width: 28px !important;
     background-color: transparent;
-    border: 1px solid #fffbbd;
-    color: #fffbbd;
+    border: 1px solid var(--manilla);
+    color: var(--manilla);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -105,25 +105,25 @@
 }
 
 .edit-button.save {
-    background-color: rgba(91, 239, 106, 0.1);
-    border-color: #5bef6a;
-    color: #5bef6a;
+    background-color: var(--green-05);
+    border-color: var(--green);
+    color: var(--green);
 }
 
 .edit-button.save:hover {
-    background-color: #5bef6a;
-    color: #020919;
+    background-color: var(--green);
+    color: var(--black);
 }
 
 .edit-button.cancel {
-    background-color: rgba(239, 91, 91, 0.1);
-    border-color: #ef5b5b;
-    color: #ef5b5b;
+    background-color: var(--red-05);
+    border-color: var(--red);
+    color: var(--red);
 }
 
 .edit-button.cancel:hover {
-    background-color: #ef5b5b;
-    color: #020919;
+    background-color: var(--red);
+    color: var(--black);
 }
 
 .dashboard p {
@@ -154,10 +154,10 @@
     width: 100%;
     padding: 5px;
     margin: 5px 0;
-    border: 1px solid #fffbbd;
+    border: 1px solid var(--manilla);
     border-radius: 2;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fffbbd;
+    background-color: var(--black-10);
+    color: var(--manilla);
     font-family: 'TheGoodMonolith';
 }
 
@@ -166,19 +166,19 @@
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #fffbbd;
+    border: 1px solid var(--manilla);
     border-radius: 2;
-    background-color: #020919;
-    color: #fffbbd;
+    background-color: var(--black);
+    color: var(--manilla);
     cursor: pointer;
-    text-shadow: 1px 0px 0px #fffbbd;
+    text-shadow: 1px 0px 0px var(--manilla);
     font-family: 'TheGoodMonolith';
 }
 
 .dashboard button:hover {
-    background-color: #5bef6a;
-    color: #020919;
-    text-shadow: 1px 0px 0px #020919;
+    background-color: var(--green);
+    color: var(--black);
+    text-shadow: 1px 0px 0px var(--black);
 }
 
 @media (min-width: 375px) {
@@ -212,9 +212,9 @@
     left: 0;
     right: 0;
     height: 24px;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--black-40);
     backdrop-filter: blur(25px);
-    color: #fffbbd;
+    color: var(--manilla);
     text-align: center;
     font-size: 12px;
     line-height: 24px;
@@ -222,7 +222,7 @@
 }
 
 .avatar-container.editing {
-    border: 1px dashed #fffbbd;
+    border: 1px dashed var(--manilla);
 }
 
 .avatar-container.editing .avatar-upload-overlay {
@@ -262,8 +262,8 @@
     height: 28px;
     width: 28px !important;
     background-color: transparent;
-    border: 1px solid #fffbbd;
-    color: #fffbbd;
+    border: 1px solid var(--manilla);
+    color: var(--manilla);
     cursor: pointer;
     display: flex;
     align-items: center;

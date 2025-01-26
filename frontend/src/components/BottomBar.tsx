@@ -49,18 +49,45 @@ const BottomBar: React.FC<BottomBarProps> = React.memo(({
     }
   }, [txStatus, setLocalTxStatus]);
 
+  const buttons = [
+    {
+      icon: <PiClockCounterClockwiseDuotone />,
+      label: 'Activity',
+      panel: 'activity',
+      onClick: () => setActivePanel('activity')
+    },
+    {
+      icon: <PiBellDuotone />,
+      label: 'Notifications',
+      panel: 'notifications',
+      onClick: () => setActivePanel('notifications')
+    },
+    {
+      icon: <PiSealQuestionDuotone />,
+      label: 'Help',
+      panel: 'help',
+      onClick: () => setActivePanel('help')
+    },
+    {
+      icon: <PiGearDuotone />,
+      label: 'Settings',
+      panel: 'settings',
+      onClick: () => setActivePanel('settings')
+    }
+  ];
+
   return (
     <div className="bottom-bar">
       <div className="location-status">
         {isLocationActive ? (
           <div className="status-active">
             <PiGpsDuotone />
-            <span>Location Active</span>
+            <span>Active</span>
           </div>
         ) : (
           <div className="status-inactive">
             <PiGpsSlashDuotone />
-            <span>Location Disabled</span>
+            <span>Disabled</span>
           </div>
         )}
       </div>
@@ -73,18 +100,20 @@ const BottomBar: React.FC<BottomBarProps> = React.memo(({
         />
       )}
       <div className="button-group">
-        <button className="help-button" onClick={() => setActivePanel('activity')}>
-          <PiClockCounterClockwiseDuotone />
-        </button>
-        <button className="help-button" onClick={() => setActivePanel('notifications')}>
-          <PiBellDuotone />
-        </button>
-        <button className="help-button" onClick={() => setActivePanel('help')}>
-          <PiSealQuestionDuotone />
-        </button>
-        <button style={{ display: 'none' }} className="help-button">
-          <PiGearDuotone />
-        </button>
+        {buttons.map((button, index) => (
+          <React.Fragment key={index}>
+            <button 
+              className="help-button" 
+              onClick={button.onClick}
+              aria-label={button.label}
+            >
+              {button.icon}
+            </button>
+            {index < buttons.length - 1 && (
+              <div className="bottom-bar-divider" />
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

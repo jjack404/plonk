@@ -39,7 +39,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
   const [markerStyle, setMarkerStyle] = useState<MarkerOption>({
     id: 'pin-cream',
     icon: 'pin',
-    color: '#fffbbd'
+    color: 'var(--manilla)'
   });
 
   // Token state

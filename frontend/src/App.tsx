@@ -11,6 +11,7 @@ import SidePanel from './components/SidePanel';
 import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
 import { Position, TxStatus, Drop } from './types';
+import { SettingsProvider } from './context/SettingsContext';
 
 const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
@@ -72,13 +73,15 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <PanelProvider>
-      <WalletProviderWrapper>
-        <DropsProvider>
-          <ModalProvider>
-            <AppContent />
-          </ModalProvider>
-        </DropsProvider>
-      </WalletProviderWrapper>
+      <SettingsProvider>
+        <WalletProviderWrapper>
+          <DropsProvider>
+            <ModalProvider>
+              <AppContent />
+            </ModalProvider>
+          </DropsProvider>
+        </WalletProviderWrapper>
+      </SettingsProvider>
     </PanelProvider>
   );
 };

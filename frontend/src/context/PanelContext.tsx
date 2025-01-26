@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState } from 'react';
 
-type PanelType = 'activity' | 'notifications' | 'help' | 'loot' | null;
+export type PanelType = 'activity' | 'notifications' | 'help' | 'loot' | 'settings';
 
 interface PanelContextType {
-  activePanel: PanelType;
-  setActivePanel: (panel: PanelType) => void;
+  activePanel: PanelType | null;
+  setActivePanel: (panel: PanelType | null) => void;
 }
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined);
 
 export const PanelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activePanel, setActivePanel] = useState<PanelType>(null);
+  const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 
   return (
     <PanelContext.Provider value={{ activePanel, setActivePanel }}>

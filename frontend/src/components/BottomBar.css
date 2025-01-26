@@ -2,12 +2,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 48px;
-  padding: 0 12px;
+  height: 42px;
+  padding-left: 12px;
+  padding-right: 6px;
   background: linear-gradient(
     to bottom,
-    rgba(38, 45, 59, 0.85) 0%,
-    rgba(2, 9, 25, 0.95) 100%
+    var(--manilla-10) 0%,
+    var(--black-90) 100%
   );
   backdrop-filter: blur(8px);
   color: var(--color-text);
@@ -15,7 +16,7 @@
   bottom: 0;
   width: 100%;
   z-index: 1000;
-  border-top: 1px solid rgba(255, 251, 189, 0.1);
+  border-top: 1px solid var(--manilla-20);
 }
 
 .location-status {
@@ -31,11 +32,11 @@
 }
 
 .status-active {
-  color: var(--color-success);
+  color: var(--green);
 }
 
 .status-inactive {
-  color: var(--color-error);
+  color: var(--red);
 }
 
 .status-active svg,
@@ -43,14 +44,9 @@
   font-size: 16px;
 }
 
-.status-active span,
-.status-inactive span {
-  display: none;
-}
-
 @media (min-width: 768px) {
   .bottom-bar {
-    padding: 0 1em;
+    padding-left: 12px;
   }
   .location-status {
     font-size: 14px;
@@ -84,13 +80,13 @@
 
 .button-group {
   display: flex;
-  gap: 8px;
+  align-items: center;
 }
 
 .history-button {
   background: none;
   border: none;
-  color: var(--color-success);
+  color: var(--green);
   cursor: pointer;
   padding: 8px;
   font-size: 20px;
@@ -106,4 +102,18 @@
 
 .icon-default {
   color: var(--color-text);
+}
+
+/* Add styles for the button group and divider */
+.bottom-bar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bottom-bar-divider {
+  width: 1px;
+  height: 28px;
+  background: #353e53;
+  margin: 0 4px;
 }
