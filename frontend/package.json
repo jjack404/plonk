@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.3.0",
+    "@metaplex-foundation/umi": "^1.0.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
     "@react-google-maps/api": "^2.19.3",
     "@solana/spl-token": "^0.4.9",
     "@solana/wallet-adapter-react": "^0.15.35",
