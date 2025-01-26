@@ -5,6 +5,7 @@ import { getLocationImage } from '../utils/locationImage';
 import { useCurrentLocation } from '../hooks/useCurrentLocation';
 import { calculateDistance } from '../utils/distance';
 import PanoramaView from './PanoramaView';
+import MiniMap from './MiniMap';
 import { PiWalletDuotone } from "react-icons/pi";
 import { useSettings } from '../context/SettingsContext';
 
@@ -18,10 +19,6 @@ interface MarkerBlurbProps {
   onConnectWallet: () => void;
 }
 
-const getStaticMapUrl = (lat: number, lng: number): string => {
-  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=300x150&markers=color:red%7C${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
-};
-
 const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
   drop,
   position,
@@ -34,8 +31,7 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
   const { latitude, longitude, isLoading: locationLoading, error: locationError } = useCurrentLocation();
   const [isInRange, setIsInRange] = useState<boolean | null>(null);
   const [locationData, setLocationData] = useState<{
-    type: 'panorama' | 'static';
-    url?: string;
+    type: 'panorama' | 'map';
     location?: { lat: number; lng: number; pano?: string };
   } | null>(null);
   const [blurbStyle, setBlurbStyle] = useState<React.CSSProperties>({
@@ -198,21 +194,19 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
             <h3>{drop.title}</h3>
             <span className="drop-value">$0.00</span>
           </div>
-          {locationData && (
-            <div className="location-image">
-              {locationData.type === 'panorama' && locationData.location ? (
-                <PanoramaView
-                  position={locationData.location}
-                  onError={() => setLocationData({
-                    type: 'static',
-                    url: getStaticMapUrl(drop.position.lat, drop.position.lng)
-                  })}
-                />
-              ) : (
-                <img src={locationData.url} alt="Location view" />
-              )}
-            </div>
-          )}
+          <div className="location-image">
+            {locationData?.type === 'panorama' && locationData.location ? (
+              <PanoramaView
+                position={locationData.location}
+                onError={() => setLocationData({
+                  type: 'map',
+                  location: drop?.position
+                })}
+              />
+            ) : (
+              <MiniMap position={drop?.position} />
+            )}
+          </div>
           {renderTokens()}
           <p className="description">{drop.description}</p>
           <div className="drop-info">

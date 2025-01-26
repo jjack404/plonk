@@ -73,10 +73,12 @@
     to bottom,
     transparent 2px,
     var(--manilla-20) 1px,
-    var(--manilla-60) 3px,
+    var(--black) 3px,
     transparent 0px
   ) 3px 0 / calc(100% - 6px) 100% no-repeat,
-  var(--manilla-05) !important;
+  var(--manilla-80) !important;
+  color: var(--black) !important;
+  text-shadow: 1px 0px 0px var(--black) !important;
 }
 
 .wallet-button:active {

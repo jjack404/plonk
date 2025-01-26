@@ -44,7 +44,7 @@
 }
 
 .map-control-button:hover {
-  background: var(--manilla) !important;
+  background: var(--manilla-90) !important;
   border-color: var(--black);
   color: var(--black) !important;  
 }
@@ -78,7 +78,7 @@
 }
 
 .gm-style-mtc-bbw button:hover {
-  background: var(--manilla) !important;
+  background: var(--manilla-90) !important;
   border-color: var(--black) !important;
   color: var(--black) !important;  
 }
@@ -115,7 +115,7 @@
 }
 
 .gm-svpc:hover {
-  background: var(--manilla) !important;
+  background: var(--manilla-90) !important;
   border-color: var(--black) !important;
   color: var(--black) !important;  
 }
@@ -137,7 +137,7 @@
 }
 
 .gmnoprint .gm-control-active:hover {
-  background: var(--manilla) !important;
+  background: var(--manilla-90) !important;
   border-color: var(--black) !important;
   color: var(--black) !important;  
 }
