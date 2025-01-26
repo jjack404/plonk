@@ -14,7 +14,7 @@ const NavBar: React.FC = () => {
       <div className="logo">
         <img src="/plonk-logo-sm.png" alt="" className="logo-small" />
         <h1>PLONK</h1>
-        <img src="/plonk-logo-main.png" alt="PLONK" className="logo-large" />
+        <img src="/plonk-logo-main.png" alt="Plonk" className="logo-large" />
       </div>
       <div className="walletButton">
         {walletAddress && (

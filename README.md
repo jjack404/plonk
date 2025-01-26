@@ -1,18 +1,18 @@
-# PLONK 🎯
+# Plonk 🎯
 
 ### The Ultimate Web3 Scavenger Hunt
 
-Ser, are you ready to revolutionize how we think about token distribution? PLONK lets you drop tokens and NFTs anywhere in the world, creating a global treasure hunt that brings web3 into meatspace.
+Ser, are you ready to revolutionize how we think about token distribution? Plonk lets you drop tokens and NFTs anywhere in the world, creating a global treasure hunt that brings web3 into meatspace.
 
-## 🌍 What is PLONK?
+## 🌍 What is Plonk?
 
-PLONK is a location-based token distribution platform that enables users to:
+Plonk is a location-based token distribution platform that enables users to:
 - Drop any SPL token or NFT at specific geographic coordinates
 - Create treasure hunts with custom descriptions and clues
 - Claim tokens by physically visiting drop locations
 - Build community engagement through gamified token discovery
 
-## 🚀 Why PLONK?
+## 🚀 Why Plonk?
 
 - **True Geo-Distribution**: Finally, a way to tie token distribution to physical presence
 - **Community Building**: Create memorable experiences around token drops

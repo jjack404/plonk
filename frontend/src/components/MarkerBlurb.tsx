@@ -8,6 +8,7 @@ import PanoramaView from './PanoramaView';
 import MiniMap from './MiniMap';
 import { PiWalletDuotone } from "react-icons/pi";
 import { useSettings } from '../context/SettingsContext';
+import { formatLocation } from '../utils/formatLocation';
 
 interface MarkerBlurbProps {
   drop: Drop | null;
@@ -211,11 +212,14 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
           <p className="description">{drop.description}</p>
           <div className="drop-info">
             <span className="wallet">By: {abbreviateAddress(drop.walletAddress)}</span>
-            <span className="location">
-              {drop.position.city && drop.position.country
-                ? `${drop.position.city}, ${drop.position.country}`
-                : drop.position.country || 'Unknown Location'}
-            </span>
+            <div className="location-details">
+              <span className="location">
+                {formatLocation(drop.position.city, drop.position.country) || 'Unknown Location'}
+              </span>
+              <span className="coordinates">
+                {`${drop.position.lat.toFixed(4)}, ${drop.position.lng.toFixed(4)}`}
+              </span>
+            </div>
           </div>
           {renderLocationStatus()}
         </>
@@ -223,10 +227,8 @@ const MarkerBlurb: React.FC<MarkerBlurbProps> = React.memo(({
         <>
           {renderTokens()}
           <div className="mini-location">
-            {drop.position.city && drop.position.country
-              ? `${drop.position.city}, ${drop.position.country}`
-              : drop.position.country ||
-              `${drop.position.lat.toFixed(4)}, ${drop.position.lng.toFixed(4)}`}
+            {formatLocation(drop.position.city, drop.position.country) || 
+             `${drop.position.lat.toFixed(4)}, ${drop.position.lng.toFixed(4)}`}
           </div>
         </>
       )}

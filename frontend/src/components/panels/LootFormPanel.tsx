@@ -10,6 +10,7 @@ import MarkerSelector from '../MarkerSelector';
 import './PanelStyles.css';
 import { useTokens } from '../../hooks/useTokens';
 import MiniMap from '../MiniMap';
+import { formatLocation } from '../../utils/formatLocation';
 
 interface LootFormPanelProps {
   position: { lat: number; lng: number; city?: string; country?: string };
@@ -228,13 +229,18 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
           <>
             <form onSubmit={handleSubmit}>
               <div className="location-info">
-                <div className="location-name">
-                  {position.city && position.country 
-                    ? `${position.city}, ${position.country}`
-                    : position.country || 'Unknown Location'}
-                </div>
+                <span className="location-name">
+                  {formatLocation(position.city, position.country) || 'Unknown Location'}
+                </span>
                 <div className="coordinates-row">
-                  {position.lat.toFixed(4)}, {position.lng.toFixed(4)}
+                  <span>
+                    <span className="coordinate-label">lat:</span>
+                    {position.lat.toFixed(4)}
+                  </span>
+                  <span>
+                    <span className="coordinate-label">lng:</span>
+                    {position.lng.toFixed(4)}
+                  </span>
                 </div>
               </div>
               
@@ -384,9 +390,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
               <div className="confirm-summary">
                 <div className="confirm-location">
                   <span className="label">Location:</span>
-                  <span>{position.city && position.country 
-                    ? `${position.city}, ${position.country}`
-                    : position.country || 'Unknown Location'}</span>
+                  <span>{formatLocation(position.city, position.country) || 'Unknown Location'}</span>
                 </div>
                 
                 <div className="confirm-title">
