@@ -72,8 +72,9 @@ h2 {
 /* Loot Form Styles */
 .location-info {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin-bottom: 3px;
+  justify-content: space-between;
 }
 
 .location-name {
@@ -84,9 +85,18 @@ h2 {
 }
 
 .coordinates-row {
-  font-size: 16px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
   color: var(--manilla-80);
   text-shadow: 0.5px 0px 0px var(--manilla-80);
+}
+
+.coordinate-label {
+  color: var(--manilla-60);
+  margin-right: 4px;
 }
 
 .location-image .gmnoprint div {
@@ -205,6 +215,10 @@ h2 {
   flex-direction: column;
   gap: 0;
   overflow-y: auto;
+}
+
+.tokens-container.fungible-list .inventory-fungible-token:not(:first-child) {
+  margin-top: -1px;
 }
 
 .tokens-container.nft-grid {
