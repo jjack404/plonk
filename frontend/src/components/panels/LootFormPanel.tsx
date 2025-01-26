@@ -90,6 +90,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
         amount: amount || token.amount
       }));
 
+      // Create transaction
       let transaction;
       try {
         transaction = await createDropTransaction(
@@ -112,6 +113,7 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
       });
 
       try {
+        // Send and confirm transaction first
         const signature = await sendTransaction(transaction, connection);
 
         setTxStatus({ 
@@ -121,7 +123,10 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
           txId: signature 
         });
 
-        // Create drop in database with pending status
+        // Wait for confirmation before creating drop in database
+        await connection.confirmTransaction(signature, 'confirmed');
+
+        // Only create drop in database after successful transaction
         const dropData = {
           title,
           description,
@@ -137,26 +142,13 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
             metadata: token.metadata,
             isNFT: token.isNFT || false
           })),
-          status: 'pending',
+          status: 'Active',
           txId: signature
         };
 
         const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/drops`,
           dropData,
-          { headers: { 'wallet-address': walletAddress } }
-        );
-
-        // Wait for confirmation
-        await connection.confirmTransaction(signature, 'confirmed');
-
-        // Update drop status
-        await axios.put(
-          `${import.meta.env.VITE_BACKEND_URL}/api/drops/${response.data._id}/transaction`,
-          { 
-            txId: signature,
-            status: 'Active'
-          },
           { headers: { 'wallet-address': walletAddress } }
         );
 
