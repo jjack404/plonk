@@ -800,6 +800,7 @@ h2 {
   display: flex;
   gap: 8px;
   margin-bottom: 6px;
+
 }
 
 .token-tab-button {
@@ -819,6 +820,7 @@ h2 {
   font-family: "TheGoodMonolith";
   text-shadow: 1px 0px 0px var(--red);
   cursor: pointer;
+  letter-spacing: .5px;
   transition: all 0.2s ease;
 }
 

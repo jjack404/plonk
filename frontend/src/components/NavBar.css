@@ -50,7 +50,7 @@
   display: block;
   font-family: 'FATPIXEL';
   font-size: 18px;
-  color: var(--color-text);
+  color: var(--manilla);
   margin: 0;
   padding: 0;
   line-height: 1;
@@ -80,7 +80,33 @@
 .dashboard-button .profile-icon {
   height: 25.65px;
   width: 25.65px;
-  color: var(--color-text);
+  color: var(--manilla);
+}
+
+.wallet-adapter-modal-wrapper {
+  background: var(--black) !important;
+  border: 1px solid var(--manilla) !important;
+  border-radius: 2px !important;
+}
+
+.wallet-adapter-modal-title {
+  color: var(--manilla) !important;
+  font-family: 'TheGoodMonolith' !important;
+}
+
+.wallet-adapter-modal-button-close {
+  background: var(--black) !important;
+  border: 1px solid var(--manilla-20) !important;
+  border-radius: 2px !important;
+  padding: 3px !important;
+}
+
+.wallet-adapter-modal-button-close svg {
+  fill: var(--manilla) !important;
+}
+
+.wallet-adapter-modal-button-close:hover {
+  background: var(--manilla-20) !important;
 }
 
 .wallet-adapter-button-start-icon {
@@ -99,7 +125,7 @@
   margin: 0;
   padding: 0;
   background-color: var(--color-background);
-  color: var(--color-text);
+  color: var(--manilla);
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -108,7 +134,7 @@
 /* Wallet Button */
 .wallet-adapter-button {
   background: var(--color-background) !important;
-  color: var(--color-text) !important;
+  color: var(--manilla) !important;
   border-radius: 2 !important;
   padding: 0 8px !important;
   font-family: "TheGoodMonolith" !important;
@@ -119,7 +145,7 @@
 
 .wallet-adapter-button-trigger .wallet-icon {
   font-size: 1.2em;
-  color: var(--color-text);
+  color: var(--manilla);
 }
 
 @media (min-width: 768px) {
@@ -168,7 +194,7 @@
   left: -18px;
   z-index: 1;
   font-size: 1.2em;
-  color: var(--color-text);
+  color: var(--manilla);
 }
 
 .nav-button {
