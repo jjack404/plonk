@@ -1,5 +1,5 @@
 import express, { RequestHandler } from 'express';
-import { fetchTokenAccounts } from '../utils/apiUtils';
+import { getWalletTokens } from '../services/tokenService';
 import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
@@ -19,7 +19,7 @@ const getTokensHandler: RequestHandler = async (req, res, next): Promise<void> =
       return;
     }
     
-    const tokens = await fetchTokenAccounts(walletAddress);
+    const tokens = await getWalletTokens(walletAddress);
     res.json(tokens);
   } catch (error) {
     next(error);

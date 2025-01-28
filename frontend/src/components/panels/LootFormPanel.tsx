@@ -11,6 +11,7 @@ import './PanelStyles.css';
 import { useTokens } from '../../hooks/useTokens';
 import MiniMap from '../MiniMap';
 import { formatLocation } from '../../utils/formatLocation';
+import { NFTGrid } from './NFTGrid';
 
 interface LootFormPanelProps {
   position: { lat: number; lng: number; city?: string; country?: string };
@@ -335,31 +336,13 @@ export const LootFormPanel: React.FC<LootFormPanelProps> = React.memo(({
                       <div className="token-status-message">No tokens found in wallet</div>
                     )
                   ) : (
-                    isLoading ? (
-                      <div className="token-status-message">Loading NFTs...</div>
-                    ) : error ? (
-                      <div className="token-status-message error">{error}</div>
-                    ) : tokens.filter(t => t.isNFT).length > 0 ? (
-                      tokens.filter(t => t.isNFT).map(token => (
-                        <div 
-                          key={token.mint} 
-                          className={`inventory-nft-token ${selectedTokens[token.mint] ? 'selected' : ''}`}
-                          onClick={() => handleTokenSelect(token)}
-                        >
-                          <div className="nft-image-container">
-                            <img
-                              src={token.logoURI || `https://placehold.co/150x150?text=NFT`}
-                              alt={token.symbol}
-                            />
-                          </div>
-                          <div className="nft-info">
-                            <span className="nft-name">{token.metadata?.name || 'Unnamed NFT'}</span>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="token-status-message">No NFTs found in wallet</div>
-                    )
+                    <NFTGrid 
+                      tokens={tokens}
+                      selectedTokens={selectedTokens}
+                      onSelect={handleTokenSelect}
+                      isLoading={isLoading}
+                      error={error}
+                    />
                   )}
                 </div>
               </div>

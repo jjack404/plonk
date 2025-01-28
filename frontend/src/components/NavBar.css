@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 5px 0 12px;
 }
 
 .logo {
@@ -81,6 +81,25 @@
   height: 25.65px;
   width: 25.65px;
   color: var(--manilla);
+}
+
+.wallet-adapter-dropdown-list {
+  background: var(--black) !important;
+  font-family: 'TheGoodMonolith' !important;
+  border-radius: 2px !important;
+  border: 1px solid var(--manilla-20) !important;
+  z-index: 1100 !important;
+  padding: 4px !important;
+  position: absolute !important;
+  top: 24px !important;
+  right: 0px !important;
+}
+
+.wallet-adapter-dropdown-list-active .wallet-adapter-dropdown-list-item {
+  background: var(--black-90) !important;
+  font-family: 'TheGoodMonolith' !important;
+  border-radius: 2px !important;
+  border: 1px solid var(--manilla-20) !important;
 }
 
 .wallet-adapter-modal-wrapper {
@@ -187,6 +206,8 @@
   position: relative;
   display: flex;
   align-items: center;
+  border-radius: 2px;
+  border: 1px solid var(--manilla-20);
 }
 
 .wallet-button-wrapper .wallet-icon {
