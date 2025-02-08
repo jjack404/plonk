@@ -264,7 +264,7 @@ h2 {
 .token-image-symbol img {
   width: 24px;
   height: 24px;
-  border-radius: 2;
+  border-radius: 2px;
 }
 
 .token-symbol {
@@ -709,7 +709,7 @@ h2 {
 .token-list-image {
   width: 24px;
   height: 24px;
-  border-radius: 2;
+  border-radius: 2px;
 }
 
 .marker-selector-container {
