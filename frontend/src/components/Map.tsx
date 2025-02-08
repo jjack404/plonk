@@ -18,6 +18,7 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import WelcomeModal from './WelcomeModal';
 import { usePanel } from '../context/PanelContext';
 import { PiCrosshairDuotone } from "react-icons/pi";
+import { useOverlay } from '../context/OverlayContext';
 
 interface MapProps {
   setTxStatus: (status: TxStatus | null) => void;
@@ -34,6 +35,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
   const { connection } = useConnection();
   const { sendTransaction, publicKey } = useWallet();
   const { drops, setDrops, isLoading: dropsLoading, error: dropsError } = useDrops();
+  const { activeOverlay, setActiveOverlay } = useOverlay();
   const {
     setShowForm,
     formPosition,
@@ -44,7 +46,7 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
     expandedMarker,
     setExpandedMarker,
     markerPosition,
-    handleMapClick,
+    handleMapClick: baseHandleMapClick,
     handleMarkerMouseOver
   } = useMapInteractions(walletAddress);
 
@@ -272,6 +274,31 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
     }
   };
 
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (activeOverlay) {
+      setActiveOverlay(null);
+      setExpandedMarker(null);
+      return;
+    }
+    baseHandleMapClick(event);
+  };
+
+  // Effect to handle overlay state for marker blurb
+  useEffect(() => {
+    if (expandedMarker) {
+      setActiveOverlay('markerBlurb');
+    } else if (activeOverlay === 'markerBlurb') {
+      setActiveOverlay(null);
+    }
+  }, [expandedMarker, activeOverlay]);
+
+  // Effect to handle closing marker blurb when other overlays open
+  useEffect(() => {
+    if (activeOverlay && activeOverlay !== 'markerBlurb') {
+      setExpandedMarker(null);
+    }
+  }, [activeOverlay]);
+
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
@@ -321,12 +348,31 @@ const Map: React.FC<MapProps> = ({ setTxStatus, setDropPosition }) => {
           />
         ))}
         
-        {(hoveredMarker || expandedMarker) && markerPosition && (
+        {hoveredMarker && !expandedMarker && markerPosition && (
           <MarkerBlurb
-            drop={expandedMarker || hoveredMarker}
+            drop={hoveredMarker}
             position={markerPosition}
-            expanded={!!expandedMarker}
-            onExpand={() => setExpandedMarker(hoveredMarker)}
+            expanded={false}
+            onExpand={() => {
+              if (!activeOverlay) {
+                setExpandedMarker(hoveredMarker);
+                setActiveOverlay('markerBlurb');
+              }
+            }}
+            walletAddress={walletAddress}
+            onConnectWallet={() => setVisible(true)}
+          />
+        )}
+        
+        {expandedMarker && markerPosition && activeOverlay === 'markerBlurb' && (
+          <MarkerBlurb
+            drop={expandedMarker}
+            position={markerPosition}
+            expanded={true}
+            onExpand={() => {
+              setExpandedMarker(null);
+              setActiveOverlay(null);
+            }}
             onClaim={handleClaimDrop}
             walletAddress={walletAddress}
             onConnectWallet={() => setVisible(true)}

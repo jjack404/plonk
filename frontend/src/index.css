@@ -21,7 +21,7 @@
   font-weight: 400;
   margin: 0;
   padding: 0;
-  background-color: #020919;
+  background-image: linear-gradient(to right, var(--black) 0%, var(--black-90) 50%, var(--black) 100%);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

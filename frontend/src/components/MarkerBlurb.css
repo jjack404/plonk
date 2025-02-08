@@ -4,14 +4,17 @@
   color: var(--manilla);
   min-width: 200px;
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   box-shadow: 0 2px 8px var(--black-20);
-  z-index: 999;
+  z-index: 1000;
   margin-top: -30px;
   border-radius: 2px;
   cursor: pointer;
   pointer-events: auto;
   border: 1px solid var(--manilla-60);
-  box-shadow: 0 0 10px var(--black-90); 
+  box-shadow: 0 0 10px var(--black-90);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .marker-blurb:not(.expanded) {
@@ -26,9 +29,12 @@
   position: fixed;
   left: 50% !important;
   top: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  transform: translate3d(-50%, -50%, 0) !important;
+  -webkit-transform: translate3d(-50%, -50%, 0) !important;
   max-height: calc(100vh - 120px);
   overflow-y: auto;
+  will-change: transform;
+  isolation: isolate;
 }
 .marker-blurb h3 {
   margin: 0 0 8px 0;

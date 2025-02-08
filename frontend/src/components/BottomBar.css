@@ -5,18 +5,23 @@
   height: 42px;
   padding-left: 12px;
   padding-right: 6px;
-  background: linear-gradient(
+  background-color: var(--black-95);
+  background-image: linear-gradient(
     to bottom,
     var(--manilla-10) 0%,
+    transparent 50%,
     var(--black-90) 100%
-  );
+  ), linear-gradient(to right, transparent 0%, var(--black-90) 100%);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: var(--manilla);
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 1100;
   border-top: 1px solid var(--manilla-20);
+  transform: translate3d(0,0,0);
+  will-change: transform;
 }
 
 .location-status {

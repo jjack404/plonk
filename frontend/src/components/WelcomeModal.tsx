@@ -60,6 +60,9 @@ const WelcomeModal: React.FC = () => {
             />
             Connect with Solflare
           </button>
+          <span style={{marginTop: '12px', fontSize: '14px', color: 'var(--manilla-60)', width: '100%', textAlign: 'center', margin: 'auto', display: 'block'}}>or <button style={{fontSize: '1rem', color: 'var(--manilla)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '700'}} onClick={() => {
+            setIsVisible(false);
+          }}>Browse as guest</button></span>
         </div>
       </div>
     </div>

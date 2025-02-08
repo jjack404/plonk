@@ -7,6 +7,9 @@
   border-radius: 2px;
   border: 1px solid var(--manilla);
   overflow: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
 }
 
 .map-container:focus {
@@ -18,7 +21,13 @@
 }
 
 .map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
   transition: width 0.3s ease;
+  will-change: width;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 @media (min-width: 768px) {
