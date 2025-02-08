@@ -6,16 +6,8 @@ export const NotificationsPanel: React.FC = () => {
     <div className="panel-section">
       <div className="notifications-list">
         <div className="notification-item">
-          <span className="notification-text">New drop available nearby!</span>
-          <span className="notification-time">5m ago</span>
-        </div>
-        <div className="notification-item">
-          <span className="notification-text">Successfully claimed drop</span>
-          <span className="notification-time">2h ago</span>
-        </div>
-        <div className="notification-item">
-          <span className="notification-text">Welcome to Plonk!</span>
-          <span className="notification-time">1d ago</span>
+          <span className="notification-text">No notifications yet</span>
+          <span className="notification-time">-</span>
         </div>
       </div>
     </div>

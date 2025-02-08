@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import NavBar from './components/NavBar';
 import Map from './components/Map';
 import { WalletProviderWrapper, WalletContext } from './context/WalletContext';
@@ -12,17 +12,41 @@ import PanelContent from './components/PanelContent';
 import BottomBar from './components/BottomBar';
 import { Position, TxStatus, Drop } from './types';
 import { SettingsProvider } from './context/SettingsContext';
+import { OverlayProvider, useOverlay } from './context/OverlayContext';
 
 const AppContent: React.FC = () => {
   const { activeModal, closeModal } = useModal();
   const { walletAddress, profile } = useContext(WalletContext);
   const { activePanel, setActivePanel } = usePanel();
+  const { activeOverlay, setActiveOverlay } = useOverlay();
   const [txStatus, setTxStatus] = useState<TxStatus | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<Position>();
+
+  // Effect to coordinate between different overlays
+  useEffect(() => {
+    if (activeOverlay === 'profile' && activeModal !== 'profile') {
+      closeModal();
+    } else if (activeOverlay === 'panel' && !activePanel) {
+      setActivePanel(null);
+    } else if (activeOverlay === null) {
+      closeModal();
+      setActivePanel(null);
+    }
+  }, [activeOverlay]);
+
+  // Effect to update activeOverlay based on other states
+  useEffect(() => {
+    if (activeModal === 'profile') {
+      setActiveOverlay('profile');
+    } else if (activePanel) {
+      setActiveOverlay('panel');
+    }
+  }, [activeModal, activePanel]);
 
   const handleMapClick = (position: Position) => {
     setSelectedPosition(position);
     setActivePanel('loot');
+    setActiveOverlay('panel');
   };
 
   const handleSubmit = async (data: Drop) => {
@@ -42,19 +66,25 @@ const AppContent: React.FC = () => {
           }}
         />
       </div>
-      {activeModal === 'profile' && (
+      {activeOverlay === 'profile' && activeModal === 'profile' && (
         <div className="self-profile">
           <UserProfile 
             walletAddress={walletAddress} 
             profile={profile} 
-            onClose={closeModal}
+            onClose={() => {
+              closeModal();
+              setActiveOverlay(null);
+            }}
           />
         </div>
       )}
-      {activePanel && (
+      {activeOverlay === 'panel' && activePanel && (
         <SidePanel 
           isOpen={true} 
-          onClose={() => setActivePanel(null)}
+          onClose={() => {
+            setActivePanel(null);
+            setActiveOverlay(null);
+          }}
           title={activePanel}
         >
           <PanelContent 
@@ -72,17 +102,19 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <PanelProvider>
-      <SettingsProvider>
-        <WalletProviderWrapper>
-          <DropsProvider>
-            <ModalProvider>
-              <AppContent />
-            </ModalProvider>
-          </DropsProvider>
-        </WalletProviderWrapper>
-      </SettingsProvider>
-    </PanelProvider>
+    <OverlayProvider>
+      <PanelProvider>
+        <SettingsProvider>
+          <WalletProviderWrapper>
+            <DropsProvider>
+              <ModalProvider>
+                <AppContent />
+              </ModalProvider>
+            </DropsProvider>
+          </WalletProviderWrapper>
+        </SettingsProvider>
+      </PanelProvider>
+    </OverlayProvider>
   );
 };
 
