@@ -18,16 +18,18 @@
 }
 
 /* Add transition for panel open state */
-:root.panel-open .map-wrapper {
-  width: 67dvw !important;
-  transition: width 0.3s ease;
+@media (min-width: 768px) {
+  :root.panel-open .map-wrapper {
+    width: 67dvw !important;
+    transition: width 0.3s ease;
+  }
 }
 
 .map-control-button {
   position: absolute;
   display: none;
-  top: .68rem;
-  right: .68rem;
+  top: 0.68rem;
+  right: 0.68rem;
   width: 40px;
   height: 40px;
   background: var(--black-80) !important;
@@ -46,7 +48,7 @@
 .map-control-button:hover {
   background: var(--manilla-90) !important;
   border-color: var(--black);
-  color: var(--black) !important;  
+  color: var(--black) !important;
 }
 
 .map-control-button.locating {
@@ -59,13 +61,17 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .gm-style-mtc-bbw {
   gap: 8px !important;
-  margin: .25rem !important;
+  margin: 0.25rem !important;
 }
 
 .gm-style-mtc-bbw button {
@@ -80,13 +86,13 @@
 .gm-style-mtc-bbw button:hover {
   background: var(--manilla-90) !important;
   border-color: var(--black) !important;
-  color: var(--black) !important;  
+  color: var(--black) !important;
 }
 
 .gm-style-mtc-bbw ul {
   background: var(--manilla) !important;
   border: 1px solid var(--black) !important;
-  color: var(--black) !important;  
+  color: var(--black) !important;
   padding: 1px !important;
   border-radius: 2px !important;
 }
@@ -94,18 +100,18 @@
 .gm-style-mtc-bbw li {
   background: var(--manilla) !important;
   border: 1px solid var(--black) !important;
-  color: var(--black) !important;  
+  color: var(--black) !important;
   border-radius: 2px !important;
-  font-family: 'TheGoodMonolith' !important;
-} 
+  font-family: "TheGoodMonolith" !important;
+}
 
 .gm-style-mtc-bbw ul {
-  right: initial !important;  
+  right: initial !important;
 }
 
 .gm-bundled-control {
-  margin-right: .25rem !important;
-  margin-bottom: .25rem !important;
+  margin-right: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
 }
 
 .gm-svpc {
@@ -117,11 +123,11 @@
 .gm-svpc:hover {
   background: var(--manilla-90) !important;
   border-color: var(--black) !important;
-  color: var(--black) !important;  
+  color: var(--black) !important;
 }
 
 .gmnoprint div {
-  font-family: 'TheGoodMonolith' !important;
+  font-family: "TheGoodMonolith" !important;
   background: transparent !important;
   color: var(--manilla) !important;
 }
@@ -139,9 +145,9 @@
 .gmnoprint .gm-control-active:hover {
   background: var(--manilla-90) !important;
   border-color: var(--black) !important;
-  color: var(--black) !important;  
+  color: var(--black) !important;
 }
 
 .gm-style-cc a {
-  font-family: 'TheGoodMonolith' !important;
+  font-family: "TheGoodMonolith" !important;
 }
