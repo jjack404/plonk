@@ -17,7 +17,10 @@
   filter: blur(8px);
 }
 
-/* Add transition for panel open state */
+.map-wrapper {
+  transition: width 0.3s ease;
+}
+
 @media (min-width: 768px) {
   :root.panel-open .map-wrapper {
     width: 67dvw !important;
