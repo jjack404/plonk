@@ -65,6 +65,27 @@
 
 .wallet-adapter-button-trigger {
   height: 27px !important;
+  padding-left: 32px !important;
+  white-space: nowrap !important;
+}
+
+/* Wallet Button */
+.wallet-adapter-button {
+  background: var(--color-background) !important;
+  color: var(--manilla) !important;
+  border-radius: 2 !important;
+  padding: 0 8px !important;
+  font-family: "TheGoodMonolith" !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0px !important;
+  font-size: 14px !important;
+}
+
+.wallet-adapter-button-trigger .wallet-icon {
+  font-size: 1.2em;
+  color: var(--manilla);
 }
 
 .dashboard-button {
@@ -93,7 +114,33 @@
   position: absolute !important;
   top: 24px !important;
   right: 0px !important;
+  width: 100% !important;
+  min-width: 136px !important;
 }
+
+.wallet-adapter-dropdown-list-item {
+  width: 100% !important;
+}
+
+.wallet-button-wrapper {
+  position: relative;
+  min-width: 136px !important;
+  display: flex;
+  align-items: center;
+  border-radius: 2px;
+  justify-content: end;
+  border: 1px solid var(--manilla-20);
+}
+
+.wallet-button-wrapper .wallet-icon {
+  position: absolute;
+  left: 0px;
+  margin-left: 4px;
+  z-index: 1;
+  font-size: 1.2em;
+  color: var(--manilla);
+}
+
 
 .wallet-adapter-dropdown-list-active .wallet-adapter-dropdown-list-item {
   background: var(--black-90) !important;
@@ -150,23 +197,6 @@
   width: 100%;
 }
 
-/* Wallet Button */
-.wallet-adapter-button {
-  background: var(--color-background) !important;
-  color: var(--manilla) !important;
-  border-radius: 2 !important;
-  padding: 0 8px !important;
-  font-family: "TheGoodMonolith" !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-
-.wallet-adapter-button-trigger .wallet-icon {
-  font-size: 1.2em;
-  color: var(--manilla);
-}
-
 @media (min-width: 768px) {
   .navbar {
     height: 60px;
@@ -192,6 +222,10 @@
     width: 38.47px;
   }
 
+  .wallet-button-wrapper {
+    height: 40px;
+  }
+
   .wallet-adapter-button-start-icon {
     margin-right: 12px !important;
   }
@@ -200,22 +234,10 @@
     height: 30px !important;
     width: 30px !important;
   }
-}
 
-.wallet-button-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  border-radius: 2px;
-  border: 1px solid var(--manilla-20);
-}
-
-.wallet-button-wrapper .wallet-icon {
-  position: absolute;
-  left: -18px;
-  z-index: 1;
-  font-size: 1.2em;
-  color: var(--manilla);
+  .wallet-adapter-button {
+    font-size: 16px !important;
+  }
 }
 
 .nav-button {
